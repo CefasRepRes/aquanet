@@ -1,4 +1,4 @@
-ListSiteDetailsWithModelID = function(graph_full, graph.contactp.objects, siteLocationsWithCatchment.fileName) {
+ListSiteDetailsWithModelID = function(graph_full, siteLocationsWithCatchment.fileName) {
 
   siteID <- igraph::V(graph_full)$siteID
   personID <- igraph::V(graph_full)$PersonID
