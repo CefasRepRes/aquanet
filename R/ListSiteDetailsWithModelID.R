@@ -1,11 +1,11 @@
-ListSiteDetailsWithModelID = function(graph_full, siteLocationsWithCatchment.fileName) {
+ListSiteDetailsWithModelID = function(graph, siteLocationsWithCatchment.fileName) {
 
-  siteID <- igraph::V(graph_full)$siteID
-  personID <- igraph::V(graph_full)$PersonID
+  siteID <- igraph::V(graph)$siteID
+  personID <- igraph::V(graph)$PersonID
   modelID <- 1:length(siteID)
-  siteName <- igraph::V(graph_full)$siteName
-  catchmentID <- igraph::V(graph_full)$catchmentID
-  type <- igraph::V(graph_full)$type
+  siteName <- igraph::V(graph)$siteName
+  catchmentID <- igraph::V(graph)$catchmentID
+  type <- igraph::V(graph)$type
 
   siteDetailsWithModelID <- data.frame(siteID, personID, modelID, siteName, catchmentID, type)
 
