@@ -1,9 +1,9 @@
-CreateCatchment2SiteMatrix <- function(graph_full, catchmentLayer.fileName) {
+CreateCatchment2SiteMatrix <- function(graph, catchmentLayer.fileName) {
   # Create a table 'graph.catchment2site.Merged' which maps site to catchment
   # Ensure that the order of sites matches that included within the contact matrix
 
-  graph.catchmentID <- igraph::get.vertex.attribute(graph = graph_full,name = "catchmentID",index = igraph::V(graph_full))
-  graph.siteID <- igraph::get.vertex.attribute(graph = graph_full, name = "siteID",index = igraph::V(graph_full))
+  graph.catchmentID <- igraph::get.vertex.attribute(graph = graph,name = "catchmentID",index = igraph::V(graph))
+  graph.siteID <- igraph::get.vertex.attribute(graph = graph, name = "siteID",index = igraph::V(graph))
 
   graph.catchment2site <- as.data.frame(cbind(graph.catchmentID, graph.siteID))
   colnames(graph.catchment2site) <- c('TRUNK_CODE','siteID')
