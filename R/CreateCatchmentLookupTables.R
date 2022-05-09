@@ -42,7 +42,7 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
   # convert to sparse matrix (rows are siteID, cols are catchment code)
   matrix_sites_catchment <- stats::model.matrix(~ 0 + TRUNK_CODE, data = df_sites)
   spmatrix_sites_catchment <- Matrix::Matrix(matrix_sites_catchment > 0, sparse = TRUE)
-  spmatrix_sites_catchment <- as(object = spmatrix_sites_catchment, Class = "dgCMatrix")
+  spmatrix_sites_catchment <- methods::as(object = spmatrix_sites_catchment, Class = "dgCMatrix")
 
   # return a list containing (1) data frame of catchment and (2) site data and site to catchment matrix
   return(list(df_catchment_sites, spmatrix_sites_catchment))
