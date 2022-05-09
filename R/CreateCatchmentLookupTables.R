@@ -5,7 +5,7 @@
 #' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
 #' @param filename_catchment_layer (class string) String containing the file path and file name for .shp file containing catchment information.
 #'
-#' @return (class list) of length 2 containing [[1]] data frame of site to catchment information and [[2]] dgCMatrix sparse matrix containing site to catchment summary.
+#' @return (class list) of length 2 containing (1) data frame of site to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
 #' @importFrom igraph get.vertex.attribute V
 #' @importFrom rgdal readOGR
