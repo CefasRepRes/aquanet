@@ -1,7 +1,18 @@
+#' createCatchmentToSiteMatrix
+#'
+#' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data (.shp). This produced list output 1 which which maps site to catchment. To produce list output 2, convert the catchment (columns) to site (rows) information to a sparse matrix. Note: ensure that the order of sites matches that included within the contact matrix.
+#'
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
+#' @param filename_catchment_layer (class string) String containing the file path and file name for .shp file containing catchment information.
+#'
+#' @return (class list) of length 2 containing [[1]] data frame of site to catchment information and [[2]] dgCMatrix sparse matrix containing site to catchment summary.
+#'
+#' @importFrom igraph get.vertex.attribute V
+#' @importFrom rgdal readOGR
+#' @importFrom stats model.matrix
+#' @importFrom Matrix Matrix
+#' @importFrom methods as
 createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
-  # Create a table 'df_sites.Merged' which maps site to catchment
-  # Ensure that the order of sites matches that included within the contact matrix
-
   # create data frame of catchment ID and site ID
   df_sites <- data.frame("TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
                                                                      name = "catchmentID",
