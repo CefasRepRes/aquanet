@@ -1,4 +1,4 @@
-ListSiteDetailsWithModelID = function(graph, filename_sites_catchments) {
+mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments) {
 
   # extract model and site metadata from igraph output to dataframe
   model_metadata <- data.frame(siteID = igraph::V(graph)$siteID,
