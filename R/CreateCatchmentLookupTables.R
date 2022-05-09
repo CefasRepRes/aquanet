@@ -1,4 +1,4 @@
-CreateCatchment2SiteMatrix <- function(graph, filename_catchment_layer) {
+createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
   # Create a table 'df_sites.Merged' which maps site to catchment
   # Ensure that the order of sites matches that included within the contact matrix
 
