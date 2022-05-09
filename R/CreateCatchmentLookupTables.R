@@ -60,20 +60,22 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
 }
 
 createWithinCatchmentEdgesMatrix <- function(graph) {
-  # Create a logical matrix to specify which edges represent movements within a catchment
+  # create logical matrix to specify which edges represent movements within a catchment
   graph.withinCatchmentEdges.matrix <- igraph::get.adjacency(graph = graph,
                                                              attr = "withinCatchment",
                                                              names = TRUE,
                                                              sparse = TRUE)
 
-  # Store the position of each within catchment movement, as a simple edge table
+  # get the position of each within catchment movement as edge table
   edgeList.withinCatchmentEdges.Table <- igraph::get.edges(graph = graph,
                                                            igraph::E(graph)[igraph::E(graph)$withinCatchment])
 
-  # Check the list of movements that occur within a catchment against the LFMD, Google, the Catchment Layer, etc
+  # create edgeList of within catchment movements by source and receiving site ID
   edgeList.withinCatchmentEdges.Table.bySiteID <- cbind(igraph::E(graph)$scrSiteID[igraph::E(graph)$withinCatchment],
                                                         igraph::E(graph)$recSiteID[igraph::E(graph)$withinCatchment])
   colnames(edgeList.withinCatchmentEdges.Table.bySiteID) <- c('scrSiteID','recSiteID')
 
-  return(list(graph.withinCatchmentEdges.matrix,edgeList.withinCatchmentEdges.Table,edgeList.withinCatchmentEdges.Table.bySiteID))
+  # return list containing logical matrix of catchment:catchment connections,
+  # numeric matrix of within catchment edges, and siteID-siteID within catchment edges
+  return(list(graph.withinCatchmentEdges.matrix, edgeList.withinCatchmentEdges.Table, edgeList.withinCatchmentEdges.Table.bySiteID))
 }
