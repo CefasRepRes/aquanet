@@ -58,3 +58,17 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
   # return a list containing (1) data frame of catchment and (2) site data and site to catchment matrix
   return(list(df_catchment_sites, spmatrix_sites_catchment))
 }
+
+CreateWithinCatchmentEdgesMatrix = function(graph_full, graph.catchment2Site.objects, locationSiteDetailsWithModelID) {
+  # Create a logical matrix to specify which edges represent movements within a catchment
+  graph.withinCatchmentEdges.matrix= get.adjacency(graph_full, attr="withinCatchment", names=TRUE, sparse = TRUE)
+
+  # Store the position of each within catchment movement, as a simple edge table
+  edgeList.withinCatchmentEdges.Table = get.edges(graph_full, E(graph_full)[E(graph_full)$withinCatchment])
+
+  # Check the list of movements that occur within a catchment against the LFMD, Google, the Catchment Layer, etc
+  edgeList.withinCatchmentEdges.Table.bySiteID = cbind(E(graph_full)$scrSiteID[E(graph_full)$withinCatchment],E(graph_full)$recSiteID[E(graph_full)$withinCatchment])
+  colnames(edgeList.withinCatchmentEdges.Table.bySiteID) = c('scrSiteID','recSiteID')
+
+  return(list(graph.withinCatchmentEdges.matrix,edgeList.withinCatchmentEdges.Table,edgeList.withinCatchmentEdges.Table.bySiteID))
+}
