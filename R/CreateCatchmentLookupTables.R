@@ -10,9 +10,11 @@ CreateCatchment2SiteMatrix <- function(graph, filename_catchment_layer) {
                                                name = "siteID",
                                                index = igraph::V(graph))
 
-  graph.catchment2site <- as.data.frame(cbind(graph.catchmentID, graph.siteID))
+  # create data frame of catchment ID and site ID
+  graph.catchment2site2 <- as.data.frame(cbind("TRUNK_CODE" = graph.catchmentID,
+                                               "siteID" = graph.siteID))
 
-  colnames(graph.catchment2site) <- c("TRUNK_CODE", "siteID")
+  print(all.equal(graph.catchment2site, graph.catchment2site2))
 
   graph.catchment2site$Order <- seq(1, nrow(graph.catchment2site))
 
