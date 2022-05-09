@@ -1,43 +1,49 @@
 CreateCatchment2SiteMatrix <- function(graph, filename_catchment_layer) {
-  # Create a table 'graph.catchment2site.Merged' which maps site to catchment
+  # Create a table 'df_sites.Merged' which maps site to catchment
   # Ensure that the order of sites matches that included within the contact matrix
 
   # create data frame of catchment ID and site ID
-  graph.catchment2site <- data.frame("Order" = seq(1, length(get.vertex.attribute(graph = graph_full, "siteID"))),
-                                     "TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
-                                                                                 name = "catchmentID",
-                                                                                 index = igraph::V(graph)),
-                                     "siteID" = igraph::get.vertex.attribute(graph = graph,
-                                                                             name = "siteID",
-                                                                             index = igraph::V(graph)))
+  df_sites <- data.frame("TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
+                                                                     name = "catchmentID",
+                                                                     index = igraph::V(graph)),
+                         "siteID" = igraph::get.vertex.attribute(graph = graph,
+                                                                 name = "siteID",
+                                                                 index = igraph::V(graph)),
+                         "Order" = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
 
-  catchmentLayer <- rgdal::readOGR(dsn = filename_catchment_layer,
-                                   layer = "catchmnt_50k+TrunkCodes-Filtered-Merged_region")
+  # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
+  catchment_layer <- rgdal::readOGR(dsn = filename_catchment_layer,
+                                   layer = sub(pattern = "(.*)\\..*$",
+                                               replacement = "\\1",
+                                               basename(filename_catchment_layer)))
 
-  catchmentLayer.Table <- catchmentLayer@data
+  # extract the data from the catchment layer
+  df_catchments <- catchment_layer@data
 
-  graph.catchment2site.merged <- merge(x = graph.catchment2site,
-                                       y = catchmentLayer.Table,
-                                       by.x = 'TRUNK_CODE',
-                                       by.y = 'TRUNK_CODE',
-                                       sort = FALSE,
-                                       all.x = TRUE)
+  # merge catchment data with site data extracted from graph
+  df_catchment_sites <- merge(x = df_sites,
+                              y = df_catchments,
+                              by.x = "TRUNK_CODE",
+                              by.y = "TRUNK_CODE",
+                              sort = FALSE,
+                              all.x = TRUE)
 
-  graph.catchment2site.merged <- graph.catchment2site.merged[order(graph.catchment2site.merged$Order), ]
+  # order the merged data frame
+  df_catchment_sites <- df_catchment_sites[order(df_catchment_sites$Order), ]
 
-  # Transform the catchment2site table into a logical matrix
-  # Keep sites in the same order
-  graph.catchment2site$TRUNK_CODE <- factor(x = graph.catchment2site$TRUNK_CODE,
-                                            levels = unique(graph.catchment2site$TRUNK_CODE),
+  # convert catchment codes to ordered factor to retain site order
+  df_sites$TRUNK_CODE <- factor(x = df_sites$TRUNK_CODE,
+                                            levels = unique(df_sites$TRUNK_CODE),
                                             ordered = TRUE)
 
-  row.names(graph.catchment2site) <- graph.catchment2site$siteID
+  # assign siteID as rownames
+  row.names(df_sites) <- df_sites$siteID
 
-  graph.catchment2site.matrix <- model.matrix(~ 0 + TRUNK_CODE,data = graph.catchment2site)
+  # convert to sparse matrix (rows are siteID, cols are catchment code)
+  matrix_sites_catchment <- stats::model.matrix(~ 0 + TRUNK_CODE, data = df_sites)
+  spmatrix_sites_catchment <- Matrix::Matrix(matrix_sites_catchment > 0, sparse = TRUE)
+  spmatrix_sites_catchment <- as(object = spmatrix_sites_catchment, Class = "dgCMatrix")
 
-  graph.catchment2site.matrix2 <- Matrix::Matrix(graph.catchment2site.matrix > 0, sparse = TRUE)
-
-  graph.catchment2site.matrix2 <- as(object = graph.catchment2site.matrix2, Class = "dgCMatrix")
-
-  return(list(graph.catchment2site.merged, graph.catchment2site.matrix2))
+  # return a list containing (1) data frame of catchment and (2) site data and site to catchment matrix
+  return(list(df_catchment_sites, spmatrix_sites_catchment))
 }
