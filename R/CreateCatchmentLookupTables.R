@@ -59,7 +59,7 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
   return(list(df_catchment_sites, spmatrix_sites_catchment))
 }
 
-CreateWithinCatchmentEdgesMatrix = function(graph_full, graph.catchment2Site.objects, locationSiteDetailsWithModelID) {
+CreateWithinCatchmentEdgesMatrix = function(graph_full, locationSiteDetailsWithModelID) {
   # Create a logical matrix to specify which edges represent movements within a catchment
   graph.withinCatchmentEdges.matrix= get.adjacency(graph_full, attr="withinCatchment", names=TRUE, sparse = TRUE)
 
