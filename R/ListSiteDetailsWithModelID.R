@@ -1,22 +1,25 @@
-ListSiteDetailsWithModelID = function(graph, siteLocationsWithCatchment.fileName) {
+ListSiteDetailsWithModelID = function(graph, filename_sites_catchments) {
 
-  siteID <- igraph::V(graph)$siteID
-  personID <- igraph::V(graph)$PersonID
-  modelID <- 1:length(siteID)
-  siteName <- igraph::V(graph)$siteName
-  catchmentID <- igraph::V(graph)$catchmentID
-  type <- igraph::V(graph)$type
+  # extract model and site metadata from igraph output to dataframe
+  model_metadata <- data.frame(siteID = igraph::V(graph)$siteID,
+                         personID = igraph::V(graph)$PersonID,
+                         modelID = 1:length(igraph::V(graph_full)$siteID),
+                         siteName = igraph::V(graph)$siteName,
+                         catchmentID = igraph::V(graph)$catchmentID,
+                         type = igraph::V(graph)$type)
 
-  siteDetailsWithModelID <- data.frame(siteID, personID, modelID, siteName, catchmentID, type)
+  # read in data frame of site location and catchment information
+  sites_catchments <- read.csv(file = filename_sites_catchments, header = TRUE)
 
-  site2Catchment.table <- read.csv(file = siteLocationsWithCatchment.fileName, header = TRUE)
+  # merge model metadata and site catchment information
+  model_metadata.sites_catchments <- merge(x = model_metadata,
+                                         y = sites_catchments,
+                                         by = "siteID",
+                                         all.x = TRUE)
 
-  siteDetailsWithModelID.withCatchmentDetails <- merge(x = siteDetailsWithModelID,
-                                                      y = site2Catchment.table,
-                                                      by = c('siteID'),
-                                                      all.x = TRUE)
+  # order data frame by modelID column
+  model_metadata.sites_catchments <- model_metadata.sites_catchments[order(model_metadata.sites_catchments$modelID),]
 
-  siteDetailsWithModelID.withCatchmentDetails <- siteDetailsWithModelID.withCatchmentDetails[order(siteDetailsWithModelID.withCatchmentDetails$modelID),]
-
-  return(siteDetailsWithModelID.withCatchmentDetails)
+  # return merged data frame
+  return(model_metadata.sites_catchments)
 }
