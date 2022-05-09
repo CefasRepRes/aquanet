@@ -2,21 +2,14 @@ CreateCatchment2SiteMatrix <- function(graph, filename_catchment_layer) {
   # Create a table 'graph.catchment2site.Merged' which maps site to catchment
   # Ensure that the order of sites matches that included within the contact matrix
 
-  graph.catchmentID <- igraph::get.vertex.attribute(graph = graph,
-                                                    name = "catchmentID",
-                                                    index = igraph::V(graph))
-
-  graph.siteID <- igraph::get.vertex.attribute(graph = graph,
-                                               name = "siteID",
-                                               index = igraph::V(graph))
-
   # create data frame of catchment ID and site ID
-  graph.catchment2site2 <- as.data.frame(cbind("TRUNK_CODE" = graph.catchmentID,
-                                               "siteID" = graph.siteID))
-
-  print(all.equal(graph.catchment2site, graph.catchment2site2))
-
-  graph.catchment2site$Order <- seq(1, nrow(graph.catchment2site))
+  graph.catchment2site <- data.frame("Order" = seq(1, length(get.vertex.attribute(graph = graph_full, "siteID"))),
+                                     "TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
+                                                                                 name = "catchmentID",
+                                                                                 index = igraph::V(graph)),
+                                     "siteID" = igraph::get.vertex.attribute(graph = graph,
+                                                                             name = "siteID",
+                                                                             index = igraph::V(graph)))
 
   catchmentLayer <- rgdal::readOGR(dsn = filename_catchment_layer,
                                    layer = "catchmnt_50k+TrunkCodes-Filtered-Merged_region")
