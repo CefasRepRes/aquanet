@@ -13,12 +13,12 @@ mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments
 
   # merge model metadata and site catchment information
   model_metadata.sites_catchments <- merge(x = model_metadata,
-                                         y = sites_catchments,
-                                         by = "siteID",
-                                         all.x = TRUE)
+                                           y = sites_catchments,
+                                           by = "siteID",
+                                           all.x = TRUE)
 
   # order data frame by modelID column
-  model_metadata.sites_catchments <- model_metadata.sites_catchments[order(model_metadata.sites_catchments$modelID),]
+  model_metadata.sites_catchments <- model_metadata.sites_catchments[order(model_metadata.sites_catchments$modelID), ]
 
   # return merged data frame
   return(model_metadata.sites_catchments)
