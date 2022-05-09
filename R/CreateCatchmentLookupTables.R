@@ -1,4 +1,4 @@
-CreateCatchment2SiteMatrix <- function(graph, catchmentLayer.fileName) {
+CreateCatchment2SiteMatrix <- function(graph, filename_catchment_layer) {
   # Create a table 'graph.catchment2site.Merged' which maps site to catchment
   # Ensure that the order of sites matches that included within the contact matrix
 
@@ -10,7 +10,7 @@ CreateCatchment2SiteMatrix <- function(graph, catchmentLayer.fileName) {
 
   graph.catchment2site$Order <- seq(1,nrow(graph.catchment2site))
 
-  catchmentLayer <- rgdal::readOGR(dsn = catchmentLayer.fileName,
+  catchmentLayer <- rgdal::readOGR(dsn = filename_catchment_layer,
                            layer="catchmnt_50k+TrunkCodes-Filtered-Merged_region")
 
   catchmentLayer.Table <- catchmentLayer@data
