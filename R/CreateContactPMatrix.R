@@ -1,6 +1,6 @@
-CreateContactPMatrix <- function(graph_full, periodDataCollection) {
+CreateContactPMatrix <- function(graph, periodDataCollection) {
   # Convert the contact network to a matrix, recording the number of movements that occur between sites
-  contactp <- get.adjacency(graph_full, attr = "movements", names  = TRUE, sparse = TRUE)
+  contactp <- get.adjacency(graph, attr = "movements", names  = TRUE, sparse = TRUE)
 
   # Divide the number of movements by the time over which information was collected
   contactp.prob <- contactp/periodDataCollection
