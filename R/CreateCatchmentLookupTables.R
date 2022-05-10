@@ -59,6 +59,15 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
   return(list(df_catchment_sites, spmatrix_sites_catchment))
 }
 
+#' createWithinCatchmentEdgesMatrix
+#'
+#' Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical matrix of within catchment connections, a matrix of within catchment edges and a matrix of within catchment edges by source (column 1) and receiving (column2) site ID.
+#'
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
+#'
+#' @return (class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of source site and receiving site within catchment edges.
+#'
+#' @importFrom igraph get.adjacency get.edges E
 createWithinCatchmentEdgesMatrix <- function(graph) {
   # create logical matrix to specify which edges represent movements within a catchment
   lgmatrix_catch_catch <- igraph::get.adjacency(graph = graph,
