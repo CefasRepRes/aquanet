@@ -33,7 +33,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
   return(list(n_sites, matrix_movements, matrix_movements_prob))
 }
 
-CreateAltContactPMatrix <- function(graph, movement_period,metricType) {
+CreateAltContactPMatrix <- function(graph, movement_period) {
 
   # Convert the contact network to a matrix, recording the number of movements that occur between sites
   matrix_movements <- igraph::get.adjacency(graph, attr="movements", names=TRUE)
