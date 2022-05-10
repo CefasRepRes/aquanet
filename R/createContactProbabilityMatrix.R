@@ -39,15 +39,15 @@ CreateAltContactPMatrix <- function(graph, movement_period,metricType) {
   matrix_movements <- igraph::get.adjacency(graph, attr="movements", names=TRUE)
 
   # Divide the number of movements by the time over which information was collected
-  contactp.prob <- matrix_movements/movement_period
+  matrix_movements_prob <- matrix_movements/movement_period
   ######## This is to initiate national standstill - i.e. no movements will be allowed if there are certain number of infection in the system
-  #contactp.prob=matrix_movements/movement_period*0
+  #matrix_movements_prob=matrix_movements/movement_period*0
 
   # If there are any contacts with a probability of greater than one, assume a probability of one
-  contactp.prob[contactp.prob>1] <- 1
+  matrix_movements_prob[matrix_movements_prob>1] <- 1
 
   # Check the final number of sites represented within the model
-  LengthContactP <- length(contactp.prob[,1])
+  LengthContactP <- length(matrix_movements_prob[,1])
 
   # Calculate no. of outward movements per a site
   outwardMovementsPerSite <- rowSums(matrix_movements)
@@ -60,8 +60,8 @@ CreateAltContactPMatrix <- function(graph, movement_period,metricType) {
   InsitesGreaterQuantile <- names(inwardMovementsPerSite)[inwardMovementsPerSite > quantile(inwardMovementsPerSite,.992)]
 
   # Zero any contacts which originate from sites within the 95th quantile
-  contactp.prob[sitesGreaterQuantile,] <- 0
-  contactp.prob[InsitesGreaterQuantile,] <- 0
+  matrix_movements_prob[sitesGreaterQuantile,] <- 0
+  matrix_movements_prob[InsitesGreaterQuantile,] <- 0
 
-  return(list(LengthContactP, movement_period, contactp.prob))
+  return(list(LengthContactP, movement_period, matrix_movements_prob))
 }
