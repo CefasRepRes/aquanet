@@ -47,7 +47,7 @@ CreateAltContactPMatrix <- function(graph, movement_period) {
   matrix_movements_prob[matrix_movements_prob>1] <- 1
 
   # Check the final number of sites represented within the model
-  LengthContactP <- length(matrix_movements_prob[,1])
+  n_sites <- length(matrix_movements_prob[,1])
 
   # Calculate no. of outward movements per a site
   outwardMovementsPerSite <- rowSums(matrix_movements)
@@ -56,12 +56,11 @@ CreateAltContactPMatrix <- function(graph, movement_period) {
 
 
   # Extract a list of sites whose movements are greater than the 95th quantile
-  sitesGreaterQuantile <- names(outwardMovementsPerSite)[outwardMovementsPerSite > quantile(outwardMovementsPerSite,.992)]
   InsitesGreaterQuantile <- names(inwardMovementsPerSite)[inwardMovementsPerSite > quantile(inwardMovementsPerSite,.992)]
 
   # Zero any contacts which originate from sites within the 95th quantile
   matrix_movements_prob[sitesGreaterQuantile,] <- 0
   matrix_movements_prob[InsitesGreaterQuantile,] <- 0
 
-  return(list(LengthContactP, movement_period, matrix_movements_prob))
+  return(list(n_sites, movement_period, matrix_movements_prob))
 }
