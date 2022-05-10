@@ -15,9 +15,9 @@ CreateContactPMatrix <- function(graph, movement_period) {
   matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
 
   # extract number of sites represented within the model
-  LengthContactP <- length(matrix_movements_prob[, 1])
+  n_sites <- length(matrix_movements_prob[, 1])
 
   # return list containing number of sites in contact matrix, adjacency matrix of movements between sites,
   # and probability matrix of movements between sites
-  return(list(LengthContactP, matrix_movements, matrix_movements_prob))
+  return(list(n_sites, matrix_movements, matrix_movements_prob))
 }
