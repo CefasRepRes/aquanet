@@ -1,4 +1,4 @@
-CreateContactPMatrix <- function(graph, movement_period) {
+createContactProbabilityMatrix <- function(graph, movement_period) {
   # get sparse adjacency matrix of movements between sites from contact network (graph)
   matrix_movements <- igraph::get.adjacency(graph,
                                     attr = "movements",
