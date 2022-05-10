@@ -1,4 +1,4 @@
-CreateContactPMatrix <- function(graph, periodDataCollection) {
+CreateContactPMatrix <- function(graph, movement_period) {
   # get sparse adjacency matrix of movements between sites from contact network (graph)
   contactp <- igraph::get.adjacency(graph,
                                     attr = "movements",
@@ -6,7 +6,7 @@ CreateContactPMatrix <- function(graph, periodDataCollection) {
                                     sparse = TRUE)
 
   # divide number of movements by the time over which movement information was collected
-  contactp.prob <- contactp/periodDataCollection
+  contactp.prob <- contactp/movement_period
 
   # if there are any contacts with a probability of greater than one, assume a probability of one
   contactp.prob[contactp.prob > 1] <- 1
