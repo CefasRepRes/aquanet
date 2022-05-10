@@ -33,15 +33,15 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
   return(list(n_sites, matrix_movements, matrix_movements_prob))
 }
 
-CreateAltContactPMatrix <- function(graph, periodDataCollection,metricType) {
+CreateAltContactPMatrix <- function(graph, movement_period,metricType) {
 
   # Convert the contact network to a matrix, recording the number of movements that occur between sites
   contactp <- igraph::get.adjacency(graph, attr="movements", names=TRUE)
 
   # Divide the number of movements by the time over which information was collected
-  contactp.prob <- contactp/periodDataCollection
+  contactp.prob <- contactp/movement_period
   ######## This is to initiate national standstill - i.e. no movements will be allowed if there are certain number of infection in the system
-  #contactp.prob=contactp/periodDataCollection*0
+  #contactp.prob=contactp/movement_period*0
 
   # If there are any contacts with a probability of greater than one, assume a probability of one
   contactp.prob[contactp.prob>1] <- 1
