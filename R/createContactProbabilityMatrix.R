@@ -39,8 +39,6 @@ CreateAltContactPMatrix <- function(graph, movement_period) {
 
   # divide number of movements by the time over which movement information was collected
   matrix_movements_prob <- matrix_movements/movement_period
-  ######## This is to initiate national standstill - i.e. no movements will be allowed if there are certain number of infection in the system
-  #matrix_movements_prob <- matrix_movements/movement_period*0
 
   # if there are any contacts with a probability of greater than one, assume a probability of one
   matrix_movements_prob[matrix_movements_prob > 1] <- 1
