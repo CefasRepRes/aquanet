@@ -34,33 +34,30 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 }
 
 CreateAltContactPMatrix <- function(graph, movement_period) {
-
-  # Convert the contact network to a matrix, recording the number of movements that occur between sites
+  # get adjacency matrix of movements between sites from contact network (graph)
   matrix_movements <- igraph::get.adjacency(graph, attr = "movements", names = TRUE)
 
-  # Divide the number of movements by the time over which information was collected
+  # divide number of movements by the time over which movement information was collected
   matrix_movements_prob <- matrix_movements/movement_period
   ######## This is to initiate national standstill - i.e. no movements will be allowed if there are certain number of infection in the system
   #matrix_movements_prob <- matrix_movements/movement_period*0
 
-  # If there are any contacts with a probability of greater than one, assume a probability of one
+  # if there are any contacts with a probability of greater than one, assume a probability of one
   matrix_movements_prob[matrix_movements_prob > 1] <- 1
 
-  # Check the final number of sites represented within the model
+  # extract number of sites represented within the model
   n_sites <- length(matrix_movements_prob[, 1])
 
-  # Calculate no. of outward movements per a site
+  # calculate number of inward and outward movements per a site
   outwardMovementsPerSite <- rowSums(matrix_movements)
-  # Calculate the number of inwared movements per site
   inwardMovementsPerSite <- rowSums(t(matrix_movements))
 
-
-  # Extract a list of sites whose movements are greater than the 95th quantile
+  # extract sites whose movements are greater than the 95th quantile
   InsitesGreaterQuantile <- names(inwardMovementsPerSite)[inwardMovementsPerSite > quantile(inwardMovementsPerSite, .992)]
 
-  # Zero any contacts which originate from sites within the 95th quantile
-  matrix_movements_prob[sitesGreaterQuantile,] <- 0
-  matrix_movements_prob[InsitesGreaterQuantile,] <- 0
+  # zero any contacts which originate from sites within the 95th quantile
+  matrix_movements_prob[sitesGreaterQuantile, ] <- 0
+  matrix_movements_prob[InsitesGreaterQuantile, ] <- 0
 
   return(list(n_sites, movement_period, matrix_movements_prob))
 }
