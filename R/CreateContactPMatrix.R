@@ -1,3 +1,14 @@
+#' createContactProbabilityMatrix
+#'
+#' Use the connectivity matrix (`graph`) to extract a movement matrix. Calculate the probability of movement/contact between sites by dividing the number of movements by dividing by the period of time (in days) for which movement information was used (`movement_period`). Then, determine the number of sites present in the contact probability matrix. Return these three values as a list.
+#'
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
+#' @param movement_period (class numeric) The period of time (in days) for which movement data (live fish movements and section 30 movements) were collected and used to create `graph` parameter.
+#'
+#' @return (class list) of length 3 containing (1) number of sites in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3) probability of movements matrix (dgTMatrix, Matrix package).
+#'
+#' @importFrom igraph get.adjacency
+#' @importFrom methods as
 createContactProbabilityMatrix <- function(graph, movement_period) {
   # get sparse adjacency matrix of movements between sites from contact network (graph)
   matrix_movements <- igraph::get.adjacency(graph,
