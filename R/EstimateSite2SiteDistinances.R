@@ -12,11 +12,11 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
   dimnames(site_catchments_distances) <- list(site_catchments@data$siteID, site_catchments@data$siteID)
 
   # Reorder matrix, so that it is in the same order as the contact matrix
-  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))
-  ListSiteLocations.withCatchment.distance.reordered <- site_catchments_distances[graph.siteID.order, graph.siteID.order]
+  site_order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))
+  ListSiteLocations.withCatchment.distance.reordered <- site_catchments_distances[site_order, site_order]
 
   # Exclude self-loops and ignore any distances longer than 5000m
-  ListSiteLocations.withCatchment.distance.reordered[cbind(graph.siteID.order,graph.siteID.order)] <- 0
+  ListSiteLocations.withCatchment.distance.reordered[cbind(site_order,site_order)] <- 0
   ListSiteLocations.withCatchment.distance.reordered[ListSiteLocations.withCatchment.distance.reordered > 5000] <- 0
 
   # Calculate probability of transmission, based on distance
