@@ -1,3 +1,12 @@
+#' createFarmVector
+#'
+#' Use the connectivity matrix as input to return a numeric vector indicating which sites are of type "Farm".
+#'
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
+#'
+#' @return (class numeric) vector of length 'number of sites in the connectivity matrix' containing 1's depicting sites that are of type "Farm" and 0's for all other site types.
+#'
+#' @importFrom igraph V
 createFarmVector <- function(graph) {
   # extract site type from sites in connectivity matrix
   site_type <- igraph::V(graph)$type
