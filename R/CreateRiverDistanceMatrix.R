@@ -1,5 +1,5 @@
 CreateRiverDistanceMatrix <- function(filepath_river_distances, graph.contactp.objects, params_model_setup) {
-  # List of sites, in the same order as the adjacency matrix
+  # create vector of sites in the same order as the adjacency matrix
   graph.contactp.listSites <- as.numeric(graph.contactp.objects[[3]]@Dimnames[[1]])
 
   # Store the number of sites in the contactp matrix
@@ -28,11 +28,11 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, graph.contactp.o
 
   # Express each site as a factor
   # Levels are assigned based on the site's position within the original adjacency matrix
-  riverDistance.table.noZeros.edgeList$Origin.SiteID =
+  riverDistance.table.noZeros.edgeList$Origin.SiteID <-
     factor(x = riverDistance.table.noZeros.edgeList$Origin.SiteID,
            levels = graph.contactp.listSites)
 
-  riverDistance.table.noZeros.edgeList$Dest.SiteID =
+  riverDistance.table.noZeros.edgeList$Dest.SiteID <-
     factor(x = riverDistance.table.noZeros.edgeList$Dest.SiteID,
            levels = graph.contactp.listSites)
 
