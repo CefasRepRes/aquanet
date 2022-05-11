@@ -8,12 +8,12 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
   sp::proj4string(site_catchments) <- sp::CRS(britishNationalGrid)
 
   # create a distance matrix (assign correct col and row names)
-  site_catchments_distances <- sp::spDists(site_catchments)
-  dimnames(site_catchments_distances) <- list(site_catchments@data$siteID, site_catchments@data$siteID)
+  matrix_distances <- sp::spDists(site_catchments)
+  dimnames(matrix_distances) <- list(site_catchments@data$siteID, site_catchments@data$siteID)
 
   # reorder distance matrix, so that it is in the same order as the contact matrix
   site_order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))
-  site_catchment_distances_order <- site_catchments_distances[site_order, site_order]
+  site_catchment_distances_order <- matrix_distances[site_order, site_order]
 
   # exclude self-loops and ignore any distances longer than 5000 m
   site_catchment_distances_order[cbind(site_order, site_order)] <- 0
