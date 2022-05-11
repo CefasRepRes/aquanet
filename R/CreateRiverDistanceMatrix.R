@@ -1,4 +1,4 @@
-CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.objects, ListModelSetupParameters) {
+CreateRiverDistanceMatrix <- function(filepath_river_distances, graph.contactp.objects, ListModelSetupParameters) {
   # List of sites, in the same order as the adjacency matrix
   graph.contactp.listSites <- as.numeric(graph.contactp.objects[[3]]@Dimnames[[1]])
 
@@ -9,7 +9,7 @@ CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.obj
   River.Transmission_Current_Speed <- as.numeric(ListModelSetupParameters[c('River.Downstream.Current_speed','River.UpDownstream.Current_speed')])
 
   # Import the table of site to site distances, through the river network
-  riverDistance.table <- read.csv(file = riverDistance.fileName, stringsAsFactors = FALSE)
+  riverDistance.table <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)
 
   riverDistance.table$Origin.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "^[0-9]+"))
   riverDistance.table$Dest.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "[0-9]+$"))
