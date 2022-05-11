@@ -4,8 +4,8 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
 
   # Import the list of site locations, and assign the correct spatial projection system
   ListSiteLocations.withCatchment <- read.csv(filename_site_catchments, header = TRUE)
-  coordinates(ListSiteLocations.withCatchment) <- c('easting','northing')
-  proj4string(ListSiteLocations.withCatchment) <- sp::CRS(britishNationalGrid)
+  sp::coordinates(ListSiteLocations.withCatchment) <- c('easting','northing')
+  sp::proj4string(ListSiteLocations.withCatchment) <- sp::CRS(britishNationalGrid)
 
   # Create a distance matrix
   ListSiteLocations.withCatchment.distance <- sp::spDists(ListSiteLocations.withCatchment)
