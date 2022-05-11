@@ -16,4 +16,5 @@ Imports:
     igraph,
     Matrix,
     methods,
-    rgdal
+    rgdal,
+    sp
