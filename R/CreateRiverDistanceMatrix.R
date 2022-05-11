@@ -1,4 +1,4 @@
-CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.objects, ListModelSetupParameters, TypeRiverTransmission) {
+CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.objects, ListModelSetupParameters) {
   # List of sites, in the same order as the adjacency matrix
   graph.contactp.listSites <- as.numeric(graph.contactp.objects[[3]]@Dimnames[[1]])
 
