@@ -3,7 +3,7 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   vector_sites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
 
   # Store the number of sites in the contactp matrix
-  contactp.length <- out_createContactProbabilityMatrix[[1]]
+  n_sites <- out_createContactProbabilityMatrix[[1]]
 
   # Import the table of site to site distances, through the river network
   riverDistance.table <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)
@@ -42,8 +42,8 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
 
   # Create an empty matrix, to store distances between sites, along the river
   riverDistance.matrix <- Matrix::Matrix(data = 0,
-                                nrow = contactp.length,
-                                ncol = contactp.length,
+                                nrow = n_sites,
+                                ncol = n_sites,
                                 dimnames = list(as.character(vector_sites),
                                                 as.character(vector_sites)))
 
