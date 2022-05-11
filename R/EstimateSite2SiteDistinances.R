@@ -1,4 +1,4 @@
-CreateDistanceMatrix <- function(graph_full, siteLocationsWithCatchment.fileName, ListModelSetupParameters) {
+CreateDistanceMatrix <- function(graph, siteLocationsWithCatchment.fileName, ListModelSetupParameters) {
   # Define the British National Grid Referencing System, using Proj4 notation
   britishNationalGrid <- '+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs'
   siteLocationsWithCatchment.fileName <- siteLocationsWithCatchmentDuplicatesRemoved.fileName
@@ -12,7 +12,7 @@ CreateDistanceMatrix <- function(graph_full, siteLocationsWithCatchment.fileName
   dimnames(ListSiteLocations.withCatchment.distance) <- list(ListSiteLocations.withCatchment@data$siteID, ListSiteLocations.withCatchment@data$siteID)
 
   # Reorder matrix, so that it is in the same order as the contact matrix
-  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph_full, name = "siteID",index = V(graph_full))
+  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID",index = V(graph))
   ListSiteLocations.withCatchment.distance.reordered <- ListSiteLocations.withCatchment.distance[graph.siteID.order, graph.siteID.order]
 
   # Exclude self-loops and ignore any distances longer than 5000m
