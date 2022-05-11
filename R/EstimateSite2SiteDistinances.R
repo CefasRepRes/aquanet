@@ -12,7 +12,7 @@ CreateDistanceMatrix <- function(graph, siteLocationsWithCatchment.fileName, Lis
   dimnames(ListSiteLocations.withCatchment.distance) <- list(ListSiteLocations.withCatchment@data$siteID, ListSiteLocations.withCatchment@data$siteID)
 
   # Reorder matrix, so that it is in the same order as the contact matrix
-  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID",index = V(graph))
+  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID",index = igraph::V(graph))
   ListSiteLocations.withCatchment.distance.reordered <- ListSiteLocations.withCatchment.distance[graph.siteID.order, graph.siteID.order]
 
   # Exclude self-loops and ignore any distances longer than 5000m
