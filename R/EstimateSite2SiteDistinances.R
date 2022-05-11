@@ -5,14 +5,14 @@ CreateDistanceMatrix <- function(graph_full, siteLocationsWithCatchment.fileName
   # Import the list of site locations, and assign the correct spatial projection system
   ListSiteLocations.withCatchment <- read.csv(siteLocationsWithCatchment.fileName, header = TRUE)
   coordinates(ListSiteLocations.withCatchment) <- c('easting','northing')
-  proj4string(ListSiteLocations.withCatchment) <- CRS(britishNationalGrid)
+  proj4string(ListSiteLocations.withCatchment) <- sp::CRS(britishNationalGrid)
 
   # Create a distance matrix
-  ListSiteLocations.withCatchment.distance <- spDists(ListSiteLocations.withCatchment)
+  ListSiteLocations.withCatchment.distance <- sp::spDists(ListSiteLocations.withCatchment)
   dimnames(ListSiteLocations.withCatchment.distance) <- list(ListSiteLocations.withCatchment@data$siteID, ListSiteLocations.withCatchment@data$siteID)
 
   # Reorder matrix, so that it is in the same order as the contact matrix
-  graph.siteID.order <- get.vertex.attribute(graph = graph_full, name = "siteID",index = V(graph_full))
+  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph_full, name = "siteID",index = V(graph_full))
   ListSiteLocations.withCatchment.distance.reordered <- ListSiteLocations.withCatchment.distance[graph.siteID.order, graph.siteID.order]
 
   # Exclude self-loops and ignore any distances longer than 5000m
@@ -24,7 +24,7 @@ CreateDistanceMatrix <- function(graph_full, siteLocationsWithCatchment.fileName
   ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered < 0, 0, ListSiteLocations.withCatchment.probability.reordered)
   ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered == 0.005, 0, ListSiteLocations.withCatchment.probability.reordered)
 
-  ListSiteLocations.withCatchment.probability.reordered <- as(ListSiteLocations.withCatchment.probability.reordered, "dgTMatrix")
+  ListSiteLocations.withCatchment.probability.reordered <- methods::as(ListSiteLocations.withCatchment.probability.reordered, "dgTMatrix")
 
   return(list(ListSiteLocations.withCatchment.distance.reordered, ListSiteLocations.withCatchment.probability.reordered, ListSiteLocations.withCatchment))
 }
