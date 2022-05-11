@@ -1,6 +1,6 @@
 CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix, params_model_setup) {
   # create vector of sites in the same order as the adjacency matrix
-  graph.contactp.listSites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
+  vector_sites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
 
   # Store the number of sites in the contactp matrix
   contactp.length <- out_createContactProbabilityMatrix[[1]]
@@ -14,7 +14,7 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   riverDistance.table$Origin.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "^[0-9]+"))
   riverDistance.table$Dest.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "[0-9]+$"))
 
-  riverDistance.table <- subset(riverDistance.table, Origin.SiteID %in% as.character(graph.contactp.listSites) & Dest.SiteID %in% as.character(graph.contactp.listSites))
+  riverDistance.table <- subset(riverDistance.table, Origin.SiteID %in% as.character(vector_sites) & Dest.SiteID %in% as.character(vector_sites))
 
   # Exclude site to site distances, where the distance is zero
   riverDistance.table.noZeros <- riverDistance.table[riverDistance.table$Total_Length > 0,]
@@ -30,11 +30,11 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   # Levels are assigned based on the site's position within the original adjacency matrix
   riverDistance.table.noZeros.edgeList$Origin.SiteID <-
     factor(x = riverDistance.table.noZeros.edgeList$Origin.SiteID,
-           levels = graph.contactp.listSites)
+           levels = vector_sites)
 
   riverDistance.table.noZeros.edgeList$Dest.SiteID <-
     factor(x = riverDistance.table.noZeros.edgeList$Dest.SiteID,
-           levels = graph.contactp.listSites)
+           levels = vector_sites)
 
   # Create an edge list, where each site is expressed in terms of it's position, within the original adjacency matrix
   riverDistance.table.noZeros.edgeList$Origin.Matrix.Pos <-
@@ -47,8 +47,8 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   riverDistance.matrix <- Matrix::Matrix(data = 0,
                                 nrow = contactp.length,
                                 ncol = contactp.length,
-                                dimnames = list(as.character(graph.contactp.listSites),
-                                                as.character(graph.contactp.listSites)))
+                                dimnames = list(as.character(vector_sites),
+                                                as.character(vector_sites)))
 
   # Identify positions within the matrix which correspond to contacts, and identify the contacts with '1'
   riverDistance.matrix[cbind(riverDistance.table.noZeros.edgeList$Origin.Matrix.Pos,
