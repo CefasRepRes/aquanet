@@ -54,7 +54,7 @@ CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.obj
   riverDistance.matrix[cbind(riverDistance.table.noZeros.edgeList$Origin.Matrix.Pos,
                              riverDistance.table.noZeros.edgeList$Dest.Matrix.Pos)] <- riverDistance.table.noZeros$calcProb
 
-  riverDistance.matrix <- as(riverDistance.matrix, 'dgTMatrix')
+  riverDistance.matrix <- methods::as(riverDistance.matrix, 'dgTMatrix')
 
   return(list(riverDistance.table.noZeros, riverDistance.matrix))
 }
