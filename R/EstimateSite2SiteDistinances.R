@@ -20,12 +20,12 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
   site_catchment_distances_order[site_catchment_distances_order > 5000] <- 0
 
   # calculate probability of transmission, based on distance, if less than 0 or equal to 0.005 reassign as 0
-  ListSiteLocations.withCatchment.probability.reordered <- 0.005 * exp(-(site_catchment_distances_order)^2 * 0.000001)
-  ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered < 0, 0, ListSiteLocations.withCatchment.probability.reordered)
-  ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered == 0.005, 0, ListSiteLocations.withCatchment.probability.reordered)
-  ListSiteLocations.withCatchment.probability.reordered <- methods::as(ListSiteLocations.withCatchment.probability.reordered, "dgTMatrix")
+  matrix_distances_probability <- 0.005 * exp(-(site_catchment_distances_order)^2 * 0.000001)
+  matrix_distances_probability <- ifelse(matrix_distances_probability < 0, 0, matrix_distances_probability)
+  matrix_distances_probability <- ifelse(matrix_distances_probability == 0.005, 0, matrix_distances_probability)
+  matrix_distances_probability <- methods::as(matrix_distances_probability, "dgTMatrix")
 
   # return list containing (1) site to site distances, (2) probability of transmission by distance,
   # and (3) data frame of site catchment information.
-  return(list(site_catchment_distances_order, ListSiteLocations.withCatchment.probability.reordered, site_catchments))
+  return(list(site_catchment_distances_order, matrix_distances_probability, site_catchments))
 }
