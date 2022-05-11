@@ -4,7 +4,7 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
 
   # Import the list of site locations, and assign the correct spatial projection system
   site_catchments <- read.csv(filename_site_catchments, header = TRUE)
-  sp::coordinates(site_catchments) <- c('easting','northing')
+  sp::coordinates(site_catchments) <- c('easting', 'northing')
   sp::proj4string(site_catchments) <- sp::CRS(britishNationalGrid)
 
   # Create a distance matrix
@@ -12,15 +12,15 @@ CreateDistanceMatrix <- function(graph, filename_site_catchments) {
   dimnames(ListSiteLocations.withCatchment.distance) <- list(site_catchments@data$siteID, site_catchments@data$siteID)
 
   # Reorder matrix, so that it is in the same order as the contact matrix
-  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID",index = igraph::V(graph))
+  graph.siteID.order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))
   ListSiteLocations.withCatchment.distance.reordered <- ListSiteLocations.withCatchment.distance[graph.siteID.order, graph.siteID.order]
 
   # Exclude self-loops and ignore any distances longer than 5000m
   ListSiteLocations.withCatchment.distance.reordered[cbind(graph.siteID.order,graph.siteID.order)] <- 0
-  ListSiteLocations.withCatchment.distance.reordered[ListSiteLocations.withCatchment.distance.reordered > 5000] <- 0 ####
+  ListSiteLocations.withCatchment.distance.reordered[ListSiteLocations.withCatchment.distance.reordered > 5000] <- 0
 
   # Calculate probability of transmission, based on distance
-  ListSiteLocations.withCatchment.probability.reordered <- 0.005*exp(-(ListSiteLocations.withCatchment.distance.reordered)^2*0.000001)
+  ListSiteLocations.withCatchment.probability.reordered <- 0.005 * exp(-(ListSiteLocations.withCatchment.distance.reordered)^2 * 0.000001)
   ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered < 0, 0, ListSiteLocations.withCatchment.probability.reordered)
   ListSiteLocations.withCatchment.probability.reordered <- ifelse(ListSiteLocations.withCatchment.probability.reordered == 0.005, 0, ListSiteLocations.withCatchment.probability.reordered)
 
