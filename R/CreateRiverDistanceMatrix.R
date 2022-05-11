@@ -44,7 +44,7 @@ CreateRiverDistanceMatrix <- function(riverDistance.fileName, graph.contactp.obj
     as.numeric(riverDistance.table.noZeros.edgeList$Dest.SiteID)
 
   # Create an empty matrix, to store distances between sites, along the river
-  riverDistance.matrix <- Matrix(data = 0,
+  riverDistance.matrix <- Matrix::Matrix(data = 0,
                                 nrow = contactp.length,
                                 ncol = contactp.length,
                                 dimnames = list(as.character(graph.contactp.listSites),
