@@ -1,4 +1,4 @@
-CreateFarmVector <- function(graph) {
+createFarmVector <- function(graph) {
   # extract site type from sites in connectivity matrix
   site_type <- igraph::V(graph)$type
 
