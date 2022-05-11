@@ -6,15 +6,15 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   n_sites <- out_createContactProbabilityMatrix[[1]]
 
   # Import the table of site to site distances, through the river network
-  riverDistance.table <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)
+  river_distances <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)
 
-  riverDistance.table$Origin.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "^[0-9]+"))
-  riverDistance.table$Dest.SiteID <- regmatches(x = riverDistance.table$Name, m = regexpr(perl = TRUE, text = riverDistance.table$Name, pattern = "[0-9]+$"))
+  river_distances$Origin.SiteID <- regmatches(x = river_distances$Name, m = regexpr(perl = TRUE, text = river_distances$Name, pattern = "^[0-9]+"))
+  river_distances$Dest.SiteID <- regmatches(x = river_distances$Name, m = regexpr(perl = TRUE, text = river_distances$Name, pattern = "[0-9]+$"))
 
-  riverDistance.table <- subset(riverDistance.table, Origin.SiteID %in% as.character(vector_sites) & Dest.SiteID %in% as.character(vector_sites))
+  river_distances <- subset(river_distances, Origin.SiteID %in% as.character(vector_sites) & Dest.SiteID %in% as.character(vector_sites))
 
   # Exclude site to site distances, where the distance is zero
-  riverDistance.table.noZeros <- riverDistance.table[riverDistance.table$Total_Length > 0,]
+  riverDistance.table.noZeros <- river_distances[river_distances$Total_Length > 0,]
 
   riverDistance.table.noZeros$calcProb <- (0.005 * ((40 - (riverDistance.table.noZeros$Total_Length / 1000))/39))
   riverDistance.table.noZeros$calcProb <- ifelse(riverDistance.table.noZeros$calcProb < 0, 0, riverDistance.table.noZeros$calcProb)
