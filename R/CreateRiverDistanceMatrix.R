@@ -1,9 +1,9 @@
-CreateRiverDistanceMatrix <- function(filepath_river_distances, graph.contactp.objects, params_model_setup) {
+CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix, params_model_setup) {
   # create vector of sites in the same order as the adjacency matrix
-  graph.contactp.listSites <- as.numeric(graph.contactp.objects[[3]]@Dimnames[[1]])
+  graph.contactp.listSites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
 
   # Store the number of sites in the contactp matrix
-  contactp.length <- graph.contactp.objects[[1]]
+  contactp.length <- out_createContactProbabilityMatrix[[1]]
 
   River.Transmission_Const <- 1 / as.numeric(params_model_setup[c('River.Downstream_Transmission_Const','River.UpDownstream_Transmission_Const')])
   River.Transmission_Current_Speed <- as.numeric(params_model_setup[c('River.Downstream.Current_speed','River.UpDownstream.Current_speed')])
