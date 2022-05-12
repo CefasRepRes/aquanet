@@ -16,14 +16,14 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   river_distances <- subset(river_distances, Origin.SiteID %in% as.character(vector_sites) & Dest.SiteID %in% as.character(vector_sites))
 
   # remove site to site distances where the distance is zero
-  riverDistance.table.noZeros <- river_distances[river_distances$Total_Length > 0,]
+  river_distances_rm0 <- river_distances[river_distances$Total_Length > 0,]
 
   # convert site to site river distances to probabilities correcting for probabilities below zero
-  riverDistance.table.noZeros$calcProb <- (0.005 * ((40 - (riverDistance.table.noZeros$Total_Length / 1000))/39))
-  riverDistance.table.noZeros$calcProb <- ifelse(riverDistance.table.noZeros$calcProb < 0, 0, riverDistance.table.noZeros$calcProb)
+  river_distances_rm0$calcProb <- (0.005 * ((40 - (river_distances_rm0$Total_Length / 1000))/39))
+  river_distances_rm0$calcProb <- ifelse(river_distances_rm0$calcProb < 0, 0, river_distances_rm0$calcProb)
 
   # extract only origin and destination sites from river distances
-  riverDistance.table.noZeros.edgeList <- riverDistance.table.noZeros[ ,c("Origin.SiteID", "Dest.SiteID")]
+  riverDistance.table.noZeros.edgeList <- river_distances_rm0[ ,c("Origin.SiteID", "Dest.SiteID")]
 
   # express each siteID as a factor
   # levels assigned based on the site's position within the original contact matrix
@@ -46,9 +46,9 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
 
   # Identify positions within the matrix which correspond to contacts, and identify the contacts with '1'
   riverDistance.matrix[cbind(riverDistance.table.noZeros.edgeList$Origin.Matrix.Pos,
-                             riverDistance.table.noZeros.edgeList$Dest.Matrix.Pos)] <- riverDistance.table.noZeros$calcProb
+                             riverDistance.table.noZeros.edgeList$Dest.Matrix.Pos)] <- river_distances_rm0$calcProb
 
   riverDistance.matrix <- methods::as(riverDistance.matrix, 'dgTMatrix')
 
-  return(list(riverDistance.table.noZeros, riverDistance.matrix))
+  return(list(river_distances_rm0, riverDistance.matrix))
 }
