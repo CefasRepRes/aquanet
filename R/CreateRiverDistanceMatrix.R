@@ -60,9 +60,6 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   riverDistance.matrix[cbind(river_distances_rm0_edges$Origin.Matrix.Pos,
                              river_distances_rm0_edges$Dest.Matrix.Pos)] <- river_distances_rm0$calcProb
 
-  # convert river distance matrix to dgTMatrix
-  riverDistance.matrix <- methods::as(riverDistance.matrix, 'dgTMatrix')
-
   # return list containing (1) data frame of river distances and
   # (2) river transmission probability matrix
   return(list(river_distances_rm0, riverDistance.matrix))
