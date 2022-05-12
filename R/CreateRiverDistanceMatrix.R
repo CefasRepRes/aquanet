@@ -1,4 +1,4 @@
-CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix) {
+createRiverDistanceProbabilityMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix) {
   # create vector of sites in the same order as the adjacency matrix
   vector_sites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
 
