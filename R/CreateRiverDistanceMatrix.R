@@ -50,17 +50,17 @@ CreateRiverDistanceMatrix <- function(filepath_river_distances, out_createContac
   river_distances_rm0_edges$Dest.Matrix.Pos <- as.numeric(river_distances_rm0_edges$Dest.SiteID)
 
   # create empty matrix to store river distances between sites
-  riverDistance.matrix <- Matrix::Matrix(data = 0,
+  matrix_river_distances_prob <- Matrix::Matrix(data = 0,
                                          nrow = n_sites,
                                          ncol = n_sites,
                                          dimnames = list(as.character(vector_sites),
                                                          as.character(vector_sites)))
 
   # insert site to site transmission probabilities via river to the matrix
-  riverDistance.matrix[cbind(river_distances_rm0_edges$Origin.Matrix.Pos,
+  matrix_river_distances_prob[cbind(river_distances_rm0_edges$Origin.Matrix.Pos,
                              river_distances_rm0_edges$Dest.Matrix.Pos)] <- river_distances_rm0$calcProb
 
   # return list containing (1) data frame of river distances and
   # (2) river transmission probability matrix
-  return(list(river_distances_rm0, riverDistance.matrix))
+  return(list(river_distances_rm0, matrix_river_distances_prob))
 }
