@@ -44,8 +44,8 @@ createRiverDistanceProbabilityMatrix <- function(filepath_river_distances, out_c
 
   # retain only site to site distances where both the origin and destination site ID are present in the contact probability matrix
   river_distances <- subset(river_distances,
-                            Origin.SiteID %in% as.character(vector_sites) &
-                              Dest.SiteID %in% as.character(vector_sites))
+                            river_distances$Origin.SiteID %in% as.character(vector_sites) &
+                              river_distances$Dest.SiteID %in% as.character(vector_sites))
 
   # remove site to site distances where the distance is zero
   river_distances_rm0 <- river_distances[river_distances$Total_Length > 0, ]
