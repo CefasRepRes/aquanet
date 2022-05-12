@@ -7,6 +7,8 @@
 #'
 #' @return (class list) of length 3 containing (1) number of sites in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3) probability of movements matrix (dgTMatrix, Matrix package).
 #'
+#' @export
+#'
 #' @importFrom igraph get.adjacency
 #' @importFrom methods as
 createContactProbabilityMatrix <- function(graph, movement_period) {
@@ -41,7 +43,9 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #' @param movement_period (class numeric) The period of time (in days) for which movement data (live fish movements and section 30 movements) were collected and used to create `graph` parameter.
 #'
 #' @return (class list) of length 3 containing (1) number of sites in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3) probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).
-
+#'
+#' @export
+#'
 #' @importFrom igraph get.adjacency
 #' @importFrom stats quantile
 createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period) {

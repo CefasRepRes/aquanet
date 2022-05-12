@@ -5,6 +5,8 @@
 #'
 #' @return (class data frame) Data frame containing metadata extracted from the sit connectivity matrix produced with igraph and site location and catchment information.
 #'
+#' @export
+#'
 #' @importFrom utils read.csv
 #' @importFrom igraph V
 mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments) {

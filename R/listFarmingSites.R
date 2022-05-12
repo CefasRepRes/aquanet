@@ -6,6 +6,8 @@
 #'
 #' @return (class numeric) vector of length 'number of sites in the connectivity matrix' containing 1's depicting sites that are of type "Farm" and 0's for all other site types.
 #'
+#' @export
+#'
 #' @importFrom igraph V
 createFarmVector <- function(graph) {
   # extract site type from sites in connectivity matrix

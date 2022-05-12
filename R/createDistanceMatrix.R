@@ -7,6 +7,8 @@
 #'
 #' @return  (class list) of length 3 containing (1) a matrix of site to site distances (class matrix array), (2) a matrix of distance-based transmission probabilities (dgTMatrix, Matrix package), and (3) input data frame of site catchment locality (SpatialPointsDataFrame, sp package).
 #'
+#' @export
+#'
 #' @importFrom utils read.csv
 #' @importFrom sp CRS coordinates proj4string spDists
 #' @importFrom igraph V get.vertex.attribute

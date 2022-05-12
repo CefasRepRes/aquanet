@@ -17,6 +17,8 @@
 #'
 #' @return (class list) of length 2 containing (1) distances between sites on a river network (via river connectivity) connections of 0 distances are removed (data frame) and (2) sparse matrix containing probability of transmission between sites connected via the river network by river water (dgTMatrix)
 #'
+#' @export
+#'
 #' @importFrom utils read.csv
 #' @importFrom Matrix Matrix
 #'

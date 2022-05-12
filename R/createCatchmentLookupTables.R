@@ -7,6 +7,8 @@
 #'
 #' @return (class list) of length 2 containing (1) data frame of site to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
+#' @export
+#'
 #' @importFrom igraph get.vertex.attribute V
 #' @importFrom rgdal readOGR
 #' @importFrom stats model.matrix
@@ -66,6 +68,8 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
 #' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
 #'
 #' @return (class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of source site and receiving site within catchment edges.
+#'
+#' @export
 #'
 #' @importFrom igraph get.adjacency get.edges E
 createWithinCatchmentEdgesMatrix <- function(graph) {
