@@ -1,9 +1,14 @@
 #' mergeGraphMetaWithCatchmentLocation
 #'
-#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
-#' @param filename_sites_catchments (class string) String containing the file path and file name for .csv containing information about site location (easting and northing) and which catchment each site resides in.
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
+#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' Section 30 movements.
+#' @param filename_sites_catchments (class string) String containing the file path and file name for
+#'  .csv containing information about site location (easting and northing) and which catchment each
+#'  site resides in.
 #'
-#' @return (class data frame) Data frame containing metadata extracted from the sit connectivity matrix produced with igraph and site location and catchment information.
+#' @return (class data frame) Data frame containing metadata extracted from the sit connectivity
+#' matrix produced with igraph and site location and catchment information.
 #'
 #' @export
 #'

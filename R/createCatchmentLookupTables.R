@@ -1,11 +1,19 @@
 #' createCatchmentToSiteMatrix
 #'
-#' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data (.shp). This produced list output 1 which which maps site to catchment. To produce list output 2, convert the catchment (columns) to site (rows) information to a sparse matrix. Note: ensure that the order of sites matches that included within the contact matrix.
+#' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
+#' catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data
+#' (.shp). This produced list output 1 which which maps site to catchment. To produce list output 2,
+#' convert the catchment (columns) to site (rows) information to a sparse matrix. Note: ensure that
+#'  the order of sites matches that included within the contact matrix.
 #'
-#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
-#' @param filename_catchment_layer (class string) String containing the file path and file name for .shp file containing catchment information.
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
+#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' Section 30 movements.
+#' @param filename_catchment_layer (class string) String containing the file path and file name for
+#' .shp file containing catchment information.
 #'
-#' @return (class list) of length 2 containing (1) data frame of site to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
+#' @return (class list) of length 2 containing (1) data frame of site to catchment information and
+#' (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
 #' @export
 #'
@@ -63,11 +71,17 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
 
 #' createWithinCatchmentEdgesMatrix
 #'
-#' Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical matrix of within catchment connections, a matrix of within catchment edges and a matrix of within catchment edges by source (column 1) and receiving (column2) site ID.
+#' Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical
+#' matrix of within catchment connections, a matrix of within catchment edges and a matrix of within
+#'  catchment edges by source (column 1) and receiving (column2) site ID.
 #'
-#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.
+#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
+#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' Section 30 movements.
 #'
-#' @return (class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of source site and receiving site within catchment edges.
+#' @return (class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within
+#' catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of
+#' source site and receiving site within catchment edges.
 #'
 #' @export
 #'

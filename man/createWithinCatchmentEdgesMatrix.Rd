@@ -7,11 +7,17 @@
 createWithinCatchmentEdgesMatrix(graph)
 }
 \arguments{
-\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.}
+\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
+(using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+Section 30 movements.}
 }
 \value{
-(class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of source site and receiving site within catchment edges.
+(class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within
+catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of
+source site and receiving site within catchment edges.
 }
 \description{
-Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical matrix of within catchment connections, a matrix of within catchment edges and a matrix of within catchment edges by source (column 1) and receiving (column2) site ID.
+Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical
+matrix of within catchment connections, a matrix of within catchment edges and a matrix of within
+catchment edges by source (column 1) and receiving (column2) site ID.
 }

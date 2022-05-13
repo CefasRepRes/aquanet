@@ -7,11 +7,15 @@
 createFarmVector(graph)
 }
 \arguments{
-\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.}
+\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
+(using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+Section 30 movements.}
 }
 \value{
-(class numeric) vector of length 'number of sites in the connectivity matrix' containing 1's depicting sites that are of type "Farm" and 0's for all other site types.
+(class numeric) vector of length 'number of sites in the connectivity matrix' containing
+1's depicting sites that are of type "Farm" and 0's for all other site types.
 }
 \description{
-Use the connectivity matrix as input to return a numeric vector indicating which sites are of type "Farm".
+Use the connectivity matrix as input to return a numeric vector indicating which sites are of
+type "Farm".
 }

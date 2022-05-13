@@ -12,10 +12,17 @@
 #'  The resulting list contains (1) the river distance data frame used and (2) a river distance
 #' transmission probability sparse matrix.
 #'
-#' @param filepath_river_distances (class string) String containing the file path and file name for .csv containing information about distances between sites via river network proximity and connectivity generated with GIS tool.
-#' @param out_createContactProbabilityMatrix (class list) of length 3 containing (1) number of sites in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3) probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).
+#' @param filepath_river_distances (class string) String containing the file path and file name for
+#' .csv containing information about distances between sites via river network proximity and
+#' connectivity generated with GIS tool.
+#' @param out_createContactProbabilityMatrix (class list) of length 3 containing (1) number of sites
+#'  in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3)
+#'  probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).
 #'
-#' @return (class list) of length 2 containing (1) distances between sites on a river network (via river connectivity) connections of 0 distances are removed (data frame) and (2) sparse matrix containing probability of transmission between sites connected via the river network by river water (dgTMatrix)
+#' @return (class list) of length 2 containing (1) distances between sites on a river network (via
+#' river connectivity) connections of 0 distances are removed (data frame) and (2) sparse matrix
+#' containing probability of transmission between sites connected via the river network by river
+#' water (dgTMatrix)
 #'
 #' @export
 #'

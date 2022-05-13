@@ -7,12 +7,17 @@
 mergeGraphMetaWithCatchmentLocation(graph, filename_sites_catchments)
 }
 \arguments{
-\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and Section 30 movements.}
+\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
+(using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+Section 30 movements.}
 
-\item{filename_sites_catchments}{(class string) String containing the file path and file name for .csv containing information about site location (easting and northing) and which catchment each site resides in.}
+\item{filename_sites_catchments}{(class string) String containing the file path and file name for
+.csv containing information about site location (easting and northing) and which catchment each
+site resides in.}
 }
 \value{
-(class data frame) Data frame containing metadata extracted from the sit connectivity matrix produced with igraph and site location and catchment information.
+(class data frame) Data frame containing metadata extracted from the sit connectivity
+matrix produced with igraph and site location and catchment information.
 }
 \description{
 mergeGraphMetaWithCatchmentLocation
