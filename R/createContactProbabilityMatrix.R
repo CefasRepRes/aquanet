@@ -67,6 +67,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #'
 #' @importFrom igraph get.adjacency
 #' @importFrom stats quantile
+#' @importFrom Matrix rowSums colSums
 createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period) {
   # get adjacency matrix of movements between sites from contact network (graph)
   matrix_movements <- igraph::get.adjacency(graph, attr = "movements", names = TRUE)
@@ -81,8 +82,8 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period
   n_sites <- length(matrix_movements_prob[, 1])
 
   # calculate number of inward and outward movements per a site
-  out_per_site <- rowSums(matrix_movements)
-  in_per_site <- colSums(matrix_movements)
+  out_per_site <- Matrix::rowSums(matrix_movements)
+  in_per_site <- Matrix::colSums(matrix_movements)
 
   # extract sites whose movements are greater than the 95th quantile
   out_sites_quantile = names(out_per_site)[out_per_site > quantile(out_per_site, 0.95)]
