@@ -2,10 +2,21 @@ Package: aquanet
 Title: Functions to Execute AquaNet-Mod (The Aquaculture Disease Network Model)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Rebecca",
-           family = "Millard",
-           email = "rebecca.millard@cefas.co.uk",
-           role = c("aut", "cre"))
+    c(person(given = "Rebecca",
+             family = "Millard",
+             email = "rebecca.millard@cefas.co.uk",
+             role = c("aut", "cre")),
+      person(given = "Sarah",
+             family = "Alewijnse",
+             email = "sarah.alewijnse@cefas.co.uk"",
+             role = "aut"),
+      person(given = "David",
+             family = "Ryder",
+             email = "david.ryder@cefas.co.uk"",
+             role = "aut"),
+      person(given = "James",
+             family = "Guilder",
+             role = "aut"))
 Description: A collection of functions required to process input data and run simulations for AquaNet-Mod (The Aquaculture Disease Network Model).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
