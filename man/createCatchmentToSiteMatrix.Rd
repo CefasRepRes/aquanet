@@ -2,9 +2,9 @@
 % Please edit documentation in R/createCatchmentLookupTables.R
 \name{createCatchmentToSiteMatrix}
 \alias{createCatchmentToSiteMatrix}
-\title{createCatchmentToSiteMatrix}
+\title{createCatchmentToSiteMatrix2}
 \usage{
-createCatchmentToSiteMatrix(graph, filename_catchment_layer)
+createCatchmentToSiteMatrix(graph, filename_catchment_layer, crs_epsg)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
@@ -13,6 +13,9 @@ Section 30 movements.}
 
 \item{filename_catchment_layer}{(class string) String containing the file path and file name for
 .shp file containing catchment information.}
+
+\item{crs_epsg}{(class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
+to use for projecting the data.}
 }
 \value{
 (class list) of length 2 containing (1) data frame of site to catchment information and

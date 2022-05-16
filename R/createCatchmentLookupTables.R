@@ -1,4 +1,4 @@
-#' createCatchmentToSiteMatrix
+#' createCatchmentToSiteMatrix2
 #'
 #' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
 #' catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data
@@ -11,6 +11,8 @@
 #' Section 30 movements.
 #' @param filename_catchment_layer (class string) String containing the file path and file name for
 #' .shp file containing catchment information.
+#' @param crs_epsg (class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
+#'  to use for projecting the data.
 #'
 #' @return (class list) of length 2 containing (1) data frame of site to catchment information and
 #' (2) dgCMatrix sparse matrix containing site to catchment summary.
@@ -18,11 +20,11 @@
 #' @export
 #'
 #' @importFrom igraph get.vertex.attribute V
-#' @importFrom sf read_sf
+#' @importFrom sf read_sf st_transform
 #' @importFrom stats model.matrix
 #' @importFrom Matrix Matrix
 #' @importFrom methods as
-createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
+createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_epsg) {
   # create data frame of catchment ID and site ID
   df_sites <- data.frame("TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
                                                                      name = "catchmentID",
@@ -38,8 +40,11 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
                                                replacement = "\\1",
                                                basename(filename_catchment_layer)))
 
+  # transform to correct crs epsg code (if already correct, does nothing)
+  catchment_layer_crs <- sf::st_transform(catchment_layer, crs = crs_epsg)
+
   # extract the data from the catchment layer
-  df_catchments <- as.data.frame(catchment_layer)
+  df_catchments <- as.data.frame(catchment_layer_crs)
   cols <- c("ID", "FEATURE")
   df_catchments[cols] <- sapply(df_catchments[cols], as.character)
 
