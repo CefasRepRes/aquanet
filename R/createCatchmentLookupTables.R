@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @importFrom igraph get.vertex.attribute V
-#' @importFrom rgdal readOGR
+#' @importFrom sf read_sf
 #' @importFrom stats model.matrix
 #' @importFrom Matrix Matrix
 #' @importFrom methods as
@@ -33,13 +33,15 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer) {
                          "Order" = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
 
   # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
-  catchment_layer <- rgdal::readOGR(dsn = filename_catchment_layer,
+  catchment_layer <- sf::read_sf(dsn = filename_catchment_layer,
                                    layer = sub(pattern = "(.*)\\..*$",
                                                replacement = "\\1",
                                                basename(filename_catchment_layer)))
 
   # extract the data from the catchment layer
-  df_catchments <- catchment_layer@data
+  df_catchments <- as.data.frame(catchment_layer)
+  cols <- c("ID", "FEATURE")
+  df_catchments[cols] <- sapply(df_catchments[cols], as.character)
 
   # merge catchment data with site data extracted from graph
   df_catchment_sites <- merge(x = df_sites,
