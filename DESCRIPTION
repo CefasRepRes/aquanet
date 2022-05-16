@@ -28,4 +28,5 @@ Imports:
     Matrix,
     methods,
     rgdal,
+    sf,
     sp
