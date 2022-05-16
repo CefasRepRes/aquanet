@@ -10,6 +10,6 @@ Use remotes package to install from GitHub (ensure installed from CRAN if not al
 
 ````
 library("remotes")
-remotes::install_github("CefasRepRes/auqanet", auth_token = "PAT")
+remotes::install_github("CefasRepRes/aquanet", auth_token = "PAT")
 library("CefasRepRes/aquanet")
 ````
