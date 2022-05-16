@@ -36,9 +36,9 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 
   # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
   catchment_layer <- sf::read_sf(dsn = filename_catchment_layer,
-                                   layer = sub(pattern = "(.*)\\..*$",
-                                               replacement = "\\1",
-                                               basename(filename_catchment_layer)))
+                                 layer = sub(pattern = "(.*)\\..*$",
+                                             replacement = "\\1",
+                                             basename(filename_catchment_layer)))
 
   # transform to correct crs epsg code (if already correct, does nothing)
   catchment_layer_crs <- sf::st_transform(catchment_layer, crs = crs_epsg)
@@ -61,8 +61,8 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 
   # convert catchment codes to ordered factor to retain site order
   df_sites$TRUNK_CODE <- factor(x = df_sites$TRUNK_CODE,
-                                            levels = unique(df_sites$TRUNK_CODE),
-                                            ordered = TRUE)
+                                levels = unique(df_sites$TRUNK_CODE),
+                                ordered = TRUE)
 
   # assign siteID as rownames
   row.names(df_sites) <- df_sites$siteID
@@ -106,7 +106,7 @@ createWithinCatchmentEdgesMatrix <- function(graph) {
 
   # create edge list of within catchment movements by source and receiving site ID
   matrix_edges_within_catch_siteID <- cbind(igraph::E(graph)$scrSiteID[igraph::E(graph)$withinCatchment],
-                                              igraph::E(graph)$recSiteID[igraph::E(graph)$withinCatchment])
+                                            igraph::E(graph)$recSiteID[igraph::E(graph)$withinCatchment])
   colnames(matrix_edges_within_catch_siteID) <- c('scrSiteID','recSiteID')
 
   # return list containing logical matrix of catchment:catchment connections,
