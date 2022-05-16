@@ -1,4 +1,4 @@
-#' createCatchmentToSiteMatrix2
+#' createCatchmentToSiteMatrix
 #'
 #' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
 #' catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data

@@ -2,7 +2,7 @@
 % Please edit documentation in R/createCatchmentLookupTables.R
 \name{createCatchmentToSiteMatrix}
 \alias{createCatchmentToSiteMatrix}
-\title{createCatchmentToSiteMatrix2}
+\title{createCatchmentToSiteMatrix}
 \usage{
 createCatchmentToSiteMatrix(graph, filename_catchment_layer, crs_epsg)
 }
