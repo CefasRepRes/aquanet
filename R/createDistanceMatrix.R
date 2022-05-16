@@ -16,7 +16,9 @@
 #' Section 30 movements.
 #' @param filename_site_catchments  (class string) String containing the file path and file name for
 #'  .csv containing information about site location (easting and northing) and which catchment each
-#'  site resides in.
+#'  site resides in
+#' @param crs_epsg (class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
+#'  to use for projecting the data.
 #'
 #' @return  (class list) of length 3 containing (1) a matrix of site to site distances (class matrix
 #'  array), (2) a matrix of distance-based transmission probabilities (dgTMatrix, Matrix package),
@@ -25,21 +27,23 @@
 #' @export
 #'
 #' @importFrom utils read.csv
-#' @importFrom sp CRS coordinates proj4string spDists
+#' @importFrom sf st_as_sf st_distance
+#' @importFrom units drop_units
 #' @importFrom igraph V get.vertex.attribute
 #' @importFrom methods as
-createDistanceMatrix <- function(graph, filename_site_catchments) {
+createDistanceMatrix <- function(graph, filename_site_catchments, crs_epsg) {
   # define the British National Grid Referencing System, using Proj4 notation
-  britishNationalGrid <- '+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +datum=OSGB36 +units=m +no_defs'
 
   # import the list of site locations, and assign the correct spatial projection system
   site_catchments <- read.csv(filename_site_catchments, header = TRUE)
-  sp::coordinates(site_catchments) <- c('easting', 'northing')
-  sp::proj4string(site_catchments) <- sp::CRS(britishNationalGrid)
+  site_catchments <- sf::st_as_sf(site_catchments,
+                                  coords = c("easting", "northing"),
+                                  crs = crs_epsg)
 
   # create a distance matrix (assign correct col and row names)
-  matrix_distances <- sp::spDists(site_catchments)
-  dimnames(matrix_distances) <- list(site_catchments@data$siteID, site_catchments@data$siteID)
+  matrix_distances <- sf::st_distance(site_catchments, site_catchments, by_element = F)
+  matrix_distances <- units::drop_units(matrix_distances)
+  dimnames(matrix_distances) <- list(site_catchments$siteID, site_catchments$siteID)
 
   # reorder distance matrix, so that it is in the same order as the contact matrix
   site_order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))

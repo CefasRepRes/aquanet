@@ -29,4 +29,5 @@ Imports:
     methods,
     rgdal,
     sf,
-    sp
+    sp,
+    units
