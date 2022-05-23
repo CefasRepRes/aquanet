@@ -17,16 +17,16 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk
   # if the catchments under control are NOT the same as last time step:
   if (!all(catchments_controlled@x == catchments_controlled_prev@x)) {
     # return vector of sites contained within the controlled catchments and correct those over 1
-    secondary.controlled.sites <- as.vector(spmatrix_sites_catchment %*% catchments_controlled)
-    secondary.controlled.sites[secondary.controlled.sites > 1] <- 1
+    sites_controlled <- as.vector(spmatrix_sites_catchment %*% catchments_controlled)
+    sites_controlled[sites_controlled > 1] <- 1
 
     # create contact probability matrix for sites within controlled catchments
     # sites outside controlled catchments have p = 0 else 1
-    contacts.by.controlledSites <- contactp * secondary.controlled.sites
+    contacts.by.controlledSites <- contactp * sites_controlled
     contacts.by.controlledSites[contacts.by.controlledSites > 0] <- 1
 
     # reassign the secondary controlled sites element with sites under catchment controls in this time step
-    catchment_movements[[6]] <- secondary.controlled.sites
+    catchment_movements[[6]] <- sites_controlled
 
     # if the site control type is 1 or 2
     if (site_control_type %in% c(0,1)) {
@@ -40,7 +40,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk
     # if the site control type is 1 (allow movements within or between infected catchments)
     if (site_control_type == 1) {
       # create matrix of contacts made to other sites within controlled catchments
-      contacts.between.controlled.catchments <- t(contacts.by.controlledSites) * secondary.controlled.sites
+      contacts.between.controlled.catchments <- t(contacts.by.controlledSites) * sites_controlled
       contacts.between.controlled.catchments <- t(contacts.between.controlled.catchments)
 
       # exclude within catchment movements from the matrix of contacts made to other sites within controlled catchments
