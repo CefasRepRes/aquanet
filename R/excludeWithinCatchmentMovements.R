@@ -1,4 +1,4 @@
-excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatrix_risk_contacts, catchment_movements) {
+excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk_contacts, catchment_movements) {
   # TODO: contactp input not define
   # TODO: replace list numbers with named elements
   # extract elements from list
@@ -9,7 +9,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
   site_control_type <- catchment_movements[[5]]
 
   # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether movements are restricted
-  catchments_controlled <- t(spmatrix_sites_catchment) %*% movement.restrictions.bySite
+  catchments_controlled <- t(spmatrix_sites_catchment) %*% move_restricted_sites
 
   # determine number of catchments under control
   n_catchments_controlled <- sum(catchments_controlled > 0)
