@@ -1,20 +1,20 @@
 excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatrix_risk_contacts, catchment_movements) {
   # TODO: replace list numbers with named elements
   # extract elements from list
-  graph.catchment2site.matrix2 <- catchment_movements[[1]]
+  spmatrix_sites_catchment <- catchment_movements[[1]]
   graph.withinCatchmentEdges.matrix <- catchment_movements[[2]]
-  controlled.catchments.previous <- catchment_movements[[3]]
+  catchments_controlled_prev <- catchment_movements[[3]]
   listContacts.exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
 
   # Identify catchments placed under control, based on the list of sites currently under control
-  catchments_controlled <- t(graph.catchment2site.matrix2) %*% movement.restrictions.bySite
+  catchments_controlled <- t(spmatrix_sites_catchment) %*% movement.restrictions.bySite
   n_catchments_controlled <- sum(catchments_controlled > 0)
 
   # If the same catchments are under control as the last time the function was called, skip several steps
-  if (!all(catchments_controlled@x == controlled.catchments.previous@x)) {
+  if (!all(catchments_controlled@x == catchments_controlled_prev@x)) {
     # Lookup a list of all of the sites contained within the controlled catchments
-    secondary.controlled.sites <- as.vector(graph.catchment2site.matrix2 %*% catchments_controlled)
+    secondary.controlled.sites <- as.vector(spmatrix_sites_catchment %*% catchments_controlled)
     secondary.controlled.sites[secondary.controlled.sites > 1] <- 1
 
     # List all of the contacts made by sites within controlled catchments
