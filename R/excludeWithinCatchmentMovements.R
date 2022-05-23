@@ -57,8 +57,8 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk
   }
 
   # create matrix of contacts to remove and remove from input matrix of risk contacts
-  atriskcontacts.toremove <- spmatrix_risk_contacts * matrix_contacts_exclude
-  spmatrix_risk_contacts <- spmatrix_risk_contacts - atriskcontacts.toremove
+  risk_contacts_remove <- spmatrix_risk_contacts * matrix_contacts_exclude
+  spmatrix_risk_contacts <- spmatrix_risk_contacts - risk_contacts_remove
 
   # reassign new catchment control information (catchment, contacts to exclude and number of catchments)
   catchment_movements[[3]] <- catchments_controlled
