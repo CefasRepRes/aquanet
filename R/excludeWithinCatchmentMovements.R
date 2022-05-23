@@ -8,7 +8,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atrisk
 
   # Identify catchments placed under control, based on the list of sites currently under control
   catchments_controlled <- t(graph.catchment2site.matrix2) %*% movement.restrictions.bySite
-  no.controlled.catchments <- sum(catchments_controlled > 0)
+  n_catchments_controlled <- sum(catchments_controlled > 0)
 
   # If the same catchments are under control as the last time the function was called, skip several steps
   if (!all(catchments_controlled@x == controlled.catchments.previous@x)) {
@@ -49,7 +49,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atrisk
 
   catchment_movements[[3]] <- catchments_controlled
   catchment_movements[[4]] <- listContacts.exclude
-  catchment_movements[[7]] <- no.controlled.catchments
+  catchment_movements[[7]] <- n_catchments_controlled
 
   return(list(atriskcontacts, catchment_movements))
 }
