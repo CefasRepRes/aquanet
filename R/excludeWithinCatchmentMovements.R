@@ -40,14 +40,14 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk
     # if the site control type is 1 (allow movements within or between infected catchments)
     if (site_control_type == 1) {
       # create matrix of contacts made to other sites within controlled catchments
-      contacts.between.controlled.catchments <- t(sites_controlled_prob) * sites_controlled
-      contacts.between.controlled.catchments <- t(contacts.between.controlled.catchments)
+      sites_controlled_between_catchment_prob <- t(sites_controlled_prob) * sites_controlled
+      sites_controlled_between_catchment_prob <- t(sites_controlled_between_catchment_prob)
 
       # exclude within catchment movements from the matrix of contacts made to other sites within controlled catchments
-      contacts.between.controlled.catchments <- contacts.between.controlled.catchments - sites_controlled_in_catchment_prob
+      sites_controlled_between_catchment_prob <- sites_controlled_between_catchment_prob - sites_controlled_in_catchment_prob
 
       # create matrix of all contacts made outside of the infection area (rather than outside of each individual catchment)
-      matrix_contacts_exclude <- matrix_contacts_exclude - contacts.between.controlled.catchments
+      matrix_contacts_exclude <- matrix_contacts_exclude - sites_controlled_between_catchment_prob
 
     # else if the site control type is 2 (allow no movements by any site within an infected catchment)
     } else if (site_control_type == 2) {
