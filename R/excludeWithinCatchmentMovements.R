@@ -2,7 +2,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
   # TODO: replace list numbers with named elements
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[[1]]
-  graph.withinCatchmentEdges.matrix <- catchment_movements[[2]]
+  lgmatrix_catch_catch <- catchment_movements[[2]]
   catchments_controlled_prev <- catchment_movements[[3]]
   listContacts.exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
@@ -26,7 +26,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
 
     if (site_control_type %in% c(0,1)) {
       # List all of the contacts made within controlled catchments
-      contacts.withinCatchment.by.controlledSites <- contacts.by.controlledSites * graph.withinCatchmentEdges.matrix
+      contacts.withinCatchment.by.controlledSites <- contacts.by.controlledSites * lgmatrix_catch_catch
 
       # Identify all of the contacts made outside of controlled catchments
       listContacts.exclude <- contacts.by.controlledSites - contacts.withinCatchment.by.controlledSites
