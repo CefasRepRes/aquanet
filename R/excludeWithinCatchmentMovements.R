@@ -1,4 +1,4 @@
-excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atriskcontacts, catchment_movements) {
+excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatrix_risk_contacts, catchment_movements) {
   # extract elements from list
   graph.catchment2site.matrix2 <- catchment_movements[[1]]
   graph.withinCatchmentEdges.matrix <- catchment_movements[[2]]
@@ -44,12 +44,12 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atrisk
     }
   }
 
-  atriskcontacts.toremove <- atriskcontacts * listContacts.exclude
-  atriskcontacts <- atriskcontacts - atriskcontacts.toremove
+  atriskcontacts.toremove <- spmatrix_risk_contacts * listContacts.exclude
+  spmatrix_risk_contacts <- spmatrix_risk_contacts - atriskcontacts.toremove
 
   catchment_movements[[3]] <- catchments_controlled
   catchment_movements[[4]] <- listContacts.exclude
   catchment_movements[[7]] <- n_catchments_controlled
 
-  return(list(atriskcontacts, catchment_movements))
+  return(list(spmatrix_risk_contacts, catchment_movements))
 }
