@@ -7,13 +7,13 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atrisk
   associatedSiteControlType <- catchment_movements[[5]]
 
   # Identify catchments placed under control, based on the list of sites currently under control
-  controlled.catchments <- t(graph.catchment2site.matrix2) %*% movement.restrictions.bySite
-  no.controlled.catchments <- sum(controlled.catchments > 0)
+  catchments_controlled <- t(graph.catchment2site.matrix2) %*% movement.restrictions.bySite
+  no.controlled.catchments <- sum(catchments_controlled > 0)
 
   # If the same catchments are under control as the last time the function was called, skip several steps
-  if (!all(controlled.catchments@x == controlled.catchments.previous@x)) {
+  if (!all(catchments_controlled@x == controlled.catchments.previous@x)) {
     # Lookup a list of all of the sites contained within the controlled catchments
-    secondary.controlled.sites <- as.vector(graph.catchment2site.matrix2 %*% controlled.catchments)
+    secondary.controlled.sites <- as.vector(graph.catchment2site.matrix2 %*% catchments_controlled)
     secondary.controlled.sites[secondary.controlled.sites > 1] <- 1
 
     # List all of the contacts made by sites within controlled catchments
@@ -47,7 +47,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, atrisk
   atriskcontacts.toremove <- atriskcontacts * listContacts.exclude
   atriskcontacts <- atriskcontacts - atriskcontacts.toremove
 
-  catchment_movements[[3]] <- controlled.catchments
+  catchment_movements[[3]] <- catchments_controlled
   catchment_movements[[4]] <- listContacts.exclude
   catchment_movements[[7]] <- no.controlled.catchments
 
