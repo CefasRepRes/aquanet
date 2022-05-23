@@ -4,7 +4,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
   spmatrix_sites_catchment <- catchment_movements[[1]]
   lgmatrix_catch_catch <- catchment_movements[[2]]
   catchments_controlled_prev <- catchment_movements[[3]]
-  listContacts.exclude <- catchment_movements[[4]]
+  matrix_contacts_exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
 
   # Identify catchments placed under control, based on the list of sites currently under control
@@ -29,7 +29,7 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
       contacts.withinCatchment.by.controlledSites <- contacts.by.controlledSites * lgmatrix_catch_catch
 
       # Identify all of the contacts made outside of controlled catchments
-      listContacts.exclude <- contacts.by.controlledSites - contacts.withinCatchment.by.controlledSites
+      matrix_contacts_exclude <- contacts.by.controlledSites - contacts.withinCatchment.by.controlledSites
     }
 
     if (site_control_type == 1) {
@@ -39,17 +39,17 @@ excludeWithinCatchmentMovements <- function(movement.restrictions.bySite, spmatr
       # Exclude within catchment movements, from the list of contacts made to other sites within controlled catchments
       contacts.between.controlled.catchments <- contacts.between.controlled.catchments - contacts.withinCatchment.by.controlledSites
       # Identify all of the contacts made outside of the infection area, rather than outside of each individual catchment
-      listContacts.exclude <- listContacts.exclude - contacts.between.controlled.catchments
+      matrix_contacts_exclude <- matrix_contacts_exclude - contacts.between.controlled.catchments
     } else if (site_control_type == 2) {
-      listContacts.exclude <- contacts.by.controlledSites
+      matrix_contacts_exclude <- contacts.by.controlledSites
     }
   }
 
-  atriskcontacts.toremove <- spmatrix_risk_contacts * listContacts.exclude
+  atriskcontacts.toremove <- spmatrix_risk_contacts * matrix_contacts_exclude
   spmatrix_risk_contacts <- spmatrix_risk_contacts - atriskcontacts.toremove
 
   catchment_movements[[3]] <- catchments_controlled
-  catchment_movements[[4]] <- listContacts.exclude
+  catchment_movements[[4]] <- matrix_contacts_exclude
   catchment_movements[[7]] <- n_catchments_controlled
 
   return(list(spmatrix_risk_contacts, catchment_movements))
