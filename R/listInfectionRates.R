@@ -1,12 +1,12 @@
-listInfectionRates <- function(distanceMatrix, state_vector, trans.type) {
-  # Convert matrix to 'dgTMatrix'
-  distanceMatrix <- as(t(distanceMatrix), 'dgTMatrix')
+listInfectionRates <- function(spmatrix_risk_contacts, state_vector, trans.type) {
+  # convert matrix to 'dgTMatrix'
+  spmatrix_risk_contacts <- as(t(spmatrix_risk_contacts), 'dgTMatrix')
 
   # 'i' and 'j' vectors are coordinates, which are 0-based coordinates (most R objects have 1-based coordinates)
   # Extract each value's coordinates, and save them into seperate objects
-  i <- distanceMatrix@i
-  j <- distanceMatrix@j
-  x <- distanceMatrix@x
+  i <- spmatrix_risk_contacts@i
+  j <- spmatrix_risk_contacts@j
+  x <- spmatrix_risk_contacts@x
 
   # Create a logical vector testing whether x is non-zero
   nonEmpty.logical <- x != 0
