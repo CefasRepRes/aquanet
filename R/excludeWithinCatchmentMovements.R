@@ -1,5 +1,7 @@
-excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk_contacts, catchment_movements) {
-  # TODO: contactp input not define
+excludeWithinCatchmentMovements <- function(move_restricted_sites,
+                                            spmatrix_risk_contacts,
+                                            catchment_movements,
+                                            matrix_movements_prob) {
   # TODO: replace list numbers with named elements
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[[1]]
@@ -22,7 +24,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites, spmatrix_risk
 
     # create contact probability matrix for sites within controlled catchments
     # sites outside controlled catchments have p = 0 else 1
-    sites_controlled_prob <- contactp * sites_controlled
+    sites_controlled_prob <- matrix_movements_prob * sites_controlled
     sites_controlled_prob[sites_controlled_prob > 0] <- 1
 
     # reassign the secondary controlled sites element with sites under catchment controls in this time step
