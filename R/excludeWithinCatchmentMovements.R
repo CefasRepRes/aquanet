@@ -98,7 +98,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     # reassign the secondary controlled sites element with sites under catchment controls in this time step
     catchment_movements[[6]] <- sites_controlled
 
-    # if the site control type is 1 or 2
+    # if the site control type is 0 or 1
     if (site_control_type %in% c(0,1)) {
       # create matrix of all contacts made within controlled catchments
       sites_controlled_in_catchment_prob <- sites_controlled_prob * lgmatrix_catch_catch
