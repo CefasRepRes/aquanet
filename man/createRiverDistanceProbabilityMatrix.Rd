@@ -6,7 +6,9 @@
 \usage{
 createRiverDistanceProbabilityMatrix(
   filepath_river_distances,
-  out_createContactProbabilityMatrix
+  out_createContactProbabilityMatrix,
+  max_dist,
+  p1km
 )
 }
 \arguments{
@@ -17,6 +19,11 @@ connectivity generated with GIS tool.}
 \item{out_createContactProbabilityMatrix}{(class list) of length 3 containing (1) number of sites
 in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3)
 probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).}
+
+\item{max_dist}{(class numeric) Number stating maximum distance (km) that a pathogen can travel in
+water via river network.}
+
+\item{p1km}{(class numeric) Probabiliy that a site 1 km downstream of infection becomes infected.}
 }
 \value{
 (class list) of length 2 containing (1) distances between sites on a river network (via
@@ -31,9 +38,10 @@ sites are loaded from .csv whose filename is specified as input \code{filepath_r
 Origin and destination site IDs are extracted, and the data subsetted to retain only connections
 where both origin and destination site are present in the live fish movements contact matrix
 (generated with igraph). Distances of zero are removed. Distances are converted to transmission
-probabilities using the equation \code{0.005 * ((40 - (river_distance_length/1000))/39)} and
-probabilities less than zero are corrected. A sparse matrix with site IDs in the same order as
-the contact matrix is generated and populated with the river distance transmission probabilities.
-The resulting list contains (1) the river distance data frame used and (2) a river distance
-transmission probability sparse matrix.
+probabilities using the equation
+\code{p1km * ((max_dist - (river_distance_length/1000))/(max_dist - 1))} and probabilities less than
+zero are corrected. A sparse matrix with site IDs in the same order as the contact matrix is
+generated and populated with the river distance transmission probabilities. The resulting list
+contains (1) the river distance data frame used and (2) a river distance transmission probability
+sparse matrix.
 }
