@@ -1,4 +1,4 @@
-#' listInfectionRates
+#' extractSusceptibleRiskContacts
 #'
 #' Extract information from risk contact matrix related to the sites that have the potential to be
 #' infected (i.e. contact probability is greater than 0 and receiving sites are in a susceptible
@@ -57,7 +57,7 @@
 #' @importFrom stats setNames
 #' @importFrom methods slot
 #'
-listInfectionRates <- function(spmatrix_risk_contacts, state_vector, trans_type) {
+extractSusceptibleRiskContacts <- function(spmatrix_risk_contacts, state_vector, trans_type) {
   # convert 'dgCMatrix' to 'dgTMatrix'
   spmatrix_risk_contacts <- as(t(spmatrix_risk_contacts), "dgTMatrix")
 
