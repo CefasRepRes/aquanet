@@ -81,7 +81,7 @@ extractSusceptibleRiskContacts <- function(spmatrix_risk_contacts, state_vector,
 
   # determine number of contacts
   n_contacts <- length(contacts[["rate"]])
-  contacts_rate_type <- rep.int(0, times = n_contacts)
+  contacts_rate_type <- rep.int(trans_type, times = n_contacts)
 
   return(list(contacts_rate_type, contacts[["position"]], contacts[["rate"]], contacts[["source"]], n_contacts))
 }
