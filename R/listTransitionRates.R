@@ -1,6 +1,7 @@
-listTransitionRates <- function(state_vector, trans.type, site.index, state.match) {
+listTransitionRates <- function(run_time_params,
+                                state_vector, trans.type, site.index, state.match) {
 
-  prob <- ListRunTimeParameters[[trans.type]]
+  prob <- run_time_params[[trans.type]]
 
   state.logical <- state_vector == state.match
   state.pos <- site.index[state.logical]
