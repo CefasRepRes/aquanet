@@ -13,8 +13,8 @@ listTransitionRates <- function(run_time_params,
   # create vector of transition rates, transition rate type, and infection source
   rate <- rep(1 / prob, times = state.no)
   rate_type <- rep(trans.type, times = state.no)
-  source.infection <- rep(NA, times = state.no)
+  source_site <- rep(NA, times = state.no)
 
-  return(list(rate_type, position, rate, source.infection, state.no))
+  return(list(rate_type, position, rate, source_site, state.no))
 }
 
