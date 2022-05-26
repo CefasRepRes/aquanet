@@ -4,7 +4,11 @@
 \alias{createContactProbabilityMatrixTopSitesRemoved}
 \title{createContactProbabilityMatrixTopSitesRemoved}
 \usage{
-createContactProbabilityMatrixTopSitesRemoved(graph, movement_period)
+createContactProbabilityMatrixTopSitesRemoved(
+  graph,
+  movement_period,
+  percentile
+)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
@@ -13,6 +17,11 @@ Section 30 movements.}
 
 \item{movement_period}{(class numeric) The period of time (in days) for which movement data (live
 fish movements and section 30 movements) were collected and used to create \code{graph} parameter.}
+
+\item{percentile}{(class numeric) The percentile used to distinguish top connected sites. Contact
+probabilities for sites with number of outward (supplying) movements and sites with number of
+inward (receiving) movements above this percentile will be removed from the contact probability
+matrix.}
 }
 \value{
 (class list) of length 3 containing (1) number of sites in movements matrix (integer),
@@ -23,8 +32,8 @@ top sites zeroed (dgCMatrix, Matrix package).
 Use the connectivity matrix (\code{graph}) to extract a movement matrix. Calculate the probability of
 movement/contact between sites by dividing the number of movements by dividing by the period of
 time (in days) for which movement information was used (\code{movement_period}). Extract sites with
-greater than the 95th quantile of in (receiving) movements and out (supplying) movements and
-overwrite their contact probabilities to zero to negate the impact of top sites in the contact
-network. Then, determine the number of sites present in the contact probability matrix. Return
-these three values as a list.
+greater than a user-specified quantile (\code{percentile}) of in (receiving) movements and out
+(supplying) movements and overwrite their contact probabilities to zero to negate the impact of
+top sites in the contact network. Then, determine the number of sites present in the contact
+probability matrix. Return these three values as a list.
 }
