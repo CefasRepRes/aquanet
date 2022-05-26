@@ -1,15 +1,6 @@
 listTransitionRates <- function(state_vector, trans.type, site.index, state.match) {
 
-
   prob <- ListRunTimeParameters[[trans.type]]
-
-  ## Reduce detection time when the number of cumulative infected sites gets above 10
-  #if(sum(cumulativeState_vector) > 10 & trans.type == 6){
-  #  prob <- 14
-  #}
-  #else {
-  #  prob <- ListRunTimeParameters[[trans.type]]
-  #}
 
   state.logical <- state_vector == state.match
   state.pos <- site.index[state.logical]
