@@ -8,13 +8,13 @@ listTransitionRates <- function(run_time_params,
 
   # get the position and total number of sites in input state specified
   position <- site.index[state.logical]
-  state.no <- length(position)
+  n_rates <- length(position)
 
   # create vector of transition rates, transition rate type, and infection source
-  rate <- rep(1 / prob, times = state.no)
-  rate_type <- rep(trans.type, times = state.no)
-  source_site <- rep(NA, times = state.no)
+  rate <- rep(1 / prob, times = n_rates)
+  rate_type <- rep(trans.type, times = n_rates)
+  source_site <- rep(NA, times = n_rates)
 
-  return(list(rate_type, position, rate, source_site, state.no))
+  return(list(rate_type, position, rate, source_site, n_rates))
 }
 
