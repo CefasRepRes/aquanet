@@ -1,4 +1,4 @@
-combineTransitions <- function(transition.objects, transition.rates) {
+combineTransitionRates <- function(transition.objects, transition.rates) {
   # Type of transition
   transition.rates[[1]] <- c(transition.rates[[1]], transition.objects[[1]])
   # Site subject to transition
