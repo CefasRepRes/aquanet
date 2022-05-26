@@ -1,10 +1,10 @@
-combineTransitionRates <- function(transition.objects, transition.rates) {
+combineTransitionRates <- function(list_append, list_base) {
   # concatenate (1) transition type, (2) transition site, (3) transisiton rate and (4) source site
-  transition.rates[[1]] <- c(transition.rates[[1]], transition.objects[[1]])
-  transition.rates[[2]] <- c(transition.rates[[2]], transition.objects[[2]])
-  transition.rates[[3]] <- c(transition.rates[[3]], transition.objects[[3]])
-  transition.rates[[4]] <- c(transition.rates[[4]], transition.objects[[4]])
+  list_base[[1]] <- c(list_base[[1]], list_append[[1]])
+  list_base[[2]] <- c(list_base[[2]], list_append[[2]])
+  list_base[[3]] <- c(list_base[[3]], list_append[[3]])
+  list_base[[4]] <- c(list_base[[4]], list_append[[4]])
 
   # return concatenated transition information list
-  return(transition.rates)
+  return(list_base)
 }
