@@ -1,5 +1,5 @@
-listTransitionRates <- function(run_time_params,
-                                state_vector, trans_type, site.index, infection_state) {
+listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices,
+                                infection_state) {
   # get probability from input parameter file
   prob <- run_time_params[[trans_type]]
 
@@ -7,7 +7,7 @@ listTransitionRates <- function(run_time_params,
   state.logical <- state_vector == infection_state
 
   # get the position and total number of sites in input state specified
-  position <- site.index[state.logical]
+  position <- site_indices[state.logical]
   n_rates <- length(position)
 
   # create vector of transition rates, transition rate type, and infection source
