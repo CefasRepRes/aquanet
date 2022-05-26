@@ -33,21 +33,21 @@
 #' @param trans_type (class numeric) number stating transition type.
 #'
 #' @return (class list) of length 5 containing:
-#' 1. (class numeric) numeric vector of input `trans_type` with length 'number of sites with contact
-#'  probability greater than 0 where the receiving site is in a susceptible state'.
+#' 1. (class numeric) numeric vector of transition types (input `trans_type`) with length 'number of
+#'  sites with contact probability greater than 0 where the receiving site is in a susceptible state'.
 #'
-#' 2. (class integer) integer vector containing the positions/coordinate x of sites with risk
-#' contact at susceptible sites `(spmatrix_risk_contacts@i)` with length 'number of sites with
+#' 2. (class integer) integer vector of sites subject to transition (positions/coordinate x of sites
+#'  with risk contact at susceptible sites `(spmatrix_risk_contacts@i)`) with length 'number of
+#'  sites with contact probability greater than 0 where the receiving site is in a susceptible state'.
+#'
+#' 3. (class numeric) numeric vector of transition rates/transmission probability (the probability
+#' of risk contact at sites connected to susceptible sites. `(spmatrix_risk_contacts@x)`) with
+#' length 'number of sites with contact probability greater than 0 where the receiving site is in a
+#' susceptible state'.
+#'
+#' 4. (class integer) numeric vector of source sites (positions/coordinate y of sites with risk
+#' contact at susceptible sites `(spmatrix_risk_contacts@j)`) with length 'number of sites with
 #' contact probability greater than 0 where the receiving site is in a susceptible state'.
-#'
-#' 3. (class numeric) numeric vector containing the probability of risk contact at sites connected
-#' to susceptible sites. `(spmatrix_risk_contacts@x)` with length 'number of sites with contact
-#' probability greater than 0 where the receiving site is in a susceptible state'.
-#'
-#' 4. (class integer) numeric vector containing the positions/coordinate y of sites with risk
-#' contact at susceptible sites. These are the source sites `(spmatrix_risk_contacts@j)` with length
-#'  'number of sites with contact probability greater than 0 where the receiving site is in a
-#'  susceptible state'.
 #'
 #' 5. (class integer) number of sites that have a risk contact probability above 0 where the
 #' receiving site is in a susceptible state.

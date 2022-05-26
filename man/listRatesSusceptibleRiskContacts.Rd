@@ -36,18 +36,18 @@ information on whether each site is in an 1 = infected or 0 = susceptible state.
 \value{
 (class list) of length 5 containing:
 \enumerate{
-\item (class numeric) numeric vector of input \code{trans_type} with length 'number of sites with contact
-probability greater than 0 where the receiving site is in a susceptible state'.
-\item (class integer) integer vector containing the positions/coordinate x of sites with risk
-contact at susceptible sites \code{(spmatrix_risk_contacts@i)} with length 'number of sites with
-contact probability greater than 0 where the receiving site is in a susceptible state'.
-\item (class numeric) numeric vector containing the probability of risk contact at sites connected
-to susceptible sites. \code{(spmatrix_risk_contacts@x)} with length 'number of sites with contact
-probability greater than 0 where the receiving site is in a susceptible state'.
-\item (class integer) numeric vector containing the positions/coordinate y of sites with risk
-contact at susceptible sites. These are the source sites \code{(spmatrix_risk_contacts@j)} with length
-'number of sites with contact probability greater than 0 where the receiving site is in a
+\item (class numeric) numeric vector of transition types (input \code{trans_type}) with length 'number of
+sites with contact probability greater than 0 where the receiving site is in a susceptible state'.
+\item (class integer) integer vector of sites subject to transition (positions/coordinate x of sites
+with risk contact at susceptible sites \code{(spmatrix_risk_contacts@i)}) with length 'number of
+sites with contact probability greater than 0 where the receiving site is in a susceptible state'.
+\item (class numeric) numeric vector of transition rates/transmission probability (the probability
+of risk contact at sites connected to susceptible sites. \code{(spmatrix_risk_contacts@x)}) with
+length 'number of sites with contact probability greater than 0 where the receiving site is in a
 susceptible state'.
+\item (class integer) numeric vector of source sites (positions/coordinate y of sites with risk
+contact at susceptible sites \code{(spmatrix_risk_contacts@j)}) with length 'number of sites with
+contact probability greater than 0 where the receiving site is in a susceptible state'.
 \item (class integer) number of sites that have a risk contact probability above 0 where the
 receiving site is in a susceptible state.
 }
