@@ -8,9 +8,9 @@ calcRiverTransmission <- function(distanceMatrix,
   distanceMatrix <- t(distanceMatrix) * !move_restricted_on
   distanceMatrix <- t(distanceMatrix)
 
-  listInfectionRates.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = distanceMatrix,
+  list_river_infection_rates <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = distanceMatrix,
                                                                           state_vector = clinical_state_vector,
                                                                           trans_type = trans_type)
 
-  return(listInfectionRates.objects)
+  return(list_river_infection_rates)
 }
