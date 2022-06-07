@@ -1,5 +1,5 @@
-calcRiverTransmission <- function(distanceMatrix, clinical_state_vector, spread.offSite.prevented, spread.onSite.prevented, trans_type) {
-  distanceMatrix <- distanceMatrix * (clinical_state_vector * !spread.offSite.prevented)
+calcRiverTransmission <- function(distanceMatrix, clinical_state_vector, move_restricted_off, spread.onSite.prevented, trans_type) {
+  distanceMatrix <- distanceMatrix * (clinical_state_vector * !move_restricted_off)
   distanceMatrix <- t(distanceMatrix) * !spread.onSite.prevented
   distanceMatrix <- t(distanceMatrix)
 
