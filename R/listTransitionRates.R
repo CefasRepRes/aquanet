@@ -4,10 +4,10 @@ listTransitionRates <- function(run_time_params, state_vector, trans_type, site_
   prob <- run_time_params[[trans_type]]
 
   # create logical vector of sites in input state specified
-  state.logical <- state_vector == infection_state
+  state_logical <- state_vector == infection_state
 
   # get the position and total number of sites in input state specified
-  position <- site_indices[state.logical]
+  position <- site_indices[state_logical]
   n_rates <- length(position)
 
   # create vector of transition rates, transition rate type, and infection source
@@ -17,3 +17,4 @@ listTransitionRates <- function(run_time_params, state_vector, trans_type, site_
 
   return(list(rate_type, position, rate, source_site, n_rates))
 }
+
