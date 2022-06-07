@@ -5,7 +5,7 @@
 #' (susceptible/infected) `infection_state`). For these sites, generate a vector of the transition
 #' rate: `1 / run_time_params[[trans_type]]`. The column number of `trans_type` within the
 #' `run_time_params` depicts the rate type for the site - this is output in a list alongside the
-#' transition rate, transitioning site, rate, source site (if available), and number of sites.
+#' transition rate, transitioning site, rate, source site (NAs), and number of sites.
 #'
 #' Note: in aquanet-mod, this function is called multiple times exclusively within the `update_rate`
 #' function.

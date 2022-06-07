@@ -45,7 +45,7 @@ status (\code{state_vector}) to extract sites (from \code{site_indices}) with a 
 (susceptible/infected) \code{infection_state}). For these sites, generate a vector of the transition
 rate: \code{1 / run_time_params[[trans_type]]}. The column number of \code{trans_type} within the
 \code{run_time_params} depicts the rate type for the site - this is output in a list alongside the
-transition rate, transitioning site, rate, source site (if available), and number of sites.
+transition rate, transitioning site, rate, source site (NAs), and number of sites.
 }
 \details{
 Note: in aquanet-mod, this function is called multiple times exclusively within the \code{update_rate}
