@@ -1,5 +1,8 @@
 listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices,
                                 infection_state) {
+  # get column number for trans_type in run_time_params
+  trans_num <- which(colnames(run_time_params) == trans_type)
+
   # get probability from input parameter file
   prob <- run_time_params[[trans_type]]
 
@@ -12,9 +15,8 @@ listTransitionRates <- function(run_time_params, state_vector, trans_type, site_
 
   # create vector of transition rates, transition rate type, and infection source
   rate <- rep(1 / prob, times = n_rates)
-  rate_type <- rep(trans_type, times = n_rates)
+  rate_type <- rep(trans_num, times = n_rates)
   source_site <- rep(NA, times = n_rates)
 
   return(list(rate_type, position, rate, source_site, n_rates))
 }
-
