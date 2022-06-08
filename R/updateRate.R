@@ -5,22 +5,6 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # 2. sites whose control status is new
   # 3. contacts made out of controlled catchments
 
-  ######## This mechanism allow us to introduce a nationwide standstill or prevent movements from sites with top 10 in or out movements
-  ######## This can either be based on the total number of infections or whether there are any sites currently infected
-  #if (sum(cumulativeState_vector) >1 ) {
-  #  contactp <- graph.contactpalt.objects[[3]]
-  #}  else {
-  #  contactp <- graph.contactp.objects[[3]]
-  #}
-
-
-  #if (sum(control_matrix[,c(2,4,5]) >1) {
-  #  contactp <- graph.contactpalt.objects[[3]]
-  #}  else {
-  #  contactp <- graph.contactp.objects[[3]]
-  #}
-
-
   contactp <- graph.contactp.objects[[3]]
   transition.rates <- c(list(NULL),list(NULL),list(NULL),list(NULL))
 
