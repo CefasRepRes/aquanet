@@ -1,13 +1,11 @@
 update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.objects,
                         matrix_movements_prob) {
 
-  # Setup objects containing:
-  # 1. contacts between sites
-  # 2. sites whose control status is new
-  # 3. contacts made out of controlled catchments
-
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
+
+  # create vector of clinically infected sites
+  clinical.vector <- state_vector * !control_matrix[ , 6]
 
   # When a site has been contact traced it will be subject to movement controls, but
   # will not be culled, released from controls or used to infer which catchments
@@ -26,8 +24,6 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   infected.sites.withRecovery <- !as.logical(control_matrix[,c(4,5,6)] %*% rep(1,3))
   spread.onSite.prevented <- as.logical(control_matrix[,c(4,5,6)] %*% rep(1,3))
   spread.offSite.prevented <- spread.onSite.prevented
-
-  clinical.vector <- state_vector*!control_matrix[,6]
 
   # Identify contacts originating from infected sites,
   # excluding contacts from sites that can not transport off site
