@@ -13,7 +13,7 @@ calcRandomSpillover <- function(clinical_state_vector,
   n_sites_I <- length(spread.offSite.Index)
 
   # calculate tranmission probability
-  Fomite_Transmission_Independant_Prob <- 1 / run_time_params[[trans_type]]
+  prob <- 1 / run_time_params[[trans_type]]
 
   # if there are susceptible sites:
   if (n_sites_S != 0) {
@@ -26,7 +26,7 @@ calcRandomSpillover <- function(clinical_state_vector,
     # create populated output list
     listInfectionRates.objects <- list(rep.int(trans_num, times = n_sites_I),
                                        rep.int(spread.onSite.Index[site], times = n_sites_I),
-                                       rep.int(Fomite_Transmission_Independant_Prob, times = n_sites_I),
+                                       rep.int(prob, times = n_sites_I),
                                        rep.int(NA, times = n_sites_I),
                                        n_sites_I)
 
