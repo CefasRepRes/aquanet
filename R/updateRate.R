@@ -1,11 +1,11 @@
-update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.objects) {
+update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.objects,
+                        matrix_movements_prob) {
 
   # Setup objects containing:
   # 1. contacts between sites
   # 2. sites whose control status is new
   # 3. contacts made out of controlled catchments
 
-  contactp <- graph.contactp.objects[[3]]
   transition.rates <- c(list(NULL),list(NULL),list(NULL),list(NULL))
 
   # When a site has been contact traced it will be subject to movement controls, but
@@ -30,7 +30,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
 
   # Identify contacts originating from infected sites,
   # excluding contacts from sites that can not transport off site
-  atriskcontacts <- contactp * (state_vector * !transport.offSite.prevented)
+  atriskcontacts <- matrix_movements_prob * (state_vector * !transport.offSite.prevented)
 
   # Identify, and remove contacts ending at controlled sites,
   # excluding contacts from sites that can not receive transported stuff
