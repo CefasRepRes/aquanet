@@ -1,20 +1,20 @@
-calcRandomSpillover = function(state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
-  spread.onSite.Index = site.index[!state_vector & !spread.onSite.prevented]
-  spread.offSite.Index = site.index[state_vector & !spread.offSite.prevented]
-  Fomite_Transmission_Independant_Prob = 1 / ListRunTimeParameters[[trans.type]]
-  noInfectedSites = length(spread.offSite.Index)
-  noSusceptibleSites = length(spread.onSite.Index)
+calcRandomSpillover <- function(state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
+  spread.onSite.Index <- site.index[!state_vector & !spread.onSite.prevented]
+  spread.offSite.Index <- site.index[state_vector & !spread.offSite.prevented]
+  Fomite_Transmission_Independant_Prob <- 1 / ListRunTimeParameters[[trans.type]]
+  noInfectedSites <- length(spread.offSite.Index)
+  noSusceptibleSites <- length(spread.onSite.Index)
 
   if (noSusceptibleSites != 0) {
-    site = sample.int(noSusceptibleSites, size=1, replace = TRUE)
+    site <- sample.int(noSusceptibleSites, size=1, replace = TRUE)
 
-    listInfectionRates.objects = list(rep.int(trans.type, times = noInfectedSites),
+    listInfectionRates.objects <- list(rep.int(trans.type, times = noInfectedSites),
                                       rep.int(spread.onSite.Index[site], times = noInfectedSites),
                                       rep.int(Fomite_Transmission_Independant_Prob, times = noInfectedSites),
                                       rep.int(NA, times = noInfectedSites),
                                       noInfectedSites)
   } else {
-    listInfectionRates.objects = list(NULL,NULL,NULL,NULL)
+    listInfectionRates.objects <- list(NULL,NULL,NULL,NULL)
   }
 
 
