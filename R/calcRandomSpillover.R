@@ -24,17 +24,17 @@ calcRandomSpillover <- function(clinical_state_vector,
     trans_num <- which(colnames(run_time_params) == trans_type)
 
     # create populated output list
-    listInfectionRates.objects <- list(rep.int(trans_num, times = n_sites_I),
-                                       rep.int(sites_susceptible[site], times = n_sites_I),
-                                       rep.int(prob, times = n_sites_I),
-                                       rep.int(NA, times = n_sites_I),
-                                       n_sites_I)
+    list_infection_rates <- list(rep.int(trans_num, times = n_sites_I),
+                                 rep.int(sites_susceptible[site], times = n_sites_I),
+                                 rep.int(prob, times = n_sites_I),
+                                 rep.int(NA, times = n_sites_I),
+                                 n_sites_I)
 
   # if there are no susceptible sites:
   } else {
     # create empty output list
-    listInfectionRates.objects <- list(NULL, NULL, NULL, NULL)
+    list_infection_rates <- list(NULL, NULL, NULL, NULL)
   }
 
-  return(listInfectionRates.objects)
+  return(list_infection_rates)
 }
