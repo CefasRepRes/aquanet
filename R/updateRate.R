@@ -125,13 +125,13 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
     # Calculate the probability of a contact occuring downstream of an outbreak, through the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
     riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
-    susceptable.sites.exposure.byRiver.downstream.objects <- calcRiverTransmission(riverDownstream.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 10)
+    susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(riverDownstream.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 10)
     trans_rates <- aquanet::combineTransitionRates(susceptable.sites.exposure.byRiver.downstream.objects, trans_rates)
 
     ########
     ######## Calculate the probability of a contact occuring due to local fomite transmission
     fomite.matrix <- graph.estimateSiteDistances.objects[[2]]
-    susceptable.sites.exposure.byFomites.objects <- calcRiverTransmission(fomite.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 14)
+    susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(fomite.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 14)
     trans_rates <- aquanet::combineTransitionRates(susceptable.sites.exposure.byFomites.objects, trans_rates)
     ########
 
