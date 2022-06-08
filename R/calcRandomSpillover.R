@@ -6,7 +6,7 @@ calcRandomSpillover <- function(clinical_state_vector,
                                 run_time_params) {
   # create vector of susceptible site IDs with no restricted spread on site
   spread.onSite.Index <- site_indices[!clinical_state_vector & !spread_restricted_on]
-  noSusceptibleSites <- length(spread.onSite.Index)
+  n_sites_S <- length(spread.onSite.Index)
 
   # create vector of infected site IDs with no resticted spread off site
   spread.offSite.Index <- site_indices[clinical_state_vector & !spread_restricted_off]
@@ -16,9 +16,9 @@ calcRandomSpillover <- function(clinical_state_vector,
   Fomite_Transmission_Independant_Prob <- 1 / run_time_params[[trans_type]]
 
   # if there are susceptible sites:
-  if (noSusceptibleSites != 0) {
+  if (n_sites_S != 0) {
     # take a sample of one susceptible site
-    site <- sample.int(noSusceptibleSites, size = 1, replace = TRUE)
+    site <- sample.int(n_sites_S, size = 1, replace = TRUE)
 
     # determine which column number the trans_type string refers to
     trans_num <- which(colnames(run_time_params) == trans_type)
