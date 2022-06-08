@@ -13,16 +13,16 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Hence contact tracing isn't used to calculate 'movement.restrictions.bySite'
 
   ######## sites in the surveillance and fallow periods
-  movement.restrictions.bySite <- as.logical(control_matrix[,c(2,3,4,5)] %*% rep(1,4))
+  movement.restrictions.bySite <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
 
   ####### sites in the surveillance period - different for culling and surveillance scenario as all sites in culling scenario transition from 2 to 4
-  movement.restrictions.allSite <- as.logical(control_matrix[,c(2,3)] %*% rep(1,2))
+  movement.restrictions.allSite <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
 
   ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
-  transport.onSite.prevented <- as.logical(control_matrix[,c(2,4,5,6,7)] %*% rep(1,5))
-  transport.offSite.prevented <- as.logical(control_matrix[,c(2,4,5,7)] %*% rep(1,4))
-  infected.sites.withRecovery <- !as.logical(control_matrix[,c(4,5,6)] %*% rep(1,3))
-  spread.onSite.prevented <- as.logical(control_matrix[,c(4,5,6)] %*% rep(1,3))
+  transport.onSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
+  transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
+  infected.sites.withRecovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
+  spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
   spread.offSite.prevented <- spread.onSite.prevented
 
   # Identify contacts originating from infected sites,
@@ -49,7 +49,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of infected sites
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
-  infected.sites <- state_vector * infected.sites.withRecovery*farm_vector
+  infected.sites <- state_vector * infected.sites.withRecovery * farm_vector
   infected.sites.recover.rate.objects <- listTransitionRates(infected.sites, 3, site.index, 1)
   trans_rates <- combineTransitions(infected.sites.recover.rate.objects, trans_rates)
   ########
@@ -59,7 +59,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of infected sites
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
-  infected.sites <- state_vector * infected.sites.withRecovery*!farm_vector
+  infected.sites <- state_vector * infected.sites.withRecovery * !farm_vector
   infected.sites.recover.rate.objects <- listTransitionRates(infected.sites, 2, site.index, 1)
   trans_rates <- combineTransitions(infected.sites.recover.rate.objects, trans_rates)
   ########
@@ -77,21 +77,21 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Identify any latent, infected sites
   # Create a vector showing the position of latent sites
   # Create a vector with the recovery rate of latent sites
-  latent.sites <- as.logical(control_matrix[,6])
+  latent.sites <- as.logical(control_matrix[ , 6])
   latent.sites.recovery.rate.objects <- listTransitionRates(latent.sites, 5, site.index, 1)
   trans_rates <- combineTransitions(latent.sites.recovery.rate.objects, trans_rates)
 
   # Identify sites that are fallow, and infected
   # Create a vector showing the position of sites that are fallow and infected
   # Create a vector showing the rate at which fallow sites are disinfected
-  fallow.infected.sites <- state_vector * (control_matrix[,4] + control_matrix[,5])
+  fallow.infected.sites <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
   fallow.infected.sites.rate.disinfection <- listTransitionRates(fallow.infected.sites, 1, site.index, 1)
   trans_rates <- combineTransitions(fallow.infected.sites.rate.disinfection, trans_rates)
 
   # Identify sites which have been contact traced
   # Create a vector showing the position of sites which have been contact traced
   # Create a vector showing the rate at which contact traced sites will be tested
-  contact.traced.sites <- control_matrix[,7]
+  contact.traced.sites <- control_matrix[ , 7]
   contact.traced.sites.rate.testing <- listTransitionRates(contact.traced.sites, 12, site.index, 1)
   trans_rates <- combineTransitions(contact.traced.sites.rate.testing, trans_rates)
 
@@ -101,8 +101,8 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # The simualiton will check roughly every 42 days to see if the management status' need updating
   # Create a vector showing the position of sites that are under surveillance
   # Create a vector showing the rates at which the sites under surveillance should be allowed to trade again
-  #surveillance.sites <- as.logical(control_matrix[,c(2,3,4,5)] %*% rep(1,4))
-  #surveillance.sites <- ifelse(surveillance.sites >0, 1, 0)
+  #surveillance.sites <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
+  #surveillance.sites <- ifelse(surveillance.sites > 0, 1, 0)
   #surveillance.sites.rate <- listTransitionRates(surveillance.sites, 7, site.index, 1)
   #trans_rates <- combineTransitions(surveillance.sites.rate, trans_rates)
   ########
@@ -110,7 +110,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Identify sites that can become controlled
   # Create a vector showing the position of sites that can be controlled
   # Create a vector with the control rate of infected sites
-  infected.sites.notControlled <- control_matrix[,1]
+  infected.sites.notControlled <- control_matrix[ , 1]
   infected.sites.control.rate.objects <- listTransitionRates(infected.sites.notControlled, 6, site.index, 1)
   trans_rates <- combineTransitions(infected.sites.control.rate.objects, trans_rates)
 
