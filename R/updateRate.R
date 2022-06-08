@@ -50,7 +50,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
   infected.sites <- state_vector * infected.sites.withRecovery * farm_vector
-  infected.sites.recover.rate.objects <- listTransitionRates(infected.sites, 3, site.index, 1)
+  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(infected.sites, 3, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(infected.sites.recover.rate.objects, trans_rates)
   ########
 
@@ -60,7 +60,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
   infected.sites <- state_vector * infected.sites.withRecovery * !farm_vector
-  infected.sites.recover.rate.objects <- listTransitionRates(infected.sites, 2, site.index, 1)
+  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(infected.sites, 2, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(infected.sites.recover.rate.objects, trans_rates)
   ########
 
@@ -70,7 +70,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
   #infected.sites <- state_vector * infected.sites.withRecovery
-  #infected.sites.recover.rate.objects <- listTransitionRates(infected.sites, 2, site.index, 1)
+  #infected.sites.recover.rate.objects <- aquanet::listTransitionRates(infected.sites, 2, site.index, 1)
   #trans_rates <- aquanet::combineTransitionRates(infected.sites.recover.rate.objects, trans_rates)
   ########
 
@@ -78,21 +78,21 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of latent sites
   # Create a vector with the recovery rate of latent sites
   latent.sites <- as.logical(control_matrix[ , 6])
-  latent.sites.recovery.rate.objects <- listTransitionRates(latent.sites, 5, site.index, 1)
+  latent.sites.recovery.rate.objects <- aquanet::listTransitionRates(latent.sites, 5, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(latent.sites.recovery.rate.objects, trans_rates)
 
   # Identify sites that are fallow, and infected
   # Create a vector showing the position of sites that are fallow and infected
   # Create a vector showing the rate at which fallow sites are disinfected
   fallow.infected.sites <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
-  fallow.infected.sites.rate.disinfection <- listTransitionRates(fallow.infected.sites, 1, site.index, 1)
+  fallow.infected.sites.rate.disinfection <- aquanet::listTransitionRates(fallow.infected.sites, 1, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(fallow.infected.sites.rate.disinfection, trans_rates)
 
   # Identify sites which have been contact traced
   # Create a vector showing the position of sites which have been contact traced
   # Create a vector showing the rate at which contact traced sites will be tested
   contact.traced.sites <- control_matrix[ , 7]
-  contact.traced.sites.rate.testing <- listTransitionRates(contact.traced.sites, 12, site.index, 1)
+  contact.traced.sites.rate.testing <- aquanet::listTransitionRates(contact.traced.sites, 12, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(contact.traced.sites.rate.testing, trans_rates)
 
   ########
@@ -103,7 +103,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the rates at which the sites under surveillance should be allowed to trade again
   #surveillance.sites <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
   #surveillance.sites <- ifelse(surveillance.sites > 0, 1, 0)
-  #surveillance.sites.rate <- listTransitionRates(surveillance.sites, 7, site.index, 1)
+  #surveillance.sites.rate <- aquanet::listTransitionRates(surveillance.sites, 7, site.index, 1)
   #trans_rates <- aquanet::combineTransitionRates(surveillance.sites.rate, trans_rates)
   ########
 
@@ -111,14 +111,14 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites that can be controlled
   # Create a vector with the control rate of infected sites
   infected.sites.notControlled <- control_matrix[ , 1]
-  infected.sites.control.rate.objects <- listTransitionRates(infected.sites.notControlled, 6, site.index, 1)
+  infected.sites.control.rate.objects <- aquanet::listTransitionRates(infected.sites.notControlled, 6, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(infected.sites.control.rate.objects, trans_rates)
 
   if (winter == FALSE) {
     # Identify any latent, infected sites
     # Create a vector showing the position of latent sites
     # Create a vector with the rate at which sites revert to active expression of disease
-    latent.sites.secondOutbreak <- listTransitionRates(latent.sites, 4, site.index, 1)
+    latent.sites.secondOutbreak <- aquanet::listTransitionRates(latent.sites, 4, site.index, 1)
     trans_rates <- aquanet::combineTransitionRates(latent.sites.secondOutbreak, trans_rates)
 
 
@@ -148,7 +148,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites that can become fallow
   # Create a vector with the rate at which sites become fallow
   controlled.farms <- movement.restrictions.allSite * culling_vector
-  controlled.sites.fallow.rate.objects <- listTransitionRates(controlled.farms, 9, site.index, 1)
+  controlled.sites.fallow.rate.objects <- aquanet::listTransitionRates(controlled.farms, 9, site.index, 1)
   trans_rates <- aquanet::combineTransitionRates(controlled.sites.fallow.rate.objects, trans_rates)
 
   return(list(trans_rates, withinCatchmentMovements.objects, movement.restrictions.bySite))
