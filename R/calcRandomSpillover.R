@@ -9,8 +9,8 @@ calcRandomSpillover <- function(clinical_state_vector,
   n_sites_S <- length(sites_susceptible)
 
   # create vector of infected site IDs with no resticted spread off site
-  spread.offSite.Index <- site_indices[clinical_state_vector & !spread_restricted_off]
-  n_sites_I <- length(spread.offSite.Index)
+  sites_spreading_I <- site_indices[clinical_state_vector & !spread_restricted_off]
+  n_sites_I <- length(sites_spreading_I)
 
   # calculate tranmission probability
   prob <- 1 / run_time_params[[trans_type]]
