@@ -5,8 +5,8 @@ calcRandomSpillover <- function(clinical_state_vector,
                                 trans_type,
                                 run_time_params) {
   # create vector of susceptible site IDs with no restricted spread on site
-  spread.onSite.Index <- site_indices[!clinical_state_vector & !spread_restricted_on]
-  n_sites_S <- length(spread.onSite.Index)
+  sites_susceptible <- site_indices[!clinical_state_vector & !spread_restricted_on]
+  n_sites_S <- length(sites_susceptible)
 
   # create vector of infected site IDs with no resticted spread off site
   spread.offSite.Index <- site_indices[clinical_state_vector & !spread_restricted_off]
@@ -25,7 +25,7 @@ calcRandomSpillover <- function(clinical_state_vector,
 
     # create populated output list
     listInfectionRates.objects <- list(rep.int(trans_num, times = n_sites_I),
-                                       rep.int(spread.onSite.Index[site], times = n_sites_I),
+                                       rep.int(sites_susceptible[site], times = n_sites_I),
                                        rep.int(prob, times = n_sites_I),
                                        rep.int(NA, times = n_sites_I),
                                        n_sites_I)
