@@ -1,10 +1,10 @@
-calcRandomSpillover <- function(state_vector,
+calcRandomSpillover <- function(clinical_state_vector,
                                 spread.offSite.prevented,
                                 spread.onSite.prevented,
                                 trans.type) {
 
-  spread.onSite.Index <- site.index[!state_vector & !spread.onSite.prevented]
-  spread.offSite.Index <- site.index[state_vector & !spread.offSite.prevented]
+  spread.onSite.Index <- site.index[!clinical_state_vector & !spread.onSite.prevented]
+  spread.offSite.Index <- site.index[clinical_state_vector & !spread.offSite.prevented]
   Fomite_Transmission_Independant_Prob <- 1 / ListRunTimeParameters[[trans.type]]
   noInfectedSites <- length(spread.offSite.Index)
   noSusceptibleSites <- length(spread.onSite.Index)
