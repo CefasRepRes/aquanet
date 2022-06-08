@@ -23,11 +23,11 @@
 #' non-clinically infected state (the latter includes both susceptible and latently infected sites).
 #' Note: vector created within the `update_rate` function.
 #'
-#' @param move_restricted_off (class logical) logical vector of length number of sites that
+#' @param spread_restricted_off (class logical) logical vector of length number of sites that
 #' states whether movements off this site are currently restricted (TRUE) or unrestricted (FALSE).
 #' (Note: created in the `update_rate` function of aquanet-mod).
 #'
-#' @param move_restricted_on (class logical) logical vector of length number of sites that
+#' @param spread_restricted_on (class logical) logical vector of length number of sites that
 #' states whether movements on to this site are currently restricted (TRUE) or unrestricted (FALSE).
 #' (Note: created in the `update_rate` function of aquanet-mod).
 #'
@@ -58,15 +58,15 @@
 #'
 calcRiverTransmission <- function(matrix_river_distances_prob,
                                   clinical_state_vector,
-                                  move_restricted_off,
-                                  move_restricted_on,
+                                  spread_restricted_off,
+                                  spread_restricted_on,
                                   trans_type) {
 
   # multiply probability matrix by clinical sites where offsite movements are not restricted
-  matrix_river_distances_prob <- matrix_river_distances_prob * (clinical_state_vector * !move_restricted_off)
+  matrix_river_distances_prob <- matrix_river_distances_prob * (clinical_state_vector * !spread_restricted_off)
 
   # transpose and multiply probability matrix by sites where onsite movements are not restricted
-  matrix_river_distances_prob <- t(matrix_river_distances_prob) * !move_restricted_on
+  matrix_river_distances_prob <- t(matrix_river_distances_prob) * !spread_restricted_on
 
   # re-transpose probability matrix
   matrix_river_distances_prob <- t(matrix_river_distances_prob)

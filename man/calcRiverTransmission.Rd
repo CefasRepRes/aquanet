@@ -7,8 +7,8 @@
 calcRiverTransmission(
   matrix_river_distances_prob,
   clinical_state_vector,
-  move_restricted_off,
-  move_restricted_on,
+  spread_restricted_off,
+  spread_restricted_on,
   trans_type
 )
 }
@@ -23,11 +23,11 @@ containing information on whether each site is in an 1 = clinically infected or 
 non-clinically infected state (the latter includes both susceptible and latently infected sites).
 Note: vector created within the \code{update_rate} function.}
 
-\item{move_restricted_off}{(class logical) logical vector of length number of sites that
+\item{spread_restricted_off}{(class logical) logical vector of length number of sites that
 states whether movements off this site are currently restricted (TRUE) or unrestricted (FALSE).
 (Note: created in the \code{update_rate} function of aquanet-mod).}
 
-\item{move_restricted_on}{(class logical) logical vector of length number of sites that
+\item{spread_restricted_on}{(class logical) logical vector of length number of sites that
 states whether movements on to this site are currently restricted (TRUE) or unrestricted (FALSE).
 (Note: created in the \code{update_rate} function of aquanet-mod).}
 
