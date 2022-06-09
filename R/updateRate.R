@@ -39,7 +39,9 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   withinCatchmentMovements.objects <- withinCatchmentMovements.out.objects[[2]]
 
   # Create an edge list for live fish movements from infected to exposed sites
-  susceptable.sites.exposure.rate.objects <- listInfectionRates(atriskcontacts, state_vector, 0)
+  susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = atriskcontacts,
+                                                                                       state_vector = state_vector,
+                                                                                       trans_type = 0)
   trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.rate.objects,
                                                  list_base = trans_rates)
 
@@ -142,7 +144,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
     # Identify any latent, infected sites
     # Create a vector showing the position of latent sites
     # Create a vector with the rate at which sites revert to active expression of disease
-    latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters.
+    latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
                                                                 state_vector = latent.sites,
                                                                 trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                                 site_indices = site.index,
