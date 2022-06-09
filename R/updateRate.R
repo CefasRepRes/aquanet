@@ -132,15 +132,13 @@ update_rate <- function(state_vector,
 
   # if inside active transmission period get rates of transmission for mechanisms other than LFM:
   if (winter == FALSE) {
-    # Identify any latent, infected sites
-    # Create a vector showing the position of latent sites
-    # Create a vector with the rate at which sites revert to active expression of disease
-    latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = run_time_params,
+    # Rate 7: rate at which sites revert from latent to clinical infection
+    sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                 state_vector = sites_L,
                                                                 trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                                 site_indices = site.index,
                                                                 infection_status = 1)
-    trans_rates <- aquanet::combineTransitionRates(list_append = latent.sites.secondOutbreak, list_base = trans_rates)
+    trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
 
 
     # Calculate the probability of a contact occuring downstream of an outbreak, through the river network
