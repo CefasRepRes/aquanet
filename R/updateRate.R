@@ -1,5 +1,9 @@
-update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.objects,
-                        matrix_movements_prob, run_time_params) {
+update_rate <- function(state_vector,
+                        control_matrix,
+                        farm_vector,
+                        withinCatchmentMovements.objects,
+                        matrix_movements_prob,
+                        run_time_params) {
 
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
@@ -76,7 +80,8 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
                                                                       infection_status = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects,
                                                  list_base = trans_rates)
-  ########
+
+  # Rate 3: transition from subclinical infection
 
   # Identify any latent, infected sites
   # Create a vector showing the position of latent sites
