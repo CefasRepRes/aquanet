@@ -40,8 +40,8 @@ update_rate <- function(state_vector,
 
   # Identify, and remove contacts ending at controlled sites,
   # excluding contacts from sites that can not receive transported stuff
-  atriskcontacts <- t(atriskcontacts) * !transport.onSite.prevented
-  atriskcontacts <- t(atriskcontacts)
+  atriskcontacts <- Matrix::t(atriskcontacts) * !transport.onSite.prevented
+  atriskcontacts <- Matrix::t(atriskcontacts)
 
   withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = movement.restrictions.bySite,
                                                                                    spmatrix_risk_contacts = atriskcontacts,
