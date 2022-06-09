@@ -23,7 +23,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
   # sites that are not fallow, not allowed to import fish and not latent
-  infected.sites.withRecovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
+  sites_I_recovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
 
   # sites that are fallow, allowed to import fish or latent
   spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
@@ -57,7 +57,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
 
   # Rate 1: farm transitions from infected to subclinical infection
   # create vector of infected farms that are NOT latent or fallow (leading to recovery)
-  farms_I <- state_vector * infected.sites.withRecovery * farm_vector
+  farms_I <- state_vector * sites_I_recovery * farm_vector
   infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = farms_I,
                                                                       trans_type = "Site_Recovers",
@@ -68,7 +68,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
 
   # Rate 2: fishery transitions from infected to subclinical infection
   # create vector of infected fisheries that are NOT latent (leading to latency)
-  fisheries_I <- state_vector * infected.sites.withRecovery * !farm_vector
+  fisheries_I <- state_vector * sites_I_recovery * !farm_vector
   infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = fisheries_I,
                                                                       trans_type = "Infection_Becomes_Subclinical",
