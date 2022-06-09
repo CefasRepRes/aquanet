@@ -28,4 +28,6 @@ Imports:
     Matrix,
     methods,
     rgdal,
-    sp
+    sf,
+    sp,
+    units

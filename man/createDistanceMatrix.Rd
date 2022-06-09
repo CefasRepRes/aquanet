@@ -4,7 +4,7 @@
 \alias{createDistanceMatrix}
 \title{createDistanceMatrix}
 \usage{
-createDistanceMatrix(graph, filename_site_catchments)
+createDistanceMatrix(graph, filename_site_catchments, crs_epsg)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
@@ -13,7 +13,10 @@ Section 30 movements.}
 
 \item{filename_site_catchments}{(class string) String containing the file path and file name for
 .csv containing information about site location (easting and northing) and which catchment each
-site resides in.}
+site resides in}
+
+\item{crs_epsg}{(class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
+to use for projecting the data.}
 }
 \value{
 (class list) of length 3 containing (1) a matrix of site to site distances (class matrix

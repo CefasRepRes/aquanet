@@ -6,11 +6,12 @@
 #' Origin and destination site IDs are extracted, and the data subsetted to retain only connections
 #' where both origin and destination site are present in the live fish movements contact matrix
 #' (generated with igraph). Distances of zero are removed. Distances are converted to transmission
-#' probabilities using the equation `0.005 * ((40 - (river_distance_length/1000))/39)` and
-#' probabilities less than zero are corrected. A sparse matrix with site IDs in the same order as
-#' the contact matrix is generated and populated with the river distance transmission probabilities.
-#'  The resulting list contains (1) the river distance data frame used and (2) a river distance
-#' transmission probability sparse matrix.
+#' probabilities using the equation
+#' `p1km * ((max_dist - (river_distance_length/1000))/(max_dist - 1))` and probabilities less than
+#' zero are corrected. A sparse matrix with site IDs in the same order as the contact matrix is
+#' generated and populated with the river distance transmission probabilities. The resulting list
+#' contains (1) the river distance data frame used and (2) a river distance transmission probability
+#'  sparse matrix.
 #'
 #' @param filepath_river_distances (class string) String containing the file path and file name for
 #' .csv containing information about distances between sites via river network proximity and
@@ -18,6 +19,9 @@
 #' @param out_createContactProbabilityMatrix (class list) of length 3 containing (1) number of sites
 #'  in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3)
 #'  probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).
+#' @param max_dist (class numeric) Number stating maximum distance (km) that a pathogen can travel in
+#' water via river network.
+#' @param p1km (class numeric) Probabiliy that a site 1 km downstream of infection becomes infected.
 #'
 #' @return (class list) of length 2 containing (1) distances between sites on a river network (via
 #' river connectivity) connections of 0 distances are removed (data frame) and (2) sparse matrix
@@ -29,7 +33,8 @@
 #' @importFrom utils read.csv
 #' @importFrom Matrix Matrix
 #'
-createRiverDistanceProbabilityMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix) {
+createRiverDistanceProbabilityMatrix <- function(filepath_river_distances, out_createContactProbabilityMatrix,
+                                                 max_dist, p1km) {
   # create vector of sites in the same order as the adjacency matrix
   vector_sites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
 
@@ -59,7 +64,7 @@ createRiverDistanceProbabilityMatrix <- function(filepath_river_distances, out_c
   river_distances_rm0 <- river_distances[river_distances$Total_Length > 0, ]
 
   # convert site to site river distances to probabilities correcting for probabilities below zero
-  river_distances_rm0$calcProb <- (0.005 * ((40 - (river_distances_rm0$Total_Length/1000))/39))
+  river_distances_rm0$calcProb <- (p1km * ((max_dist - (river_distances_rm0$Total_Length/1000))/(max_dist -1)))
 
   river_distances_rm0$calcProb <- ifelse(river_distances_rm0$calcProb < 0,
                                          yes = 0,
