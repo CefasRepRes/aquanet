@@ -62,24 +62,24 @@ update_rate <- function(state_vector,
   # Rate 1: farm transitions from infected to subclinical infection
   # create vector of infected farms that are NOT latent or fallow (leading to recovery)
   farms_I <- state_vector * sites_I_recovery * farm_vector
-  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
+  rate_farm_recovery <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = farms_I,
                                                                       trans_type = "Site_Recovers",
                                                                       site_indices = site.index,
                                                                       infection_status = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects,
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery,
                                                  list_base = trans_rates)
 
 
   # Rate 2: fishery transitions from infected to subclinical infection
   # create vector of infected fisheries that are NOT latent (leading to latency)
   fisheries_I <- state_vector * sites_I_recovery * !farm_vector
-  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
+  rate_fishery_latency <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = fisheries_I,
                                                                       trans_type = "Infection_Becomes_Subclinical",
                                                                       site_indices = site.index,
                                                                       infection_status = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects,
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency,
                                                  list_base = trans_rates)
 
 
