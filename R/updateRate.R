@@ -120,9 +120,9 @@ update_rate <- function(state_vector,
 
   # Rate 6: rate of detection in infected but undetected sites
   # create vector of sites that can be controlled (infection present and not detected)
-  infected.sites.notControlled <- control_matrix[ , 1]
+  sites_I_undetected <- control_matrix[ , 1]
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                     state_vector = infected.sites.notControlled,
+                                                     state_vector = sites_I_undetected,
                                                      trans_type = "Detection_Reporting_Disease",
                                                      site_indices = site.index,
                                                      infection_status = 1)
