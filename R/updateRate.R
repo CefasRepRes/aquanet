@@ -98,12 +98,12 @@ update_rate <- function(state_vector,
   # Rate 4: rate at which fallow sites are disinfected
   # create vector of sites (farms) that are fallow and infected (fallow/ready to restock post fallow)
   farms_fallow <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
-  fallow.infected.sites.rate.disinfection <- aquanet::listTransitionRates(run_time_params = run_time_params,
+  rate_farm_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                           state_vector = farms_fallow,
                                                                           trans_type = "Reinfection_After_Restocking_Const",
                                                                           site_indices = site.index,
                                                                           infection_status = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = fallow.infected.sites.rate.disinfection,
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_disinfected,
                                                  list_base = trans_rates)
 
   # Rate 5: rate at which contact traced sites will be tested
