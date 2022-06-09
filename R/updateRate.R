@@ -58,7 +58,7 @@ update_rate <- function(state_vector,
                                                  list_base = trans_rates)
 
 
-  ### calculate transition rates ----------------
+  ### calculate transition rates ----
 
   # Rate 1: farm transitions from infected to subclinical infection
   # create vector of infected farms that are NOT latent or fallow (leading to recovery)
@@ -130,37 +130,47 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected,
                                                  list_base = trans_rates)
 
-  # if inside active transmission period get rates of transmission for mechanisms other than LFM:
+
+  ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
+
   if (winter == FALSE) {
     # Rate 7: rate at which sites revert from latent to clinical infection
     sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                state_vector = sites_L,
-                                                                trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
-                                                                site_indices = site.index,
-                                                                infection_status = 1)
+                                                       state_vector = sites_L,
+                                                       trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
+                                                       site_indices = site.index,
+                                                       infection_status = 1)
     trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
 
 
-    # Calculate the probability of a contact occuring downstream of an outbreak, through the river network
+    # Rate 8: probability of a contact occurring downstream of an outbreak via the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
     riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
     susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(riverDownstream.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 10)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byRiver.downstream.objects,
                                                    list_base = trans_rates)
 
-    ########
-    ######## Calculate the probability of a contact occuring due to local fomite transmission
+
+    # Rate 9: probability of a contact occurring due to local fomite transmission
     fomite.matrix <- graph.estimateSiteDistances.objects[[2]]
     susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(fomite.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 14)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byFomites.objects,
                                                    list_base = trans_rates)
-    ########
 
 
-    #Identify potential transitions from infected to susceptable sites that could occur randomly, regardless of the proposed mechanism
-    #Exclude contacts from sites that can not perticipate in such a mechanism of transmition
+
+    ## if there are susceptible sites without restrictions preventing spread on site: ----
+
     if (sum(!state_vector & !spread.onSite.prevented) != 0) {
-      spill.over.objects <- calcRandomSpillover(clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 11)
+
+      # Rate 10: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
+      # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
+      spill.over.objects <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
+                                                         spread_restricted_off = spread.offSite.prevented,
+                                                         spread_restricted_on = spread.onSite.prevented,
+                                                         site_indices = site.index,
+                                                         trans_type = "Fomite_Transmission_Independant_Prob",
+                                                         run_time_params = run_time_params)
       trans_rates <- aquanet::combineTransitionRates(list_append = spill.over.objects,
                                                      list_base = trans_rates)
     }
