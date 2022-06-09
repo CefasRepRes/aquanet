@@ -75,20 +75,6 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
                                                  list_base = trans_rates)
   ########
 
-  ######## This is the original code
-  # Identify any infected sites, which are not latent, or fallow
-  # Create a vector showing the position of infected sites
-  # Create a vector with the rate at which sites lapse into latency, or recover
-  # State 3 and 2 leads to recovery and latency, respectively
-  #infected.sites <- state_vector * infected.sites.withRecovery
-  # infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
-  #                                                                     state_vector = infected.sites,
-  #                                                                     trans_type = "Infection_Becomes_Subclinical",
-  #                                                                     site_indices = site.index,
-  #                                                                     infection_status = 1)
-  #trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects, list_base = trans_rates)
-  ########
-
   # Identify any latent, infected sites
   # Create a vector showing the position of latent sites
   # Create a vector with the recovery rate of latent sites
