@@ -70,6 +70,7 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects,
                                                  list_base = trans_rates)
 
+
   # Rate 2: fishery transitions from infected to subclinical infection
   # create vector of infected fisheries that are NOT latent (leading to latency)
   fisheries_I <- state_vector * sites_I_recovery * !farm_vector
@@ -81,14 +82,12 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.recover.rate.objects,
                                                  list_base = trans_rates)
 
-  # Rate 3: transition from subclinical infection
 
-  # Identify any latent, infected sites
-  # Create a vector showing the position of latent sites
-  # Create a vector with the recovery rate of latent sites
-  latent.sites <- as.logical(control_matrix[ , 6])
+  # Rate 3: transition from subclinical infection (farms and fisheries)
+  # create a vector of latently infected sites
+  sites_L <- as.logical(control_matrix[ , 6])
   latent.sites.recovery.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                     state_vector = latent.sites,
+                                                                     state_vector = sites_L,
                                                                      trans_type = "Clearing_Of_Latency_From_Infected_Sites",
                                                                      site_indices = site.index,
                                                                      infection_status = 1)
@@ -151,7 +150,7 @@ update_rate <- function(state_vector,
     # Create a vector showing the position of latent sites
     # Create a vector with the rate at which sites revert to active expression of disease
     latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                state_vector = latent.sites,
+                                                                state_vector = sites_L,
                                                                 trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                                 site_indices = site.index,
                                                                 infection_status = 1)
