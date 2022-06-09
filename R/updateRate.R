@@ -117,21 +117,6 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested,
                                                  list_base = trans_rates)
 
-  ########
-  # Identify sites that are under surveillance or management
-  # This is so the simulation continues even if there is no infection left in the system
-  # The simualiton will check roughly every 42 days to see if the management status' need updating
-  # Create a vector showing the position of sites that are under surveillance
-  # Create a vector showing the rates at which the sites under surveillance should be allowed to trade again
-  #surveillance.sites <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
-  #surveillance.sites <- ifelse(surveillance.sites > 0, 1, 0)
-  # surveillance.sites.rate <- aquanet::listTransitionRates(run_time_params = run_time_params,
-  #                                                         state_vector = surveillance.sites,
-  #                                                         trans_type = "Early_Controls_Fisheries",
-  #                                                         site_indices = site.index,
-  #                                                         infection_status = 1)
-  #trans_rates <- aquanet::combineTransitionRates(list_append = surveillance.sites.rate, list_base = trans_rates)
-  ########
 
   # Identify sites that can become controlled
   # Create a vector showing the position of sites that can be controlled
