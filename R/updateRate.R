@@ -158,14 +158,22 @@ update_rate <- function(state_vector,
     # Rate 8: probability of a contact occurring downstream of an outbreak via the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
     riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
-    susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(riverDownstream.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 10)
+    susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
+                                                                                            clinical_state_vector = clinical.vector,
+                                                                                            spread_restricted_off = spread.offSite.prevented,
+                                                                                            spread_restricted_on = spread.onSite.prevented,
+                                                                                            trans_type = 10)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byRiver.downstream.objects,
                                                    list_base = trans_rates)
 
 
     # Rate 9: probability of a contact occurring due to local fomite transmission
     fomite.matrix <- graph.estimateSiteDistances.objects[[2]]
-    susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(fomite.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 14)
+    susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
+                                                                                   clinical_state_vector = clinical.vector,
+                                                                                   spread_restricted_off = spread.offSite.prevented,
+                                                                                   spread_restricted_on = spread.onSite.prevented,
+                                                                                   trans_type = 14)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byFomites.objects,
                                                    list_base = trans_rates)
 
