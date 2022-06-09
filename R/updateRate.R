@@ -106,12 +106,11 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = fallow.infected.sites.rate.disinfection,
                                                  list_base = trans_rates)
 
-  # Identify sites which have been contact traced
-  # Create a vector showing the position of sites which have been contact traced
-  # Create a vector showing the rate at which contact traced sites will be tested
-  contact.traced.sites <- control_matrix[ , 7]
+  # Rate 5: rate at which contact traced sites will be tested
+  # create vector of sites which have been contact traced
+  sites_contact_traced <- control_matrix[ , 7]
   contact.traced.sites.rate.testing <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                    state_vector = contact.traced.sites,
+                                                                    state_vector = sites_contact_traced,
                                                                     trans_type = "Contact_Detection",
                                                                     site_indices = site.index,
                                                                     infection_status = 1)
