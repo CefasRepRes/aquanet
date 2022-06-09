@@ -3,7 +3,8 @@ update_rate <- function(state_vector,
                         farm_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
-                        run_time_params) {
+                        run_time_params,
+                        winter) {
 
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
@@ -129,6 +130,7 @@ update_rate <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected,
                                                  list_base = trans_rates)
 
+  # if inside active transmission period get rates of transmission for mechanisms other than LFM:
   if (winter == FALSE) {
     # Identify any latent, infected sites
     # Create a vector showing the position of latent sites
