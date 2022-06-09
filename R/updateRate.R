@@ -1,5 +1,5 @@
 update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.objects,
-                        matrix_movements_prob) {
+                        matrix_movements_prob, run_time_params) {
 
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
@@ -56,7 +56,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
   farms_I <- state_vector * infected.sites.withRecovery * farm_vector
-  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = farms_I,
                                                                       trans_type = "Site_Recovers",
                                                                       site_indices = site.index,
@@ -71,7 +71,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
   fisheries_I <- state_vector * infected.sites.withRecovery * !farm_vector
-  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = fisheries_I,
                                                                       trans_type = "Infection_Becomes_Subclinical",
                                                                       site_indices = site.index,
@@ -84,7 +84,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of latent sites
   # Create a vector with the recovery rate of latent sites
   latent.sites <- as.logical(control_matrix[ , 6])
-  latent.sites.recovery.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  latent.sites.recovery.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                      state_vector = latent.sites,
                                                                      trans_type = "Clearing_Of_Latency_From_Infected_Sites",
                                                                      site_indices = site.index,
@@ -96,7 +96,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites that are fallow and infected
   # Create a vector showing the rate at which fallow sites are disinfected
   fallow.infected.sites <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
-  fallow.infected.sites.rate.disinfection <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  fallow.infected.sites.rate.disinfection <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                           state_vector = fallow.infected.sites,
                                                                           trans_type = "Reinfection_After_Restocking_Const",
                                                                           site_indices = site.index,
@@ -108,7 +108,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites which have been contact traced
   # Create a vector showing the rate at which contact traced sites will be tested
   contact.traced.sites <- control_matrix[ , 7]
-  contact.traced.sites.rate.testing <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  contact.traced.sites.rate.testing <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                     state_vector = contact.traced.sites,
                                                                     trans_type = "Contact_Detection",
                                                                     site_indices = site.index,
@@ -124,7 +124,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the rates at which the sites under surveillance should be allowed to trade again
   #surveillance.sites <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
   #surveillance.sites <- ifelse(surveillance.sites > 0, 1, 0)
-  # surveillance.sites.rate <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  # surveillance.sites.rate <- aquanet::listTransitionRates(run_time_params = run_time_params,
   #                                                         state_vector = surveillance.sites,
   #                                                         trans_type = "Early_Controls_Fisheries",
   #                                                         site_indices = site.index,
@@ -136,7 +136,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites that can be controlled
   # Create a vector with the control rate of infected sites
   infected.sites.notControlled <- control_matrix[ , 1]
-  infected.sites.control.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  infected.sites.control.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                       state_vector = infected.sites.notControlled,
                                                                       trans_type = "Detection_Reporting_Disease",
                                                                       site_indices = site.index,
@@ -147,7 +147,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
     # Identify any latent, infected sites
     # Create a vector showing the position of latent sites
     # Create a vector with the rate at which sites revert to active expression of disease
-    latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+    latent.sites.secondOutbreak <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                 state_vector = latent.sites,
                                                                 trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                                 site_indices = site.index,
@@ -184,7 +184,7 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of sites that can become fallow
   # Create a vector with the rate at which sites become fallow
   controlled.farms <- movement.restrictions.allSite * culling_vector
-  controlled.sites.fallow.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+  controlled.sites.fallow.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                        state_vector = controlled.farms,
                                                                        trans_type = "Time_Required_Cull_Site",
                                                                        site_indices = site.index,
