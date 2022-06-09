@@ -118,16 +118,16 @@ update_rate <- function(state_vector,
                                                  list_base = trans_rates)
 
 
-  # Identify sites that can become controlled
-  # Create a vector showing the position of sites that can be controlled
-  # Create a vector with the control rate of infected sites
+  # Rate 6: rate of detection in infected but undetected sites
+  # create vector of sites that can be controlled (infection present and not detected)
   infected.sites.notControlled <- control_matrix[ , 1]
-  infected.sites.control.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                      state_vector = infected.sites.notControlled,
-                                                                      trans_type = "Detection_Reporting_Disease",
-                                                                      site_indices = site.index,
-                                                                      infection_status = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = infected.sites.control.rate.objects, list_base = trans_rates)
+  rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
+                                                     state_vector = infected.sites.notControlled,
+                                                     trans_type = "Detection_Reporting_Disease",
+                                                     site_indices = site.index,
+                                                     infection_status = 1)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected,
+                                                 list_base = trans_rates)
 
   if (winter == FALSE) {
     # Identify any latent, infected sites
