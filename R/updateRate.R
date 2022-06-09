@@ -55,9 +55,9 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of infected sites
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
-  infected.sites <- state_vector * infected.sites.withRecovery * farm_vector
+  farms_I <- state_vector * infected.sites.withRecovery * farm_vector
   infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
-                                                                      state_vector = infected.sites,
+                                                                      state_vector = farms_I,
                                                                       trans_type = "Site_Recovers",
                                                                       site_indices = site.index,
                                                                       infection_status = 1)
@@ -70,9 +70,9 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   # Create a vector showing the position of infected sites
   # Create a vector with the rate at which sites lapse into latency, or recover
   # State 3 and 2 leads to recovery and latency, respectively
-  infected.sites <- state_vector * infected.sites.withRecovery * !farm_vector
+  fisheries_I <- state_vector * infected.sites.withRecovery * !farm_vector
   infected.sites.recover.rate.objects <- aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
-                                                                      state_vector = infected.sites,
+                                                                      state_vector = fisheries_I,
                                                                       trans_type = "Infection_Becomes_Subclinical",
                                                                       site_indices = site.index,
                                                                       infection_status = 1)
