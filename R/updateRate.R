@@ -34,7 +34,10 @@ update_rate <- function(state_vector, control_matrix, withinCatchmentMovements.o
   atriskcontacts <- t(atriskcontacts) * !transport.onSite.prevented
   atriskcontacts <- t(atriskcontacts)
 
-  withinCatchmentMovements.out.objects <- excludeWithinCatchmentMovements(movement.restrictions.bySite, atriskcontacts, withinCatchmentMovements.objects)
+  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = movement.restrictions.bySite,
+                                                                                   spmatrix_risk_contacts = atriskcontacts,
+                                                                                   catchment_movements = withinCatchmentMovements.objects,
+                                                                                   matrix_movements_prob = matrix_movements_prob)
   atriskcontacts <- withinCatchmentMovements.out.objects[[1]]
   withinCatchmentMovements.objects <- withinCatchmentMovements.out.objects[[2]]
 
