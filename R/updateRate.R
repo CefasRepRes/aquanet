@@ -86,12 +86,12 @@ update_rate <- function(state_vector,
   # Rate 3: transition from subclinical infection (farms and fisheries)
   # create a vector of latently infected sites
   sites_L <- as.logical(control_matrix[ , 6])
-  latent.sites.recovery.rate.objects <- aquanet::listTransitionRates(run_time_params = run_time_params,
+  rate_site_cleared <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                      state_vector = sites_L,
                                                                      trans_type = "Clearing_Of_Latency_From_Infected_Sites",
                                                                      site_indices = site.index,
                                                                      infection_status = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = latent.sites.recovery.rate.objects,
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared,
                                                  list_base = trans_rates)
 
 
