@@ -165,13 +165,13 @@ update_rate <- function(state_vector,
 
       # Rate 10: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
       # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
-      spill.over.objects <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
+      sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
                                                          spread_restricted_off = spread.offSite.prevented,
                                                          spread_restricted_on = spread.onSite.prevented,
                                                          site_indices = site.index,
                                                          trans_type = "Fomite_Transmission_Independant_Prob",
                                                          run_time_params = run_time_params)
-      trans_rates <- aquanet::combineTransitionRates(list_append = spill.over.objects,
+      trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change,
                                                      list_base = trans_rates)
     }
   }
