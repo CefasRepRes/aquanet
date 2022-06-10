@@ -14,20 +14,20 @@ update_rate <- function(state_vector,
 
   ### define movement restrictions ----
 
-  # Scenario 1: culling - farms in the surveillance and fallow periods (infection detected, movements restricted and fallow)
+  # Scenario 1: culling - all sites in the surveillance and fallow periods (infection detected/movements restricted/fallow state)
   # Note: for culling all sites transition from 2 -> 4
   # Note: when sites are contact traced, movements are controlled, but not culled until infection is confirmed
   # therefore contact tracing is not used to determine these movement restrictions
-  farms_movement_restricted <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
+  sites_all_movement_restricted <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
 
   # Scenario 2: surveillance - sites in the surveillance period
   sites_movement_restricted <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
 
-  ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
+  # sites that have ...  Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
   transport_prevented_on <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
   transport_prevented_off <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
-  # sites that are fallow, allowed to import fish or latent
+  # farms that have fallowed, are empty and can restock and latent - i.e. cannot spread
   spread_prevented_on <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
   spread_prevented_off <- spread_prevented_on
 
@@ -71,7 +71,7 @@ update_rate <- function(state_vector,
   atriskcontacts <- Matrix::t(atriskcontacts) * !transport_prevented_on
   atriskcontacts <- Matrix::t(atriskcontacts)
 
-  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = farms_movement_restricted,
+  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                                    spmatrix_risk_contacts = atriskcontacts,
                                                                                    catchment_movements = withinCatchmentMovements.objects,
                                                                                    matrix_movements_prob = matrix_movements_prob)
@@ -210,5 +210,5 @@ update_rate <- function(state_vector,
     }
   }
 
-  return(list(trans_rates, withinCatchmentMovements.objects, farms_movement_restricted))
+  return(list(trans_rates, withinCatchmentMovements.objects, sites_all_movement_restricted))
 }
