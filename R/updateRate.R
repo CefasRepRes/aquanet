@@ -63,15 +63,15 @@ update_rate <- function(state_vector,
   clinical.vector <- state_vector * !control_matrix[ , 6]
 
 
+  ### identify LFM contacts carrying risk ----
 
-  # Identify contacts originating from infected sites,
-  # excluding contacts from sites that can not transport off site
+  # retain contact probabilities where origin site is infected with unrestricted transport off site
   atriskcontacts <- matrix_movements_prob * (state_vector * !transport_prevented_off)
 
-  # Identify, and remove contacts ending at controlled sites,
-  # excluding contacts from sites that can not receive transported stuff
+  # retain contact probabilities where receiving sites have no restricted transport on site
   atriskcontacts <- Matrix::t(atriskcontacts) * !transport_prevented_on
   atriskcontacts <- Matrix::t(atriskcontacts)
+
 
   withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                                    spmatrix_risk_contacts = atriskcontacts,
