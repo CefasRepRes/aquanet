@@ -27,8 +27,8 @@ update_rate <- function(state_vector,
   transport_prevented_off <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
   # sites that are fallow, allowed to import fish or latent
-  spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
-  spread.offSite.prevented <- spread.onSite.prevented
+  spread_prevented_on <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
+  spread.offSite.prevented <- spread_prevented_on
 
 
   ### define site types ----
@@ -174,7 +174,7 @@ update_rate <- function(state_vector,
     susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
                                                                                             clinical_state_vector = clinical.vector,
                                                                                             spread_restricted_off = spread.offSite.prevented,
-                                                                                            spread_restricted_on = spread.onSite.prevented,
+                                                                                            spread_restricted_on = spread_prevented_on,
                                                                                             trans_type = 10)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byRiver.downstream.objects,
                                                    list_base = trans_rates)
@@ -185,7 +185,7 @@ update_rate <- function(state_vector,
     susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
                                                                                    clinical_state_vector = clinical.vector,
                                                                                    spread_restricted_off = spread.offSite.prevented,
-                                                                                   spread_restricted_on = spread.onSite.prevented,
+                                                                                   spread_restricted_on = spread_prevented_on,
                                                                                    trans_type = 14)
     trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byFomites.objects,
                                                    list_base = trans_rates)
@@ -194,13 +194,13 @@ update_rate <- function(state_vector,
 
     ## if there are susceptible sites without restrictions preventing spread on site: ----
 
-    if (sum(!state_vector & !spread.onSite.prevented) != 0) {
+    if (sum(!state_vector & !spread_prevented_on) != 0) {
 
       # Rate 10: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
       # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
       sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
                                                          spread_restricted_off = spread.offSite.prevented,
-                                                         spread_restricted_on = spread.onSite.prevented,
+                                                         spread_restricted_on = spread_prevented_on,
                                                          site_indices = site.index,
                                                          trans_type = "Fomite_Transmission_Independant_Prob",
                                                          run_time_params = run_time_params)
