@@ -66,6 +66,7 @@
 #'
 #' @export
 #'
+#' @importFrom Matrix t
 excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             spmatrix_risk_contacts,
                                             catchment_movements,
@@ -79,7 +80,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   site_control_type <- catchment_movements[[5]]
 
   # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether movements are restricted
-  catchments_controlled <- t(spmatrix_sites_catchment) %*% move_restricted_sites
+  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites
 
   # determine number of catchments under control
   n_catchments_controlled <- sum(catchments_controlled > 0)
@@ -110,8 +111,8 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     # if the site control type is 1 (allow movements within or between infected catchments)
     if (site_control_type == 1) {
       # create matrix of contacts made to other sites within controlled catchments
-      sites_controlled_between_catchment_prob <- t(sites_controlled_prob) * sites_controlled
-      sites_controlled_between_catchment_prob <- t(sites_controlled_between_catchment_prob)
+      sites_controlled_between_catchment_prob <- Matrix::t(sites_controlled_prob) * sites_controlled
+      sites_controlled_between_catchment_prob <- Matrix::t(sites_controlled_between_catchment_prob)
 
       # exclude within catchment movements from the matrix of contacts made to other sites within controlled catchments
       sites_controlled_between_catchment_prob <- sites_controlled_between_catchment_prob - sites_controlled_in_catchment_prob
