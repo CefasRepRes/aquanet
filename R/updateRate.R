@@ -1,6 +1,7 @@
 update_rate <- function(state_vector,
                         control_matrix,
                         farm_vector,
+                        culling_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
                         run_time_params,
