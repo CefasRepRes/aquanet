@@ -24,7 +24,7 @@ update_rate <- function(state_vector,
 
   ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
   transport_prevented_on <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
-  transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
+  transport_prevented_off <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
   # sites that are fallow, allowed to import fish or latent
   spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
@@ -63,7 +63,7 @@ update_rate <- function(state_vector,
 
   # Identify contacts originating from infected sites,
   # excluding contacts from sites that can not transport off site
-  atriskcontacts <- matrix_movements_prob * (state_vector * !transport.offSite.prevented)
+  atriskcontacts <- matrix_movements_prob * (state_vector * !transport_prevented_off)
 
   # Identify, and remove contacts ending at controlled sites,
   # excluding contacts from sites that can not receive transported stuff
