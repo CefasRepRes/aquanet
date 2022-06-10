@@ -81,11 +81,11 @@ update_rate <- function(state_vector,
 
   ### calculate LFM infection rate ----
 
-  # Infection Rate 1: LFM contacts from infected to susceptible sites
-  susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
-                                                                                       state_vector = state_vector,
-                                                                                       trans_type = 0)
-  trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.rate.objects,
+  # Infection Rate 1: exposure rate of LFM contacts from infected to susceptible sites
+  rate_site_infection <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
+                                                                   state_vector = state_vector,
+                                                                   trans_type = 0)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_infection,
                                                  list_base = trans_rates)
 
 
