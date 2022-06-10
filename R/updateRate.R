@@ -23,11 +23,12 @@ update_rate <- function(state_vector,
   # Scenario 2: surveillance - sites in the surveillance period
   sites_movement_restricted <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
 
-  # sites that have ...  Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
+  # sites where movement is restricted on or off site (Note: latent sites can import but not export)
+  # Note: include sites in surveillance stage 3 as they can move fish within infected catchments
   transport_prevented_on <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
   transport_prevented_off <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
-  # farms that have fallowed, are empty and can restock and latent - i.e. cannot spread
+  # sites that have fallowed, are empty and can restock or are latently infected - i.e. cannot spread
   spread_prevented_on <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
   spread_prevented_off <- spread_prevented_on
 
