@@ -1,4 +1,5 @@
 update_rate <- function(state_vector,
+                        site_indices,
                         control_matrix,
                         farm_vector,
                         culling_vector,
@@ -91,7 +92,7 @@ update_rate <- function(state_vector,
   rate_farm_recovery <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                      state_vector = farms_I,
                                                      trans_type = "Site_Recovers",
-                                                     site_indices = site.index,
+                                                     site_indices = site_indices,
                                                      infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery,
                                                  list_base = trans_rates)
@@ -101,7 +102,7 @@ update_rate <- function(state_vector,
   rate_fishery_latency <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = fisheries_I,
                                                        trans_type = "Infection_Becomes_Subclinical",
-                                                       site_indices = site.index,
+                                                       site_indices = site_indices,
                                                        infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency,
                                                  list_base = trans_rates)
@@ -111,7 +112,7 @@ update_rate <- function(state_vector,
   rate_site_cleared <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                     state_vector = sites_L,
                                                     trans_type = "Clearing_Of_Latency_From_Infected_Sites",
-                                                    site_indices = site.index,
+                                                    site_indices = site_indices,
                                                     infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared,
                                                  list_base = trans_rates)
@@ -121,7 +122,7 @@ update_rate <- function(state_vector,
   rate_farm_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                         state_vector = farms_fallow,
                                                         trans_type = "Reinfection_After_Restocking_Const",
-                                                        site_indices = site.index,
+                                                        site_indices = site_indices,
                                                         infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_disinfected,
                                                  list_base = trans_rates)
@@ -130,7 +131,7 @@ update_rate <- function(state_vector,
   rate_sites_ct_tested <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_contact_traced,
                                                        trans_type = "Contact_Detection",
-                                                       site_indices = site.index,
+                                                       site_indices = site_indices,
                                                        infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested,
                                                  list_base = trans_rates)
@@ -140,7 +141,7 @@ update_rate <- function(state_vector,
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                      state_vector = sites_I_undetected,
                                                      trans_type = "Detection_Reporting_Disease",
-                                                     site_indices = site.index,
+                                                     site_indices = site_indices,
                                                      infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected,
                                                  list_base = trans_rates)
@@ -150,7 +151,7 @@ update_rate <- function(state_vector,
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                        state_vector = farms_I_controlled,
                                                                        trans_type = "Time_Required_Cull_Site",
-                                                                       site_indices = site.index,
+                                                                       site_indices = site_indices,
                                                                        infection_state = 1)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow,
                                                  list_base = trans_rates)
@@ -163,7 +164,7 @@ update_rate <- function(state_vector,
     sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_L,
                                                        trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
-                                                       site_indices = site.index,
+                                                       site_indices = site_indices,
                                                        infection_state = 1)
     trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
 
@@ -201,7 +202,7 @@ update_rate <- function(state_vector,
       sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
                                                          spread_restricted_off = spread_prevented_off,
                                                          spread_restricted_on = spread_prevented_on,
-                                                         site_indices = site.index,
+                                                         site_indices = site_indices,
                                                          trans_type = "Fomite_Transmission_Independant_Prob",
                                                          run_time_params = run_time_params)
       trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change,
