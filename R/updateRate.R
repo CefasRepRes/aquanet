@@ -5,6 +5,7 @@ update_rate <- function(state_vector,
                         culling_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
+                        graph.riverDistance.objects,
                         fomite.matrix,
                         run_time_params,
                         winter) {
@@ -165,9 +166,7 @@ update_rate <- function(state_vector,
                                                        infection_state = 1)
 
     # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
-    graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
-    riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
-    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
+    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = graph.riverDistance.objects[[1]][[2]],
                                                      clinical_state_vector = clinical.vector,
                                                      spread_restricted_off = spread_prevented_off,
                                                      spread_restricted_on = spread_prevented_on,
