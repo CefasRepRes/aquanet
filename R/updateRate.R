@@ -154,14 +154,15 @@ update_rate <- function(state_vector,
   ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
 
   if (winter == FALSE) {
+
+    ### calculate transition rates ----
+
     # Rate 8: rate at which sites revert from latent to clinical infection
     sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_L,
                                                        trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                        site_indices = site_indices,
                                                        infection_state = 1)
-    trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
-
 
     # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
@@ -171,9 +172,6 @@ update_rate <- function(state_vector,
                                                      spread_restricted_off = spread_prevented_off,
                                                      spread_restricted_on = spread_prevented_on,
                                                      trans_type = 10)
-    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_river,
-                                                   list_base = trans_rates)
-
 
     # Rate 10: probability of a contact occurring due to local fomite transmission
     contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
@@ -181,13 +179,20 @@ update_rate <- function(state_vector,
                                                       spread_restricted_off = spread_prevented_off,
                                                       spread_restricted_on = spread_prevented_on,
                                                       trans_type = 14)
-    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_fomite, list_base = trans_rates)
 
+
+    ### combine transition rates ----
+
+    trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
+    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_river, list_base = trans_rates)
+    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_fomite, list_base = trans_rates)
 
 
     ## if there are susceptible sites without restrictions preventing spread on site: ----
 
     if (sum(!state_vector & !spread_prevented_on) != 0) {
+
+      ### calculate & combine transition rates ----
 
       # Rate 11: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
       # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
@@ -199,6 +204,7 @@ update_rate <- function(state_vector,
                                                          run_time_params = run_time_params)
 
       trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change,list_base = trans_rates)
+
     }
   }
 
