@@ -5,7 +5,7 @@ update_rate <- function(state_vector,
                         culling_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
-                        matrix_river_prob,
+                        river_prob,
                         site_distances,
                         run_time_params,
                         non_peak_season) {
@@ -158,7 +158,7 @@ update_rate <- function(state_vector,
                                                        site_indices = site_indices)
 
     # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
-    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = matrix_river_prob[[2]],
+    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = river_prob[[2]],
                                                      clinical_state_vector = clinical_vector,
                                                      spread_restricted_off = spread_prevented_off,
                                                      spread_restricted_on = spread_prevented_on,
