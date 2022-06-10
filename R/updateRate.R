@@ -58,7 +58,7 @@ update_rate <- function(state_vector,
   farms_I_controlled <- sites_movement_restricted * culling_vector
 
   # create vector of clinically infected sites
-  clinical.vector <- state_vector * !control_matrix[ , 6]
+  clinical_vector <- state_vector * !control_matrix[ , 6]
 
 
   ### identify LFM contacts carrying risk ----
@@ -167,14 +167,14 @@ update_rate <- function(state_vector,
 
     # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
     contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = graph.riverDistance.objects[[1]][[2]],
-                                                     clinical_state_vector = clinical.vector,
+                                                     clinical_state_vector = clinical_vector,
                                                      spread_restricted_off = spread_prevented_off,
                                                      spread_restricted_on = spread_prevented_on,
                                                      trans_type = 10)
 
     # Rate 10: probability of a contact occurring due to local fomite transmission
     contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
-                                                      clinical_state_vector = clinical.vector,
+                                                      clinical_state_vector = clinical_vector,
                                                       spread_restricted_off = spread_prevented_off,
                                                       spread_restricted_on = spread_prevented_on,
                                                       trans_type = 14)
@@ -195,7 +195,7 @@ update_rate <- function(state_vector,
 
       # Rate 11: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
       # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
-      sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
+      sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical_vector,
                                                          spread_restricted_off = spread_prevented_off,
                                                          spread_restricted_on = spread_prevented_on,
                                                          site_indices = site_indices,
