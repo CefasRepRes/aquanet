@@ -9,15 +9,13 @@ update_rate <- function(state_vector,
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
 
-  # When a site has been contact traced it will be subject to movement controls, but
-  # will not be culled, released from controls or used to infer which catchments
-  # need to be controlled until infection has been confirmed.
-  # Hence contact tracing isn't used to calculate 'movement.restrictions.bySite'
 
   ### define movement restrictions ----
 
   # Scenario 1: culling - farms in the surveillance and fallow periods (infection detected, movements restricted and fallow)
   # Note: for culling all sites transition from 2 -> 4
+  # Note: when sites are contact traced, movements are controlled, but not culled until infection is confirmed
+  # therefore contact tracing is not used to determine these movement restrictions
   movement.restrictions.bySite <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
 
   # Scenario 2: surveillance - sites in the surveillance period
