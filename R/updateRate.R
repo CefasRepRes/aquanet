@@ -5,6 +5,7 @@ update_rate <- function(state_vector,
                         culling_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
+                        fomite.matrix,
                         run_time_params,
                         winter) {
 
@@ -175,7 +176,6 @@ update_rate <- function(state_vector,
 
 
     # Rate 10: probability of a contact occurring due to local fomite transmission
-    fomite.matrix <- graph.estimateSiteDistances.objects[[2]]
     susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
                                                                                    clinical_state_vector = clinical.vector,
                                                                                    spread_restricted_off = spread_prevented_off,
