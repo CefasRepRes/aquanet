@@ -4,7 +4,7 @@ update_rate <- function(state_vector,
                         farm_vector,
                         culling_vector,
                         withinCatchmentMovements.objects,
-                        matrix_movements_prob,
+                        movements_prob,
                         river_prob,
                         site_distances,
                         run_time_params,
@@ -64,7 +64,7 @@ update_rate <- function(state_vector,
   ### identify LFM contacts carrying risk ----
 
   # retain contact probabilities where origin site is infected with unrestricted transport off site
-  matrix_risk_contacts <- matrix_movements_prob * (state_vector * !transport_prevented_off)
+  matrix_risk_contacts <- movements_prob[[3]] * (state_vector * !transport_prevented_off)
 
   # retain contact probabilities where receiving sites have no restricted transport on site
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
@@ -74,7 +74,7 @@ update_rate <- function(state_vector,
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = withinCatchmentMovements.objects,
-                                                                            matrix_movements_prob = matrix_movements_prob)
+                                                                            matrix_movements_prob = movements_prob[[3]])
 
 
   ### calculate LFM infection rate ----
