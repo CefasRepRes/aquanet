@@ -34,6 +34,7 @@ update_rate <- function(state_vector,
 
 
   ### define site types ----
+
   # sites that are NOT fallow, post-fallow state, or latent (i.e. not recovering)
   sites_I_recovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
 
