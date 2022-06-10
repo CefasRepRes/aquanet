@@ -6,7 +6,7 @@ update_rate <- function(state_vector,
                         withinCatchmentMovements.objects,
                         matrix_movements_prob,
                         graph.riverDistance.objects,
-                        fomite.matrix,
+                        site_distances_matrix,
                         run_time_params,
                         non_peak_season) {
 
@@ -173,7 +173,7 @@ update_rate <- function(state_vector,
                                                      trans_type = 10)
 
     # Rate 10: probability of a contact occurring due to local fomite transmission
-    contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
+    contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = site_distances_matrix[[2]],
                                                       clinical_state_vector = clinical_vector,
                                                       spread_restricted_off = spread_prevented_off,
                                                       spread_restricted_on = spread_prevented_on,
