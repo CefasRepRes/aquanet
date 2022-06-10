@@ -14,7 +14,7 @@ update_rate <- function(state_vector,
 
   ### define movement restrictions ----
 
-  # Scenario 1: culling - all sites in the surveillance and fallow periods (infection detected/movements restricted/fallow state)
+  # Scenario 1: culling - all sites in the surveillance and fallow periods
   # Note: for culling all sites transition from 2 -> 4
   # Note: when sites are contact traced, movements are controlled, but not culled until infection is confirmed
   # therefore contact tracing is not used to determine these movement restrictions
