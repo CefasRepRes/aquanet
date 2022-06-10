@@ -77,7 +77,6 @@ update_rate <- function(state_vector,
                                                                                    spmatrix_risk_contacts = atriskcontacts,
                                                                                    catchment_movements = withinCatchmentMovements.objects,
                                                                                    matrix_movements_prob = matrix_movements_prob)
-  withinCatchmentMovements.objects <- withinCatchmentMovements.out.objects[[2]]
 
   # Create an edge list for live fish movements from infected to exposed sites
   susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = withinCatchmentMovements.out.objects[[1]],
@@ -211,5 +210,5 @@ update_rate <- function(state_vector,
     }
   }
 
-  return(list(trans_rates, withinCatchmentMovements.objects, sites_all_movement_restricted))
+  return(list(trans_rates, withinCatchmentMovements.out.objects[[2]], sites_all_movement_restricted))
 }
