@@ -127,7 +127,7 @@ update_rate <- function(state_vector,
                                                      site_indices = site_indices,
                                                      infection_state = 1)
 
-  # Rate X: rate at which sites become fallow
+  # Rate 7: rate at which sites become fallow
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                                        state_vector = farms_I_controlled,
                                                                        trans_type = "Time_Required_Cull_Site",
@@ -153,7 +153,7 @@ update_rate <- function(state_vector,
   ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
 
   if (winter == FALSE) {
-    # Rate 7: rate at which sites revert from latent to clinical infection
+    # Rate 8: rate at which sites revert from latent to clinical infection
     sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_L,
                                                        trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
@@ -162,7 +162,7 @@ update_rate <- function(state_vector,
     trans_rates <- aquanet::combineTransitionRates(list_append = sites_L_recrudesce, list_base = trans_rates)
 
 
-    # Rate 8: probability of a contact occurring downstream of an outbreak via the river network
+    # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
     riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
     susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
@@ -174,7 +174,7 @@ update_rate <- function(state_vector,
                                                    list_base = trans_rates)
 
 
-    # Rate 9: probability of a contact occurring due to local fomite transmission
+    # Rate 10: probability of a contact occurring due to local fomite transmission
     fomite.matrix <- graph.estimateSiteDistances.objects[[2]]
     susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
                                                                                    clinical_state_vector = clinical.vector,
@@ -190,7 +190,7 @@ update_rate <- function(state_vector,
 
     if (sum(!state_vector & !spread_prevented_on) != 0) {
 
-      # Rate 10: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
+      # Rate 11: identify transitions from infected to susceptible sites that could occur randomly regardless of mechanism
       # Note: excludes contacts from sites whose restrictions prevent this mechanism of transmission
       sites_random_change <- aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
                                                          spread_restricted_off = spread_prevented_off,
