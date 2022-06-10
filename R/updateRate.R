@@ -9,6 +9,28 @@ update_rate <- function(state_vector,
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
 
+  # When a site has been contact traced it will be subject to movement controls, but
+  # will not be culled, released from controls or used to infer which catchments
+  # need to be controlled until infection has been confirmed.
+  # Hence contact tracing isn't used to calculate 'movement.restrictions.bySite'
+
+  ### define movement restrictions ----
+
+  # Scenario 1: culling - farms in the surveillance and fallow periods (infection detected, movements restricted and fallow)
+  # Note: for culling all sites transition from 2 -> 4
+  movement.restrictions.bySite <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
+
+  # Scenario 2: surveillance - sites in the surveillance period
+  movement.restrictions.allSite <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
+
+  ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
+  transport.onSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
+  transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
+
+  # sites that are fallow, allowed to import fish or latent
+  spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
+  spread.offSite.prevented <- spread.onSite.prevented
+
 
   ### define site types ----
 
@@ -38,32 +60,6 @@ update_rate <- function(state_vector,
 
   # create vector of clinically infected sites
   clinical.vector <- state_vector * !control_matrix[ , 6]
-
-
-
-
-
-  # When a site has been contact traced it will be subject to movement controls, but
-  # will not be culled, released from controls or used to infer which catchments
-  # need to be controlled until infection has been confirmed.
-  # Hence contact tracing isn't used to calculate 'movement.restrictions.bySite'
-
-  ### define movement restrictions ----
-  # Scenario 1: culling - farms in the surveillance and fallow periods (infection detected, movements restricted and fallow)
-  # Note: for culling all sites transition from 2 -> 4
-  movement.restrictions.bySite <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
-
-  # Scenario 2: surveillance - sites in the surveillance period
-  movement.restrictions.allSite <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
-
-  ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
-  transport.onSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
-  transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
-
-  # sites that are fallow, allowed to import fish or latent
-  spread.onSite.prevented <- as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
-  spread.offSite.prevented <- spread.onSite.prevented
-
 
 
 
