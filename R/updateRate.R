@@ -198,10 +198,11 @@ update_rate <- function(state_vector,
                                                          site_indices = site_indices,
                                                          trans_type = "Fomite_Transmission_Independant_Prob",
                                                          run_time_params = run_time_params)
-      trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change,
-                                                     list_base = trans_rates)
+
+      trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change,list_base = trans_rates)
     }
   }
 
   return(list(trans_rates, risk_contacts_catch_corrected[[2]], sites_all_movement_restricted))
+
 }
