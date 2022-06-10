@@ -72,13 +72,13 @@ update_rate <- function(state_vector,
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts)
 
-  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
-                                                                                   spmatrix_risk_contacts = matrix_risk_contacts,
-                                                                                   catchment_movements = withinCatchmentMovements.objects,
-                                                                                   matrix_movements_prob = matrix_movements_prob)
+  risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
+                                                                            spmatrix_risk_contacts = matrix_risk_contacts,
+                                                                            catchment_movements = withinCatchmentMovements.objects,
+                                                                            matrix_movements_prob = matrix_movements_prob)
 
   # Create an edge list for live fish movements from infected to exposed sites
-  susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = withinCatchmentMovements.out.objects[[1]],
+  susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
                                                                                        state_vector = state_vector,
                                                                                        trans_type = 0)
   trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.rate.objects,
@@ -209,5 +209,5 @@ update_rate <- function(state_vector,
     }
   }
 
-  return(list(trans_rates, withinCatchmentMovements.out.objects[[2]], sites_all_movement_restricted))
+  return(list(trans_rates, risk_contacts_catch_corrected[[2]], sites_all_movement_restricted))
 }
