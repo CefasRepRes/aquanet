@@ -31,12 +31,11 @@ update_rate <- function(state_vector,
 
 
   ### define site types ----
+  # sites that are not fallow, not allowed to import fish and not latent
+  sites_I_recovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
 
   # create vector of infected farms that are NOT latent or fallow (leading to recovery)
   farms_I <- state_vector * sites_I_recovery * farm_vector
-
-  # sites that are not fallow, not allowed to import fish and not latent
-  sites_I_recovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
 
   # create vector of infected fisheries that are NOT latent (leading to latency)
   fisheries_I <- state_vector * sites_I_recovery * !farm_vector
