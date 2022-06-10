@@ -72,12 +72,16 @@ update_rate <- function(state_vector,
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts)
 
+  # exclude within catchment movements
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = withinCatchmentMovements.objects,
                                                                             matrix_movements_prob = matrix_movements_prob)
 
-  # Create an edge list for live fish movements from infected to exposed sites
+
+  ### calculate LFM infection rate ----
+
+  # Infection Rate 1: LFM contacts from infected to susceptible sites
   susceptable.sites.exposure.rate.objects <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
                                                                                        state_vector = state_vector,
                                                                                        trans_type = 0)
