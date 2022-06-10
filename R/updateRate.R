@@ -20,7 +20,7 @@ update_rate <- function(state_vector,
   farms_movement_restricted <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
 
   # Scenario 2: surveillance - sites in the surveillance period
-  movement.restrictions.allSite <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
+  sites_movement_restricted <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
 
   ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
   transport.onSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
@@ -54,7 +54,7 @@ update_rate <- function(state_vector,
   sites_I_undetected <- control_matrix[ , 1]
 
   # create vector of sites (farms) that can become fallow
-  farms_I_controlled <- movement.restrictions.allSite * culling_vector
+  farms_I_controlled <- sites_movement_restricted * culling_vector
 
   # create vector of clinically infected sites
   clinical.vector <- state_vector * !control_matrix[ , 6]
