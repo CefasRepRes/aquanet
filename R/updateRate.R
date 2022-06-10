@@ -34,7 +34,7 @@ update_rate <- function(state_vector,
   sites_I_undetected <- control_matrix[ , 1]
 
   # create vector of sites (farms) that can become fallow
-  controlled.farms <- movement.restrictions.allSite * culling_vector
+  farms_I_controlled <- movement.restrictions.allSite * culling_vector
 
   # create vector of clinically infected sites
   clinical.vector <- state_vector * !control_matrix[ , 6]
@@ -154,7 +154,7 @@ update_rate <- function(state_vector,
 
   # Rate X: rate at which sites become fallow
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                       state_vector = controlled.farms,
+                                                                       state_vector = farms_I_controlled,
                                                                        trans_type = "Time_Required_Cull_Site",
                                                                        site_indices = site.index,
                                                                        infection_state = 1)
