@@ -34,28 +34,28 @@ update_rate <- function(state_vector,
 
 
   ### define site types ----
-  # sites that are not fallow, not allowed to import fish and not latent
+  # sites that are NOT fallow, post-fallow state, or latent (i.e. not recovering)
   sites_I_recovery <- !as.logical(control_matrix[ , c(4, 5, 6)] %*% rep(1, 3))
 
-  # create vector of infected farms that are NOT latent or fallow (leading to recovery)
+  # create vector of infected farms that are NOT latent or fallow state (leading to recovery)
   farms_I <- state_vector * sites_I_recovery * farm_vector
 
-  # create vector of infected fisheries that are NOT latent (leading to latency)
+  # create vector of infected fisheries that are NOT latent (or fallow state) (leading to latency)
   fisheries_I <- state_vector * sites_I_recovery * !farm_vector
 
   # create a vector of latently infected sites
   sites_L <- as.logical(control_matrix[ , 6])
 
-  # create vector of sites (farms) that are fallow and infected (fallow/ready to restock post fallow)
+  # create vector of sites (farms) that are infected and in the fallow or post-fallow state
   farms_fallow <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
 
-  # create vector of sites which have been contact traced
+  # create vector of sites which have been contact traced (are in infected catchment)
   sites_contact_traced <- control_matrix[ , 7]
 
-  # create vector of sites that can be controlled (infection present and not detected)
+  # create vector of sites that could be controlled (infection present and not detected)
   sites_I_undetected <- control_matrix[ , 1]
 
-  # create vector of sites (farms) that can become fallow
+  # create vector of sites that can become fallow as they can be culled
   farms_I_controlled <- sites_movement_restricted * culling_vector
 
   # create vector of clinically infected sites
