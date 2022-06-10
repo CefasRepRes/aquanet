@@ -23,7 +23,7 @@ update_rate <- function(state_vector,
   sites_movement_restricted <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
 
   ####### Include sites in surveillance stage 3 as they are allowed to move fish within infected catchments
-  transport.onSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
+  transport_prevented_on <- as.logical(control_matrix[ , c(2, 4, 5, 6, 7)] %*% rep(1, 5))
   transport.offSite.prevented <- as.logical(control_matrix[ , c(2, 4, 5, 7)] %*% rep(1, 4))
 
   # sites that are fallow, allowed to import fish or latent
@@ -67,7 +67,7 @@ update_rate <- function(state_vector,
 
   # Identify, and remove contacts ending at controlled sites,
   # excluding contacts from sites that can not receive transported stuff
-  atriskcontacts <- Matrix::t(atriskcontacts) * !transport.onSite.prevented
+  atriskcontacts <- Matrix::t(atriskcontacts) * !transport_prevented_on
   atriskcontacts <- Matrix::t(atriskcontacts)
 
   withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = farms_movement_restricted,
