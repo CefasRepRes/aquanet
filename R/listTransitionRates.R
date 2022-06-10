@@ -1,11 +1,12 @@
 #' listTransitionRates
 #'
-#' Generate a list of transition rate objects using an input vector of sites stating their infection
-#' status (`state_vector`) to extract sites (from `site_indices`) with a specified infection status
-#' (susceptible/infected) `infection_state`). For these sites, generate a vector of the transition
-#' rate: `1 / run_time_params[[trans_type]]`. The column number of `trans_type` within the
-#' `run_time_params` depicts the rate type for the site - this is output in a list alongside the
-#' transition rate, transitioning site, rate, source site (NAs), and number of sites.
+#' Generate a list of transition rate objects using an input vector of sites stating their status
+#' (`state_vector`) (for example infection status 1/0, fallow status, latency status) to extract
+#' sites (from `site_indices`) where the state in state_vector is 1. For these sites, generate a
+#' vector of the transition rate: `1 / run_time_params[[trans_type]]`. The column number of
+#' `trans_type` within the `run_time_params` depicts the rate type for the site - this is output in
+#' a list alongside the transition rate, transitioning site, rate, source site (NAs), and number of
+#' sites.
 #'
 #' Note: in aquanet-mod, this function is called multiple times exclusively within the `update_rate`
 #' function.
@@ -15,7 +16,8 @@
 #' frame contains probabilities from the scenarios of interest for listing transition rates.
 #'
 #' @param state_vector (class numeric) numeric binary vector of length number of sites containing
-#' information on whether each site is in an 1 = infected or 0 = susceptible state.
+#' information about the state of each site in relation to a condition (E.g. is the site
+#' 1 = infected or 0 = susceptible state).
 #'
 #' @param trans_type (class string) string in quotation marks "" stating transition type. Note: this
 #'  should correspond to a column name in the input parameter file and is case sensitive. An example
@@ -23,8 +25,6 @@
 #'
 #' @param site_indices (class numeric) vector of 0-based site indices of length 'number of sites'.
 #'
-#' @param infection_state (class numeric) infection status of sites whose transition rates should be
-#'  determined to subset either 1 = infected or 0 = susceptible.
 #'
 #' @return (class list) of length 5 containing:
 #' 1. (class numeric) numeric vector of transition types (`rate_type`).
@@ -35,18 +35,17 @@
 #'
 #' @export
 #'
-listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices,
-                                infection_state) {
+listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices) {
   # get column number for trans_type in run_time_params
   trans_num <- which(colnames(run_time_params) == trans_type)
 
   # get probability from input parameter file
   prob <- run_time_params[[trans_type]]
 
-  # create logical vector of sites in input infection_state specified
-  state_logical <- state_vector == infection_state
+  # create logical vector of sites in state_vector state 1
+  state_logical <- state_vector == 1
 
-  # get the position and total number of sites in input infection_state specified
+  # get the position and total number of sites in state 1
   position <- site_indices[state_logical]
   n_rates <- length(position)
 
