@@ -17,7 +17,7 @@ update_rate <- function(state_vector,
   # Note: for culling all sites transition from 2 -> 4
   # Note: when sites are contact traced, movements are controlled, but not culled until infection is confirmed
   # therefore contact tracing is not used to determine these movement restrictions
-  movement.restrictions.bySite <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
+  farms_movement_restricted <- as.logical(control_matrix[ , c(2, 3, 4, 5)] %*% rep(1, 4))
 
   # Scenario 2: surveillance - sites in the surveillance period
   movement.restrictions.allSite <- as.logical(control_matrix[ , c(2, 3)] %*% rep(1, 2))
@@ -70,7 +70,7 @@ update_rate <- function(state_vector,
   atriskcontacts <- Matrix::t(atriskcontacts) * !transport.onSite.prevented
   atriskcontacts <- Matrix::t(atriskcontacts)
 
-  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = movement.restrictions.bySite,
+  withinCatchmentMovements.out.objects <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = farms_movement_restricted,
                                                                                    spmatrix_risk_contacts = atriskcontacts,
                                                                                    catchment_movements = withinCatchmentMovements.objects,
                                                                                    matrix_movements_prob = matrix_movements_prob)
@@ -209,5 +209,5 @@ update_rate <- function(state_vector,
     }
   }
 
-  return(list(trans_rates, withinCatchmentMovements.objects, movement.restrictions.bySite))
+  return(list(trans_rates, withinCatchmentMovements.objects, farms_movement_restricted))
 }
