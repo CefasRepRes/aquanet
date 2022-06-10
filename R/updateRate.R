@@ -166,12 +166,12 @@ update_rate <- function(state_vector,
     # Rate 9: probability of a contact occurring downstream of an outbreak via the river network
     graph.riverDownstream.objects <- graph.riverDistance.objects[[1]]
     riverDownstream.matrix <- graph.riverDownstream.objects[[2]]
-    susceptable.sites.exposure.byRiver.downstream.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
-                                                                                            clinical_state_vector = clinical.vector,
-                                                                                            spread_restricted_off = spread_prevented_off,
-                                                                                            spread_restricted_on = spread_prevented_on,
-                                                                                            trans_type = 10)
-    trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byRiver.downstream.objects,
+    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
+                                                     clinical_state_vector = clinical.vector,
+                                                     spread_restricted_off = spread_prevented_off,
+                                                     spread_restricted_on = spread_prevented_on,
+                                                     trans_type = 10)
+    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_river,
                                                    list_base = trans_rates)
 
 
