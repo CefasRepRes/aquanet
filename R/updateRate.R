@@ -176,13 +176,12 @@ update_rate <- function(state_vector,
 
 
     # Rate 10: probability of a contact occurring due to local fomite transmission
-    susceptable.sites.exposure.byFomites.objects <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
-                                                                                   clinical_state_vector = clinical.vector,
-                                                                                   spread_restricted_off = spread_prevented_off,
-                                                                                   spread_restricted_on = spread_prevented_on,
-                                                                                   trans_type = 14)
-    trans_rates <- aquanet::combineTransitionRates(list_append = susceptable.sites.exposure.byFomites.objects,
-                                                   list_base = trans_rates)
+    contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
+                                                      clinical_state_vector = clinical.vector,
+                                                      spread_restricted_off = spread_prevented_off,
+                                                      spread_restricted_on = spread_prevented_on,
+                                                      trans_type = 14)
+    trans_rates <- aquanet::combineTransitionRates(list_append = contacts_fomite, list_base = trans_rates)
 
 
 
