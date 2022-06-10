@@ -8,7 +8,7 @@ update_rate <- function(state_vector,
                         graph.riverDistance.objects,
                         fomite.matrix,
                         run_time_params,
-                        winter) {
+                        non_peak_season) {
 
   ### define movement restrictions ----
 
@@ -154,7 +154,7 @@ update_rate <- function(state_vector,
 
   ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
 
-  if (winter == FALSE) {
+  if (non_peak_season == FALSE) {
 
     ### calculate transition rates ----
 
