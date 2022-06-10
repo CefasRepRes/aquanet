@@ -8,10 +8,6 @@ update_rate <- function(state_vector,
                         run_time_params,
                         winter) {
 
-  # create empty list for transition rate storage
-  trans_rates <- vector(mode = "list", length = 4)
-
-
   ### define movement restrictions ----
 
   # Scenario 1: culling - all sites in the surveillance and fallow periods
@@ -85,8 +81,6 @@ update_rate <- function(state_vector,
   rate_site_infection <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
                                                                    state_vector = state_vector,
                                                                    trans_type = 0)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_infection,
-                                                 list_base = trans_rates)
 
 
   ### calculate transition rates ----
@@ -97,9 +91,6 @@ update_rate <- function(state_vector,
                                                      trans_type = "Site_Recovers",
                                                      site_indices = site_indices,
                                                      infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery,
-                                                 list_base = trans_rates)
-
 
   # Rate 2: fishery transitions from infected to subclinical infection
   rate_fishery_latency <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -107,9 +98,6 @@ update_rate <- function(state_vector,
                                                        trans_type = "Infection_Becomes_Subclinical",
                                                        site_indices = site_indices,
                                                        infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency,
-                                                 list_base = trans_rates)
-
 
   # Rate 3: transition from subclinical infection (farms and fisheries)
   rate_site_cleared <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -117,9 +105,6 @@ update_rate <- function(state_vector,
                                                     trans_type = "Clearing_Of_Latency_From_Infected_Sites",
                                                     site_indices = site_indices,
                                                     infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared,
-                                                 list_base = trans_rates)
-
 
   # Rate 4: rate at which fallow sites are disinfected
   rate_farm_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -127,8 +112,6 @@ update_rate <- function(state_vector,
                                                         trans_type = "Reinfection_After_Restocking_Const",
                                                         site_indices = site_indices,
                                                         infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_disinfected,
-                                                 list_base = trans_rates)
 
   # Rate 5: rate at which contact traced sites will be tested
   rate_sites_ct_tested <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -136,9 +119,6 @@ update_rate <- function(state_vector,
                                                        trans_type = "Contact_Detection",
                                                        site_indices = site_indices,
                                                        infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested,
-                                                 list_base = trans_rates)
-
 
   # Rate 6: rate of detection in infected but undetected sites
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -146,9 +126,6 @@ update_rate <- function(state_vector,
                                                      trans_type = "Detection_Reporting_Disease",
                                                      site_indices = site_indices,
                                                      infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected,
-                                                 list_base = trans_rates)
-
 
   # Rate X: rate at which sites become fallow
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -156,8 +133,21 @@ update_rate <- function(state_vector,
                                                                        trans_type = "Time_Required_Cull_Site",
                                                                        site_indices = site_indices,
                                                                        infection_state = 1)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow,
-                                                 list_base = trans_rates)
+
+
+  ### combine transition rates ----
+
+  # create empty list for transition rate storage
+  trans_rates <- vector(mode = "list", length = 4)
+
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_infection, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_disinfected, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow, list_base = trans_rates)
 
 
   ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
