@@ -1,4 +1,4 @@
-update_rate <- function(state_vector,
+updateRates <- function(state_vector,
                         farm_vector,
                         culling_vector,
                         site_indices,
