@@ -129,10 +129,10 @@ update_rate <- function(state_vector,
 
   # Rate 7: rate at which sites become fallow
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                                       state_vector = farms_I_controlled,
-                                                                       trans_type = "Time_Required_Cull_Site",
-                                                                       site_indices = site_indices,
-                                                                       infection_state = 1)
+                                                   state_vector = farms_I_controlled,
+                                                   trans_type = "Time_Required_Cull_Site",
+                                                   site_indices = site_indices,
+                                                   infection_state = 1)
 
 
   ### combine transition rates ----
