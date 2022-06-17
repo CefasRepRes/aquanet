@@ -45,8 +45,8 @@ updateRates <- function(state_vector,
   # create a vector of latently infected sites
   sites_L <- as.logical(control_matrix[ , 6])
 
-  # create vector of sites (farms) that are infected and in the fallow or post-fallow state
-  farms_fallow <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
+  # create vector of sites that are infected and in the fallow or post-fallow state
+  sites_fallow <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
 
   # create vector of sites which have been contact traced (are in infected catchment)
   sites_contact_traced <- control_matrix[ , 7]
@@ -107,7 +107,7 @@ updateRates <- function(state_vector,
 
   # Rate 4: rate at which fallow sites are disinfected
   rate_farm_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
-                                                        state_vector = farms_fallow,
+                                                        state_vector = sites_fallow,
                                                         trans_type = "Reinfection_After_Restocking_Const",
                                                         site_indices = site_indices)
 
