@@ -7,20 +7,20 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   sites_post_fallow <- control_matrix[ , 5]
 
   # List the number of sites that are fallow, and are waiting to be restocked, in each catchment
-  catchments.no.c4.sites.present <- as.vector(t(graph.catchment2site.matrix2) %*% sites_fallow)
+  catchment_n_sites_fallow <- as.vector(t(graph.catchment2site.matrix2) %*% sites_fallow)
   catchments.no.c5.sites.present <- as.vector(t(graph.catchment2site.matrix2) %*% sites_post_fallow)
 
   # List catchments containing fallow sites, and those which are waiting to be restocked
-  catchments.c4.sites.present.logical <- catchments.no.c4.sites.present > 0
+  catchments.c4.sites.present.logical <- catchment_n_sites_fallow > 0
   catchments.c5.sites.present.logical <- catchments.no.c5.sites.present > 0
 
   # Identify catchments that contain sites ready to be restocked, but no fallow sites
   catchments.all.sites.c5.status <- rep(FALSE, no.catchments)
-  catchments.all.sites.c5.status[catchments.c5.sites.present.logical] <- catchments.no.c4.sites.present[catchments.c5.sites.present.logical] == 0
+  catchments.all.sites.c5.status[catchments.c5.sites.present.logical] <- catchment_n_sites_fallow[catchments.c5.sites.present.logical] == 0
 
   # Identify catchments that contain fallow sites
   catchments.some.sites.c4.status <- rep(FALSE, no.catchments)
-  catchments.some.sites.c4.status[catchments.c4.sites.present.logical] <- catchments.no.c4.sites.present[catchments.c4.sites.present.logical] != 0
+  catchments.some.sites.c4.status[catchments.c4.sites.present.logical] <- catchment_n_sites_fallow[catchments.c4.sites.present.logical] != 0
 
   return(list(control_matrix, catchments.some.sites.c4.status, catchments.all.sites.c5.status))
 
