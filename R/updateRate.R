@@ -1,9 +1,9 @@
-updateRates <- function(state_vector,
+updateRates <- function(control_matrix,
+                        state_vector,
                         farm_vector,
                         culling_vector,
                         site_indices,
-                        control_matrix,
-                        movements_within_catchment,
+                        catchment_movements,
                         movements_prob,
                         river_prob,
                         site_distances_prob,
@@ -73,7 +73,7 @@ updateRates <- function(state_vector,
   # exclude within catchment movements
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
-                                                                            catchment_movements = movements_within_catchment,
+                                                                            catchment_movements = catchment_movements,
                                                                             matrix_movements_prob = movements_prob[[3]])
 
 
