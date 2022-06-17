@@ -10,7 +10,7 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   catchment_n_sites_fallow <- as.vector(t(graph.catchment2site.matrix2) %*% sites_fallow)
   catchment_n_sites_post_fallow <- as.vector(t(graph.catchment2site.matrix2) %*% sites_post_fallow)
 
-  # List catchments containing fallow sites, and those which are waiting to be restocked
+  # filter catchments with more than one fallow or post_fallow site
   catchment_with_fallow <- catchment_n_sites_fallow > 0
   catchment_with_post_fallow <- catchment_n_sites_post_fallow > 0
 
