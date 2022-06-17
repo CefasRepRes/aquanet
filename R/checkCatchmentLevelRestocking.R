@@ -12,11 +12,11 @@ checkCatchmentLevelRestocking <- function(control_matrix,
 
   # List catchments containing fallow sites, and those which are waiting to be restocked
   catchment_with_fallow <- catchment_n_sites_fallow > 0
-  catchments.c5.sites.present.logical <- catchment_n_sites_post_fallow > 0
+  catchment_with_post_fallow <- catchment_n_sites_post_fallow > 0
 
   # Identify catchments that contain sites ready to be restocked, but no fallow sites
   catchments.all.sites.c5.status <- rep(FALSE, no.catchments)
-  catchments.all.sites.c5.status[catchments.c5.sites.present.logical] <- catchment_n_sites_fallow[catchments.c5.sites.present.logical] == 0
+  catchments.all.sites.c5.status[catchment_with_post_fallow] <- catchment_n_sites_fallow[catchment_with_post_fallow] == 0
 
   # Identify catchments that contain fallow sites
   catchments.some.sites.c4.status <- rep(FALSE, no.catchments)
