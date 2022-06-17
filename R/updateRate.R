@@ -106,7 +106,7 @@ updateRates <- function(state_vector,
                                                     site_indices = site_indices)
 
   # Rate 4: rate at which fallow sites are disinfected
-  rate_farm_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
+  rate_site_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                         state_vector = sites_fallow,
                                                         trans_type = "Reinfection_After_Restocking_Const",
                                                         site_indices = site_indices)
@@ -139,7 +139,7 @@ updateRates <- function(state_vector,
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared, list_base = trans_rates)
-  trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_disinfected, list_base = trans_rates)
+  trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_disinfected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow, list_base = trans_rates)
