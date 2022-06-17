@@ -37,7 +37,12 @@
 #' @importFrom units drop_units
 #' @importFrom igraph V get.vertex.attribute
 #' @importFrom methods as
-createDistanceMatrix <- function(graph, filename_site_catchments, crs_epsg) {
+createDistanceMatrix <- function(graph,
+                                 filename_site_catchments,
+                                 crs_epsg,
+                                 sdm_max_dist,
+                                 sdm_rate_gamma,
+                                 sdm_scalar_lambda) {
   # define the British National Grid Referencing System, using Proj4 notation
 
   # import the list of site locations, and assign the correct spatial projection system
