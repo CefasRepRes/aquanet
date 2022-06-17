@@ -5,8 +5,8 @@
 #'  system. Additionally, filter these distances to remove self loops and distances greater than
 #'  5000 m (assume greater than 5000 m constitutes negligible transmission risk). Convert distances
 #'  to a probability of transmission with the following equation
-#'  `0.005 * exp(-(distance)^2 * 0.000001)`. Convert probabilities that are less than 0 or equal to
-#'  0.005 to 0. Return a list containing site-site distance matrix, site-site distance-based
+#'  `sdm_rate_gamma * exp(-(distance)^2 * 0.000001)`. Convert probabilities that are less than 0 or equal to
+#'  sdm_rate_gamma to 0. Return a list containing site-site distance matrix, site-site distance-based
 #'  transmission probability matrix and site-catchment data frame. Note: matrices produces have the
 #'  same reorder distance matrix, so that it is in the same site order as the contact matrix
 #'  (graph).
@@ -19,6 +19,7 @@
 #'  site resides in
 #' @param crs_epsg (class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
 #'  to use for projecting the data.
+#' @param sdm_rate_gamma (class numeric) daily short distance mechanical (SDM) transmission rate over 0 km.
 #'
 #' @return  (class list) of length 3 containing (1) a matrix of site to site distances (class matrix
 #'  array), (2) a matrix of distance-based transmission probabilities (dgTMatrix, Matrix package),
@@ -53,10 +54,10 @@ createDistanceMatrix <- function(graph, filename_site_catchments, crs_epsg) {
   matrix_distances_order[cbind(site_order, site_order)] <- 0
   matrix_distances_order[matrix_distances_order > 5000] <- 0
 
-  # calculate probability of transmission, based on distance, if less than 0 or equal to 0.005 reassign as 0
-  matrix_distances_probability <- 0.005 * exp(-(matrix_distances_order)^2 * 0.000001)
+  # calculate probability of transmission, based on distance, if less than 0 or equal to sdm_rate_gamma reassign as 0
+  matrix_distances_probability <- sdm_rate_gamma * exp(-(matrix_distances_order)^2 * 0.000001)
   matrix_distances_probability <- ifelse(matrix_distances_probability < 0, 0, matrix_distances_probability)
-  matrix_distances_probability <- ifelse(matrix_distances_probability == 0.005, 0, matrix_distances_probability)
+  matrix_distances_probability <- ifelse(matrix_distances_probability == sdm_rate_gamma, 0, matrix_distances_probability)
   matrix_distances_probability <- methods::as(matrix_distances_probability, "dgTMatrix")
 
   # return list containing (1) site to site distances, (2) probability of transmission by distance,
