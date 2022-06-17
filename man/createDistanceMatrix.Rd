@@ -4,7 +4,14 @@
 \alias{createDistanceMatrix}
 \title{createDistanceMatrix}
 \usage{
-createDistanceMatrix(graph, filename_site_catchments, crs_epsg)
+createDistanceMatrix(
+  graph,
+  filename_site_catchments,
+  crs_epsg,
+  sdm_max_dist,
+  sdm_rate_gamma,
+  sdm_scalar_lambda
+)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
@@ -17,6 +24,15 @@ site resides in}
 
 \item{crs_epsg}{(class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
 to use for projecting the data.}
+
+\item{sdm_max_dist}{(class numeric) maximum distance (in metres) over which short distance
+mechanical (SDM) transmission can occur.}
+
+\item{sdm_rate_gamma}{(class numeric) daily short distance mechanical (SDM) transmission rate
+over 0 km.}
+
+\item{sdm_scalar_lambda}{(class numeric) local scalar of short distance mechanical (SDM)
+transmission.}
 }
 \value{
 (class list) of length 3 containing (1) a matrix of site to site distances (class matrix
@@ -27,11 +43,11 @@ and (3) input data frame of site catchment locality (SpatialPointsDataFrame, sp 
 Using the connectivity matrix and site to catchment information .csv create a matrix of distances
 between these sites calculated using the sp package and British National Grid Referencing
 system. Additionally, filter these distances to remove self loops and distances greater than
-5000 m (assume greater than 5000 m constitutes negligible transmission risk). Convert distances
-to a probability of transmission with the following equation
-\code{0.005 * exp(-(distance)^2 * 0.000001)}. Convert probabilities that are less than 0 or equal to
-0.005 to 0. Return a list containing site-site distance matrix, site-site distance-based
-transmission probability matrix and site-catchment data frame. Note: matrices produces have the
-same reorder distance matrix, so that it is in the same site order as the contact matrix
-(graph).
+sdm_max_dist m (assume greater than sdm_max_dist m constitutes negligible transmission risk).
+Convert distances to a probability of transmission with the following equation
+\code{sdm_rate_gamma * exp(-(distance)^2 * sdm_scalar_lambda)}. Convert probabilities that are less
+than 0 or equal to sdm_rate_gamma to 0. Return a list containing site-site distance matrix,
+site-site distance-based transmission probability matrix and site-catchment data frame. Note:
+matrices produces have the same reorder distance matrix, so that it is in the same site order
+as the contact matrix (graph).
 }
