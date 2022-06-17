@@ -1,7 +1,10 @@
-checkCatchmentLevelRestocking <- function(control_matrix, tdiff) {
+checkCatchmentLevelRestocking <- function(control_matrix,
+                                          tdiff,
+                                          graph.catchment2site.matrix2,
+                                          no.catchments) {
   # Extract a list of sites that are fallow, and those which are waiting to be restocked
-  controlled.sites.c4.numeric <- control_matrix[,4]
-  controlled.sites.c5.numeric <- control_matrix[,5]
+  controlled.sites.c4.numeric <- control_matrix[ , 4]
+  controlled.sites.c5.numeric <- control_matrix[ , 5]
 
   # List the number of sites that are fallow, and are waiting to be restocked, in each catchment
   catchments.no.c4.sites.present <- as.vector(t(graph.catchment2site.matrix2) %*% controlled.sites.c4.numeric)
