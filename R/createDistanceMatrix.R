@@ -5,11 +5,11 @@
 #'  system. Additionally, filter these distances to remove self loops and distances greater than
 #'  sdm_max_dist m (assume greater than sdm_max_dist m constitutes negligible transmission risk).
 #'  Convert distances to a probability of transmission with the following equation
-#'  `sdm_rate_gamma * exp(-(distance)^2 * 0.000001)`. Convert probabilities that are less than 0 or
-#'  equal to sdm_rate_gamma to 0. Return a list containing site-site distance matrix, site-site
-#'  distance-based transmission probability matrix and site-catchment data frame. Note: matrices
-#'  produces have the same reorder distance matrix, so that it is in the same site order as the
-#'  contact matrix (graph).
+#'  `sdm_rate_gamma * exp(-(distance)^2 * sdm_scalar_lambda)`. Convert probabilities that are less
+#'  than 0 or equal to sdm_rate_gamma to 0. Return a list containing site-site distance matrix,
+#'  site-site distance-based transmission probability matrix and site-catchment data frame. Note:
+#'  matrices produces have the same reorder distance matrix, so that it is in the same site order
+#'  as the contact matrix (graph).
 #'
 #' @param graph  (class igraph) Graph of connections/movements between sites produced with iGraph
 #' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
@@ -23,6 +23,8 @@
 #' over 0 km.
 #' @param sdm_max_dist (class numeric) maximum distance (in metres) over which short distance
 #' mechanical (SDM) transmission can occur.
+#' @param sdm_scalar_lambda (class numeric) local scalar of short distance mechanical (SDM)
+#' transmission.
 #'
 #' @return  (class list) of length 3 containing (1) a matrix of site to site distances (class matrix
 #'  array), (2) a matrix of distance-based transmission probabilities (dgTMatrix, Matrix package),
@@ -58,7 +60,7 @@ createDistanceMatrix <- function(graph, filename_site_catchments, crs_epsg) {
   matrix_distances_order[matrix_distances_order > sdm_max_dist] <- 0
 
   # calculate probability of transmission, based on distance, if less than 0 or equal to sdm_rate_gamma reassign as 0
-  matrix_distances_probability <- sdm_rate_gamma * exp(-(matrix_distances_order)^2 * 0.000001)
+  matrix_distances_probability <- sdm_rate_gamma * exp(-(matrix_distances_order)^2 * sdm_scalar_lambda)
   matrix_distances_probability <- ifelse(matrix_distances_probability < 0, 0, matrix_distances_probability)
   matrix_distances_probability <- ifelse(matrix_distances_probability == sdm_rate_gamma, 0, matrix_distances_probability)
   matrix_distances_probability <- methods::as(matrix_distances_probability, "dgTMatrix")
