@@ -56,61 +56,6 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
   # Create a vector to record transition times, for diagnostic purposes
   record_transition_times = c()
 
-  excludeWithinCatchmentMovements = function(movement.restrictions.bySite, atriskcontacts, withinCatchmentMovements.objects) {
-    graph.catchment2site.matrix2 = withinCatchmentMovements.objects[[1]]
-    graph.withinCatchmentEdges.matrix = withinCatchmentMovements.objects[[2]]
-    controlled.catchments.previous = withinCatchmentMovements.objects[[3]]
-    listContacts.exclude = withinCatchmentMovements.objects[[4]]
-    associatedSiteControlType = withinCatchmentMovements.objects[[5]]
-
-    # Identify catchments placed under control, based on the list of sites currently under control
-    controlled.catchments = t(graph.catchment2site.matrix2) %*% movement.restrictions.bySite
-    no.controlled.catchments = sum(controlled.catchments > 0)
-
-    # If the same catchments are under control as the last time the function was called, skip several steps
-    if ((!all(controlled.catchments@x == controlled.catchments.previous@x)) == TRUE) {
-      # Lookup a list of all of the sites contained within the controlled catchments
-      secondary.controlled.sites = as.vector(graph.catchment2site.matrix2 %*% controlled.catchments)
-      secondary.controlled.sites[secondary.controlled.sites > 1] = 1
-
-      # List all of the contacts made by sites within controlled catchments
-      contacts.by.controlledSites = contactp * secondary.controlled.sites
-      contacts.by.controlledSites[contacts.by.controlledSites > 0] = 1
-
-      # Store the list of sites that are under catchment level controls
-      withinCatchmentMovements.objects[[6]] = secondary.controlled.sites
-
-      if (associatedSiteControlType %in% c(0,1)) {
-        # List all of the contacts made within controlled catchments
-        contacts.withinCatchment.by.controlledSites = contacts.by.controlledSites * graph.withinCatchmentEdges.matrix
-
-        # Identify all of the contacts made outside of controlled catchments
-        listContacts.exclude = contacts.by.controlledSites - contacts.withinCatchment.by.controlledSites
-      }
-
-      if (associatedSiteControlType == 1) {
-        # Identify contacts made to other sites within controlled catchments
-        contacts.between.controlled.catchments = t(contacts.by.controlledSites) * secondary.controlled.sites
-        contacts.between.controlled.catchments = t(contacts.between.controlled.catchments)
-        # Exclude within catchment movements, from the list of contacts made to other sites within controlled catchments
-        contacts.between.controlled.catchments = contacts.between.controlled.catchments - contacts.withinCatchment.by.controlledSites
-        # Identify all of the contacts made outside of the infection area, rather than outside of each individual catchment
-        listContacts.exclude = listContacts.exclude - contacts.between.controlled.catchments
-      } else if (associatedSiteControlType == 2) {
-        listContacts.exclude = contacts.by.controlledSites
-      }
-    }
-
-    atriskcontacts.toremove = atriskcontacts * listContacts.exclude
-    atriskcontacts = atriskcontacts - atriskcontacts.toremove
-
-    withinCatchmentMovements.objects[[3]] = controlled.catchments
-    withinCatchmentMovements.objects[[4]] = listContacts.exclude
-    withinCatchmentMovements.objects[[7]] = no.controlled.catchments
-
-    return(list(atriskcontacts, withinCatchmentMovements.objects))
-  }
-
   for (k in 1:runs) {
     # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
     simNo = k + ((batchNo - 1) * runs)
@@ -243,18 +188,18 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
       # The following line of code should combine all the site's attributes into a single number,
       # which uniquely represents all of the attributes co-occuring within the same site
 
-      #set(x = allStates.table, i = (no.variables + 1):(no.variables + contactp.length),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
-      #set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
-      #set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
+      set(x = allStates.table, i = (no.variables + 1):(no.variables + contactp.length),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
+      set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
+      set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
 
       # Save the results to disk
-      #if (noSteps.sinceLastCommit == (commitInterval - 1)) {
-      #  numberFullSaves = noSteps %/% commitInterval
-      #  commitResults(allStates.table, allStates.table.t, numberFullSaves)
-      #  allStates.table[,as.character(iterationID.vector):=empty.vector]
-      #  allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
-      #}
+      if (noSteps.sinceLastCommit == (commitInterval - 1)) {
+       numberFullSaves = noSteps %/% commitInterval
+       commitResults(allStates.table, allStates.table.t, numberFullSaves)
+       allStates.table[,as.character(iterationID.vector):=empty.vector]
+       allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
+      }
 
       # Pick the next event, and modify a site's state accordingly
       event.objects = do_event(state_vector, control_matrix, transition.rates, tdiff, movement.restrictions.bySite, catchment_time_vector, catchments.all.sites.c5.status, record_transition_times, source.infection.vector, infected.source.matrix)
@@ -282,10 +227,10 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
   # Print diagnositic information, and format results as appriopriate
   print(c("No Iterations", noSteps))
 
-  #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
-  #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
-  #numberFullSaves = numberFullSaves + 1
-  #commitResults(allStates.table, allStates.table.t, numberFullSaves)
+  allStates.table[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
+  allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
+  numberFullSaves = numberFullSaves + 1
+  commitResults(allStates.table, allStates.table.t, numberFullSaves)
 
   save(summaryStates.table, file = paste(locationSaveResults,"/Summary/batchNo-",batchNo,".RData",sep=""),compress=FALSE)
 
