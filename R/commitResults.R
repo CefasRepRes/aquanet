@@ -16,5 +16,5 @@ commitResults = function(allStates.table, allStates.table.t, numberFullSaves) {
   colnames(simTimes.longTable) = c('timeID','simNo','tdiff','t')
 
 
-  save(simStates.longTable, simTimes.longTable, file = paste(locationSaveResults,"/FullDetails/batchNo-",batchNo,"_simNo-",simNo,"_NoCommits-",numberFullSaves,".RData",sep=""),compress=FALSE)
+  save(simStates.longTable, simTimes.longTable, file = paste(locationSaveResults,"/batch_results/states-batchNo-",batchNo,"_simNo-",simNo,".RData",sep=""),compress=FALSE)
 }
