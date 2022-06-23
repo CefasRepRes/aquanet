@@ -20,9 +20,9 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   catchments_with_post_fallow_only[catchment_with_post_fallow] <- catchment_n_sites_fallow[catchment_with_post_fallow] == 0
 
   # create logical vector of catchments with fallow sites
-  catchments.some.sites.c4.status <- rep(FALSE, no.catchments)
-  catchments.some.sites.c4.status[catchment_with_fallow] <- catchment_n_sites_fallow[catchment_with_fallow] != 0
+  catchments_with_fallow_some <- rep(FALSE, no.catchments)
+  catchments_with_fallow_some[catchment_with_fallow] <- catchment_n_sites_fallow[catchment_with_fallow] != 0
 
-  return(list(control_matrix, catchments.some.sites.c4.status, catchments_with_post_fallow_only))
+  return(list(control_matrix, catchments_with_fallow_some, catchments_with_post_fallow_only))
 
 }
