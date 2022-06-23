@@ -1,5 +1,4 @@
 checkCatchmentLevelRestocking <- function(control_matrix,
-                                          tdiff,
                                           graph.catchment2site.matrix2,
                                           no.catchments) {
   # create binary vector of sites in fallow or post-fallow (awaiting restock) state
