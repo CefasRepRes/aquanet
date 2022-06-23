@@ -23,6 +23,7 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   catchments_with_fallow_some <- rep(FALSE, no.catchments)
   catchments_with_fallow_some[catchment_with_fallow] <- catchment_n_sites_fallow[catchment_with_fallow] != 0
 
+  # TODO name list elements
   return(list(control_matrix, catchments_with_fallow_some, catchments_with_post_fallow_only))
 
 }
