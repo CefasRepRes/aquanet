@@ -2,6 +2,7 @@
 
 export(calcRandomSpillover)
 export(calcRiverTransmission)
+export(checkCatchmentLevelRestocking)
 export(combineTransitionRates)
 export(createCatchmentToSiteMatrix)
 export(createContactProbabilityMatrix)
