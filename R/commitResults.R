@@ -9,6 +9,8 @@ commitResults <- function(allStates.table,
                           simNo,
                           locationSaveResults,
                           iterationID.vector) {
+
+  # create empty dgTMatrix to record site state at each step within the specified commit interval
   allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]),
                          Class = "dgTMatrix")
 
