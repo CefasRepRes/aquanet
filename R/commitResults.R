@@ -14,7 +14,7 @@ commitResults <- function(allStates.table,
   allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)), ]),
                          Class = "dgTMatrix")
 
-  simStates.longTable <- data.frame("siteID" = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
+  sim_states <- data.frame("siteID" = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
                                     "state" = as.integer(allStates.matrix@x),
                                     "timeID" = as.integer(allStates.matrix@j + ((save_num - 1) * commitInterval)),
                                     "simNo" = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
@@ -24,7 +24,7 @@ commitResults <- function(allStates.table,
                                    "tdiff" = as.numeric(allStates.table.t[1, ])[iterationID.vector],
                                    "t" = as.numeric(allStates.table.t[2, ])[iterationID.vector])
 
-  save(simStates.longTable,
+  save(sim_states,
        simTimes.longTable,
        file = paste(locationSaveResults,
                     "/FullDetails/batchNo-", batch_num,
