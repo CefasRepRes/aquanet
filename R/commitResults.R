@@ -26,6 +26,11 @@ commitResults <- function(allStates.table,
 
   save(simStates.longTable,
        simTimes.longTable,
-       file = paste(locationSaveResults,"/FullDetails/batchNo-",batchNo,"_simNo-",simulation_num,"_NoCommits-",numberFullSaves,".RData",sep=""),
+       file = paste(locationSaveResults,
+                    "/FullDetails/batchNo-", batchNo,
+                    "_simNo-", simulation_num,
+                    "_NoCommits-", numberFullSaves,
+                    ".RData",
+                    sep = ""),
        compress=FALSE)
 }
