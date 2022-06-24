@@ -2,7 +2,7 @@ commitResults <- function(allStates.table,
                           allStates.table.t,
                           n_states,
                           contactp.length,
-                          sites_indices,
+                          site_indices,
                           commit_int,
                           filepath_results,
                           batch_num,
@@ -14,7 +14,7 @@ commitResults <- function(allStates.table,
   allStates.matrix <- as(object = as.matrix(allStates.table[((n_states + 1):(n_states + contactp.length)), ]),
                          Class = "dgTMatrix")
 
-  sim_states <- data.frame(siteID = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
+  sim_states <- data.frame(siteID = as.integer(site_indices[(allStates.matrix@i + 1)] + 1),
                            state = as.integer(allStates.matrix@x),
                            timeID = as.integer(allStates.matrix@j + ((save_num - 1) * commit_int)),
                            simNo = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
