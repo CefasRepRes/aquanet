@@ -1,6 +1,14 @@
 commitResults <- function(allStates.table,
                           allStates.table.t,
-                          numberFullSaves) {
+                          numberFullSaves,
+                          no.variables,
+                          contactp.length,
+                          site.index,
+                          commitInterval,
+                          batchNo,
+                          simNo,
+                          locationSaveResults,
+                          iterationID.vector) {
   allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]),
                          Class = "dgTMatrix")
 
