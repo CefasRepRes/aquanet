@@ -27,8 +27,9 @@ commitResults <- function(allStates.table,
                           t = as.numeric(allStates.table.t[2, ])[iteration_vector])
 
   # save simulation site states and simulation times
+  # TODO switch file path back to Sarah's new system post-testing
   filepath_save <- paste(filepath_results,
-                         "/batch_results/states-batchNo-", batch_num,
+                         "/FullDetails/states-batchNo-", batch_num,
                          "_simNo-", simulation_num,
                          "_NoCommits-", save_num,
                          sep = "")
