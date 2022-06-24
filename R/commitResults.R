@@ -19,13 +19,13 @@ commitResults <- function(allStates.table,
                                     "timeID" = as.integer(allStates.matrix@j + ((save_num - 1) * commitInterval)),
                                     "simNo" = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
 
-  simTimes.longTable <- data.frame("timeID" = as.integer(iterationID.vector + ((save_num - 1) * commitInterval)),
+  sim_times <- data.frame("timeID" = as.integer(iterationID.vector + ((save_num - 1) * commitInterval)),
                                    "simNo" = as.integer(allStates.table[3, ])[iterationID.vector],
                                    "tdiff" = as.numeric(allStates.table.t[1, ])[iterationID.vector],
                                    "t" = as.numeric(allStates.table.t[2, ])[iterationID.vector])
 
   save(sim_states,
-       simTimes.longTable,
+       sim_times,
        file = paste(locationSaveResults,
                     "/FullDetails/batchNo-", batch_num,
                     "_simNo-", simulation_num,
