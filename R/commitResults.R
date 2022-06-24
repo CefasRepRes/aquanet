@@ -3,7 +3,7 @@ commitResults <- function(allStates.table,
                           numberFullSaves,
                           no.variables,
                           contactp.length,
-                          site.index,
+                          sites_indices,
                           commitInterval,
                           batchNo,
                           simNo,
@@ -14,7 +14,7 @@ commitResults <- function(allStates.table,
   allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]),
                          Class = "dgTMatrix")
 
-  simStates.longTable <- data.frame("siteID" = as.integer(site.index[(allStates.matrix@i + 1)] + 1),
+  simStates.longTable <- data.frame("siteID" = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
                                     "state" = as.integer(allStates.matrix@x),
                                     "timeID" = as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
                                     "simNo" = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
