@@ -3,7 +3,7 @@ commitResults <- function(allStates.table,
                           n_states,
                           contactp.length,
                           sites_indices,
-                          commitInterval,
+                          commit_int,
                           batch_num,
                           simulation_num,
                           save_num,
@@ -16,10 +16,10 @@ commitResults <- function(allStates.table,
 
   sim_states <- data.frame(siteID = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
                            state = as.integer(allStates.matrix@x),
-                           timeID = as.integer(allStates.matrix@j + ((save_num - 1) * commitInterval)),
+                           timeID = as.integer(allStates.matrix@j + ((save_num - 1) * commit_int)),
                            simNo = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
 
-  sim_times <- data.frame(timeID = as.integer(iterationID.vector + ((save_num - 1) * commitInterval)),
+  sim_times <- data.frame(timeID = as.integer(iterationID.vector + ((save_num - 1) * commit_int)),
                           simNo = as.integer(allStates.table[3, ])[iterationID.vector],
                           tdiff = as.numeric(allStates.table.t[1, ])[iterationID.vector],
                           t = as.numeric(allStates.table.t[2, ])[iterationID.vector])
