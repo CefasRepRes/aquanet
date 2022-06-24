@@ -1,6 +1,6 @@
 commitResults <- function(allStates.table,
                           allStates.table.t,
-                          no.variables,
+                          n_states,
                           contactp.length,
                           sites_indices,
                           commitInterval,
@@ -11,7 +11,7 @@ commitResults <- function(allStates.table,
                           iterationID.vector) {
 
   # create empty dgTMatrix to record site state at each step within the specified commit interval
-  allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)), ]),
+  allStates.matrix <- as(object = as.matrix(allStates.table[((n_states + 1):(n_states + contactp.length)), ]),
                          Class = "dgTMatrix")
 
   sim_states <- data.frame(siteID = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
