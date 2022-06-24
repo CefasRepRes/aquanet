@@ -4,10 +4,10 @@ commitResults <- function(allStates.table,
                           contactp.length,
                           sites_indices,
                           commit_int,
+                          filepath_results,
                           batch_num,
                           simulation_num,
                           save_num,
-                          locationSaveResults,
                           iterationID.vector) {
 
   # create empty dgTMatrix to record site state at each step within the specified commit interval
@@ -26,7 +26,7 @@ commitResults <- function(allStates.table,
 
   save(sim_states,
        sim_times,
-       file = paste(locationSaveResults,
+       file = paste(filepath_results,
                     "/batch_results/states-batchNo-", batch_num,
                     "_simNo-", simulation_num,
                     "_NoCommits-", save_num,
