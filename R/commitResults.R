@@ -1,12 +1,12 @@
 commitResults <- function(allStates.table,
                           allStates.table.t,
-                          numberFullSaves,
                           no.variables,
                           contactp.length,
                           sites_indices,
                           commitInterval,
                           batch_num,
                           simulation_num,
+                          save_num,
                           locationSaveResults,
                           iterationID.vector) {
 
@@ -16,10 +16,10 @@ commitResults <- function(allStates.table,
 
   simStates.longTable <- data.frame("siteID" = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
                                     "state" = as.integer(allStates.matrix@x),
-                                    "timeID" = as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
+                                    "timeID" = as.integer(allStates.matrix@j + ((save_num - 1) * commitInterval)),
                                     "simNo" = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
 
-  simTimes.longTable <- data.frame("timeID" = as.integer(iterationID.vector + ((numberFullSaves - 1) * commitInterval)),
+  simTimes.longTable <- data.frame("timeID" = as.integer(iterationID.vector + ((save_num - 1) * commitInterval)),
                                    "simNo" = as.integer(allStates.table[3, ])[iterationID.vector],
                                    "tdiff" = as.numeric(allStates.table.t[1, ])[iterationID.vector],
                                    "t" = as.numeric(allStates.table.t[2, ])[iterationID.vector])
@@ -29,7 +29,7 @@ commitResults <- function(allStates.table,
        file = paste(locationSaveResults,
                     "/FullDetails/batchNo-", batch_num,
                     "_simNo-", simulation_num,
-                    "_NoCommits-", numberFullSaves,
+                    "_NoCommits-", save_num,
                     ".RData",
                     sep = ""),
        compress=FALSE)
