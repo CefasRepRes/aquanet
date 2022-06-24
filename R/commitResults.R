@@ -17,12 +17,12 @@ commitResults <- function(allStates.table,
   simStates.longTable <- data.frame("siteID" = as.integer(site.index[(allStates.matrix@i + 1)] + 1),
                                     "state" = as.integer(allStates.matrix@x),
                                     "timeID" = as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
-                                    "simNo" = as.integer(allStates.table[3,])[allStates.matrix@j + 1])
+                                    "simNo" = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
 
   simTimes.longTable <- data.frame("timeID" = as.integer(iterationID.vector + ((numberFullSaves - 1) * commitInterval)),
-                                   "simNo" = as.integer(allStates.table[3,])[iterationID.vector],
-                                   "tdiff" = as.numeric(allStates.table.t[1,])[iterationID.vector],
-                                   "t" = as.numeric(allStates.table.t[2,])[iterationID.vector])
+                                   "simNo" = as.integer(allStates.table[3, ])[iterationID.vector],
+                                   "tdiff" = as.numeric(allStates.table.t[1, ])[iterationID.vector],
+                                   "t" = as.numeric(allStates.table.t[2, ])[iterationID.vector])
 
   save(simStates.longTable,
        simTimes.longTable,
