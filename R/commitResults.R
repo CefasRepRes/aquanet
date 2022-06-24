@@ -6,12 +6,12 @@ commitResults <- function(allStates.table,
                           sites_indices,
                           commitInterval,
                           batchNo,
-                          simNo,
+                          simulation_num,
                           locationSaveResults,
                           iterationID.vector) {
 
   # create empty dgTMatrix to record site state at each step within the specified commit interval
-  allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]),
+  allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)), ]),
                          Class = "dgTMatrix")
 
   simStates.longTable <- data.frame("siteID" = as.integer(sites_indices[(allStates.matrix@i + 1)] + 1),
@@ -26,6 +26,6 @@ commitResults <- function(allStates.table,
 
   save(simStates.longTable,
        simTimes.longTable,
-       file = paste(locationSaveResults,"/FullDetails/batchNo-",batchNo,"_simNo-",simNo,"_NoCommits-",numberFullSaves,".RData",sep=""),
+       file = paste(locationSaveResults,"/FullDetails/batchNo-",batchNo,"_simNo-",simulation_num,"_NoCommits-",numberFullSaves,".RData",sep=""),
        compress=FALSE)
 }
