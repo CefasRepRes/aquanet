@@ -14,20 +14,15 @@ commitResults <- function(allStates.table,
   allStates.matrix <- as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]),
                          Class = "dgTMatrix")
 
-  simStates.longTable <- data.frame(as.integer(site.index[(allStates.matrix@i + 1)] + 1),
-                                    as.integer(allStates.matrix@x),
-                                    as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
-                                    as.integer(allStates.table[3,])[allStates.matrix@j + 1])
+  simStates.longTable <- data.frame("siteID" = as.integer(site.index[(allStates.matrix@i + 1)] + 1),
+                                    "state" = as.integer(allStates.matrix@x),
+                                    "timeID" = as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
+                                    "simNo" = as.integer(allStates.table[3,])[allStates.matrix@j + 1])
 
-  colnames(simStates.longTable) <- c('siteID','state','timeID','simNo')
-
-  simTimes.longTable <- data.frame(as.integer(iterationID.vector + ((numberFullSaves - 1) * commitInterval)),
-                                   as.integer(allStates.table[3,])[iterationID.vector],
-                                   as.numeric(allStates.table.t[1,])[iterationID.vector],
-                                   as.numeric(allStates.table.t[2,])[iterationID.vector])
-
-  colnames(simTimes.longTable) <- c('timeID','simNo','tdiff','t')
-
+  simTimes.longTable <- data.frame("timeID" = as.integer(iterationID.vector + ((numberFullSaves - 1) * commitInterval)),
+                                   "simNo" = as.integer(allStates.table[3,])[iterationID.vector],
+                                   "tdiff" = as.numeric(allStates.table.t[1,])[iterationID.vector],
+                                   "t" = as.numeric(allStates.table.t[2,])[iterationID.vector])
 
   save(simStates.longTable,
        simTimes.longTable,
