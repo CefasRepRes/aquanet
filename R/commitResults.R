@@ -27,13 +27,14 @@ commitResults <- function(allStates.table,
                           t = as.numeric(allStates.table.t[2, ])[iteration_vector])
 
   # save simulation site states and simulation times
-  save(sim_states,
-       sim_times,
-       file = paste(filepath_results,
-                    "/batch_results/states-batchNo-", batch_num,
-                    "_simNo-", simulation_num,
-                    "_NoCommits-", save_num,
-                    ".RData",
-                    sep = ""),
-       compress = FALSE)
+  filepath_save <- paste(filepath_results,
+                         "/batch_results/states-batchNo-", batch_num,
+                         "_simNo-", simulation_num,
+                         "_NoCommits-", save_num,
+                         sep = "")
+
+  write.csv(x = sim_states,
+            file = paste(filepath_save, "_simStates.csv"))
+  write.csv(x = sim_times,
+            file = paste(filepath_save, "_simTimes.csv"))
 }
