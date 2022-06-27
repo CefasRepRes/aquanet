@@ -3,7 +3,7 @@ do_event <- function(state_vector,
                      transition.rates,
                      tdiff,
                      move_restricted_sites,
-                     catchments.all.sites.c5.status,
+                     catchments_with_post_fallow_only,
                      source.infection.vector,
                      infected.source.matrix,
                      non_peak_season,
@@ -24,7 +24,7 @@ do_event <- function(state_vector,
   time_vector[surveillance.noVisibleInfection] <- time_vector[surveillance.noVisibleInfection] + tdiff
 
   # Increment the time recorded since every site in a catchment has been ready to be restocked
-  catchment_time_vector[catchments.all.sites.c5.status] <- catchment_time_vector[catchments.all.sites.c5.status] + tdiff
+  catchment_time_vector[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] + tdiff
 
   # Vector of possible events, expressed as the site to be infected if an event occurred
   site.vector <- transition.rates[[2]]
@@ -225,13 +225,13 @@ do_event <- function(state_vector,
     checkCatchmentLevelRestocking.objects <- checkCatchmentLevelRestocking(control_matrix, tdiff)
     control_matrix <- checkCatchmentLevelRestocking.objects[[1]]
     catchments.some.sites.c4.status <- checkCatchmentLevelRestocking.objects[[2]]
-    catchments.all.sites.c5.status <- checkCatchmentLevelRestocking.objects[[3]]
+    catchments_with_post_fallow_only <- checkCatchmentLevelRestocking.objects[[3]]
     catchment_time_vector[catchments.some.sites.c4.status] <- 0
   }
 
   # Identify catchments where every site has been ready to be restocked, for more than four days
   catchments.ready.restock <- rep(FALSE, n_catchments)
-  catchments.ready.restock[catchments.all.sites.c5.status] <- catchment_time_vector[catchments.all.sites.c5.status] >= 4
+  catchments.ready.restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
   no.catchments.ready.restock <- sum(as.numeric(catchments.ready.restock))
 
   # Print information on catchments where every site has been ready to be restocked, for more than four days
@@ -243,11 +243,11 @@ do_event <- function(state_vector,
     #control_matrix[sitesReadyRestocked, 3] <- 1
     ###
 
-    catchments.all.sites.c5.status[catchments.ready.restock] <- FALSE
+    catchments_with_post_fallow_only[catchments.ready.restock] <- FALSE
     catchment_time_vector[catchments.ready.restock] <- 0
 
     time_vector[sitesReadyRestocked] <- 0
   }
 
-  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments.all.sites.c5.status, source.infection.vector, rate.type, infected.source.matrix))
+  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source.infection.vector, rate.type, infected.source.matrix))
 }
