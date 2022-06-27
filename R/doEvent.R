@@ -5,7 +5,6 @@ do_event <- function(state_vector,
                      movement.restrictions.bySite,
                      catchment_time_vector,
                      catchments.all.sites.c5.status,
-                     record_transition_times,
                      source.infection.vector,
                      infected.source.matrix,
                      non_peak_season,
@@ -247,5 +246,5 @@ do_event <- function(state_vector,
     time_vector[sitesReadyRestocked] <- 0
   }
 
-  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments.all.sites.c5.status, record_transition_times, source.infection.vector, rate.type, infected.source.matrix))
+  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments.all.sites.c5.status, source.infection.vector, rate.type, infected.source.matrix))
 }
