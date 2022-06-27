@@ -28,14 +28,13 @@ commitResults <- function(allStates.table,
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
-  filepath_save <- paste(filepath_results,
-                         "/FullDetails/states-batchNo-", batch_num,
-                         "_simNo-", simulation_num,
-                         "_NoCommits-", save_num,
-                         sep = "")
-
-  write.csv(x = sim_states,
-            file = paste(filepath_save, "_simStates.csv"))
-  write.csv(x = sim_times,
-            file = paste(filepath_save, "_simTimes.csv"))
+  save(sim_states,
+       sim_times,
+       file = paste(filepath_results,
+                    "/FullDetails/batchNo-", batch_num,
+                    "_simNo-", simulation_num,
+                    "_NoCommits-", save_num,
+                    ".RData",
+                    sep=""),
+       compress=FALSE)
 }
