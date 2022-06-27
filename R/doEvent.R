@@ -64,7 +64,7 @@ do_event <- function(state_vector,
     event <- 1
   }
 
-  # Check the site corresponding to a particular event
+  # define site corresponding to event probability (Note: + 1 as 0-based site_vector)
   site <- site_vector[event] + 1
 
   # Lookup the event number and type, and modify the state appropriately
