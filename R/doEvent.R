@@ -64,10 +64,10 @@ do_event <- function(state_vector,
     event <- 1
   }
 
-  # define site corresponding to event probability (Note: + 1 as 0-based site_vector)
+  # define site corresponding to event (Note: + 1 as 0-based site_vector)
   site <- site_vector[event] + 1
 
-  # Lookup the event number and type, and modify the state appropriately
+  # extract transition rate for selected event - and modify the state appropriately
   rate_type <- transition_rates[[1]][event]
 
   ##### S --> I | L --> I  ####
