@@ -1,5 +1,5 @@
 commitResults <- function(allStates.table,
-                          allStates.table.t,
+                          df_time,
                           n_states,
                           n_sites,
                           site_indices,
@@ -23,8 +23,8 @@ commitResults <- function(allStates.table,
   # create data frame of simulation times
   sim_times <- data.frame(timeID = as.integer(iteration_vector + ((save_num - 1) * commit_int)),
                           simNo = as.integer(allStates.table[3, ])[iteration_vector],
-                          tdiff = as.numeric(allStates.table.t[1, ])[iteration_vector],
-                          t = as.numeric(allStates.table.t[2, ])[iteration_vector])
+                          tdiff = as.numeric(df_time[1, ])[iteration_vector],
+                          t = as.numeric(df_time[2, ])[iteration_vector])
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
