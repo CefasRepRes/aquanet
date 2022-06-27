@@ -2,7 +2,7 @@ do_event <- function(state_vector,
                      control_matrix,
                      transition.rates,
                      tdiff,
-                     movement.restrictions.bySite,
+                     move_restricted_sites,
                      catchment_time_vector,
                      catchments.all.sites.c5.status,
                      source.infection.vector,
@@ -17,7 +17,7 @@ do_event <- function(state_vector,
   # Update vector showing time since application of controls
   # Only start counting when the site has recovered
   # Time the period over which controls are applied, as well as the period a site has been fallow (these cases are mutally exclusive)
-  surveillance.noVisibleInfection <- (movement.restrictions.bySite & !state_vector & !control_matrix[,6]) | (movement.restrictions.bySite & state_vector & control_matrix[,6]) | controlled.sites.c4.logical
+  surveillance.noVisibleInfection <- (move_restricted_sites & !state_vector & !control_matrix[,6]) | (move_restricted_sites & state_vector & control_matrix[,6]) | controlled.sites.c4.logical
   time_vector[surveillance.noVisibleInfection] <- time_vector[surveillance.noVisibleInfection] + tdiff
 
   # Increment the time recorded since every site in a catchment has been ready to be restocked
