@@ -3,7 +3,6 @@ do_event <- function(state_vector,
                      transition.rates,
                      tdiff,
                      move_restricted_sites,
-                     catchments_with_post_fallow_only,
                      source.infection.vector,
                      infected.source.matrix,
                      non_peak_season,
@@ -13,6 +12,9 @@ do_event <- function(state_vector,
 
   # create vector to record time since catchment status changed
   catchment_time_vector <- rep(0, length = n_catchments)
+
+  # create vector to record catchments in post-fallow state
+  catchments_with_post_fallow_only = rep(0, length = no.catchments)
 
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[, 4])
