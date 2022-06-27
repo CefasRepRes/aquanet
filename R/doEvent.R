@@ -10,7 +10,7 @@ do_event <- function(state_vector,
                      infected.source.matrix,
                      non_peak_season,
                      ListRunTimeParameters,
-                     no.catchments,
+                     n_catchments,
                      graph.catchment2site.matrix2) {
 
   controlled.sites.c4.logical <- as.logical(control_matrix[, 4])
@@ -228,7 +228,7 @@ do_event <- function(state_vector,
   }
 
   # Identify catchments where every site has been ready to be restocked, for more than four days
-  catchments.ready.restock <- rep(FALSE, no.catchments)
+  catchments.ready.restock <- rep(FALSE, n_catchments)
   catchments.ready.restock[catchments.all.sites.c5.status] <- catchment_time_vector[catchments.all.sites.c5.status] >= 4
   no.catchments.ready.restock <- sum(as.numeric(catchments.ready.restock))
 
