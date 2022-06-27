@@ -8,7 +8,7 @@ do_event <- function(state_vector,
                      record_transition_times,
                      source.infection.vector,
                      infected.source.matrix,
-                     winter,
+                     non_peak_season,
                      ListRunTimeParameters,
                      no.catchments,
                      graph.catchment2site.matrix2) {
@@ -53,8 +53,8 @@ do_event <- function(state_vector,
     # Note the site is in an infectious state
     state_vector[site] <- 1
 
-    # If it is winter, identify the site as latent
-    if (winter == TRUE) {
+    # If it is non_peak_season, identify the site as latent
+    if (non_peak_season == TRUE) {
       control_matrix[site, 6] <- 1
       state_vector[site] <- 1
     }
@@ -164,7 +164,7 @@ do_event <- function(state_vector,
     # A site can not have multiple control states at the same time, so this should not interfere with other code
     time_vector[site] <- 0
 
-    if (winter == TRUE) {
+    if (non_peak_season == TRUE) {
       state_vector[site] <- 0
     }
   }
