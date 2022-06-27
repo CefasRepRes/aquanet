@@ -15,7 +15,7 @@ do_event <- function(state_vector,
   catchment_time_vector <- rep(0, length = n_catchments)
 
   # create vector to record catchments in post-fallow state
-  catchments_with_post_fallow_only <- rep(0, length = no.catchments)
+  catchments_with_post_fallow_only <- rep(0, length = n_catchments)
 
   # create vector to track source sites of infection (via fish movements / river network)
   source_inf_vector <- rep(0, n_sites)
