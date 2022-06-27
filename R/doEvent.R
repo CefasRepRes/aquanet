@@ -70,7 +70,7 @@ do_event <- function(state_vector,
   # extract transition rate for selected event - and modify the state appropriately
   rate_type <- transition_rates[[1]][event]
 
-  ##### S --> I | L --> I  ####
+  # S --> I | L --> I
   if (rate_type %in% c(0, 4, 10, 11, 14)) {
 
     # Note the site is in an infectious state
