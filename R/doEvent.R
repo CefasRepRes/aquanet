@@ -9,7 +9,7 @@ do_event <- function(state_vector,
                      source.infection.vector,
                      infected.source.matrix,
                      non_peak_season,
-                     ListRunTimeParameters,
+                     run_time_params,
                      n_catchments,
                      graph.catchment2site.matrix2) {
 
@@ -189,7 +189,7 @@ do_event <- function(state_vector,
   }
 
   # Update controls on those sites which have passed a given no. days without infection
-  ## min.trans <- ListRunTimeParameters[[7]]
+  ## min.trans <- run_time_params[[7]]
   min.trans <- 720
   controlled.sites.c2.logical <- as.logical(control_matrix[, 2]*!state_vector)
   allow.inward.movements <- (time_vector > min.trans) & controlled.sites.c2.logical
@@ -201,7 +201,7 @@ do_event <- function(state_vector,
   }
 
   # Update controls on those sites which have passed a given no. days without infection
-  min.trans <- 360 + ListRunTimeParameters[[8]]
+  min.trans <- 360 + run_time_params[[8]]
   controlled.sites.c3.logical <- as.logical(control_matrix[, 3])
   allow.all.movements <- (time_vector > min.trans) & controlled.sites.c3.logical
   allow.all.movements.no <- sum(allow.all.movements)
@@ -212,7 +212,7 @@ do_event <- function(state_vector,
   }
 
   # Update controls on those sites which have been fallow for more than x number of days
-  min.trans <- ListRunTimeParameters[[10]]
+  min.trans <- run_time_params[[10]]
   recover.site <- (time_vector > min.trans) & controlled.sites.c4.logical
   recover.site.no <- sum(recover.site)
 
