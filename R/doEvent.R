@@ -55,9 +55,11 @@ do_event <- function(state_vector,
   catchment_time_vector[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] + tdiff
 
 
-  # Pick an event number, from those available, using the vector of probabilities
+  ## do the event ----
+
+  # if there is more than one probability, pick an event number using the vector of probabilities
   if (n_prob != 1) {
-    event <- sample.int(n_prob, size=1, prob = prob, replace = TRUE)
+    event <- sample.int(n_prob, size = 1, prob = prob, replace = TRUE)
   } else {
     event <- 1
   }
