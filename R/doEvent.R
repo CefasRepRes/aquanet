@@ -258,5 +258,12 @@ do_event <- function(state_vector,
     time_vector[sitesReadyRestocked] <- 0
   }
 
-  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source_inf_vector, rate.type, source_inf_matrix))
+  return(list(state_vector,
+              control_matrix,
+              time_vector,
+              catchment_time_vector,
+              catchments_with_post_fallow_only,
+              source_inf_vector,
+              rate.type,
+              source_inf_matrix))
 }
