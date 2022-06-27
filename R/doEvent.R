@@ -37,7 +37,7 @@ do_event <- function(state_vector,
 
   # create vector of probabilities
   prob <- transition_rates[[3]] / rates_total
-  no.rates <- length(prob)
+  n_prob <- length(prob)
 
 
   # Update vector showing time since application of controls
@@ -54,8 +54,8 @@ do_event <- function(state_vector,
 
 
   # Pick an event number, from those available, using the vector of probabilities
-  if (no.rates != 1) {
-    event <- sample.int(no.rates, size=1, prob = prob, replace = TRUE)
+  if (n_prob != 1) {
+    event <- sample.int(n_prob, size=1, prob = prob, replace = TRUE)
   } else {
     event <- 1
   }
