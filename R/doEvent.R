@@ -40,17 +40,19 @@ do_event <- function(state_vector,
   n_prob <- length(prob)
 
 
-  # Update vector showing time since application of controls
-  # Only start counting when the site has recovered
-  # Time the period over which controls are applied, as well as the period a site has been fallow (these cases are mutally exclusive)
-  surveillance.noVisibleInfection <- (move_restricted_sites & !state_vector & !control_matrix[,6]) | (move_restricted_sites & state_vector & control_matrix[,6]) | sites_fallow
-  time_vector[surveillance.noVisibleInfection] <- time_vector[surveillance.noVisibleInfection] + tdiff
+  ## update model times ----
 
-  # Increment the time recorded since every site in a catchment has been ready to be restocked
+  # identify sites under surveillance with no visible infection
+  # sites with movement restrictions (susceptible and not latent OR infected and latent) or fallow sites
+  sites_surveillance <- (move_restricted_sites & !state_vector & !control_matrix[ , 6]) |
+    (move_restricted_sites & state_vector & control_matrix[ , 6]) | sites_fallow
+
+  # update time since application of controls (start counting when site has recovered)
+  # time the period over which controls are applied, as well as the period a site has been fallow (mutually exclusive scenarios)
+  time_vector[sites_surveillance] <- time_vector[sites_surveillance] + tdiff
+
+  # increment the time recorded since every site in a catchment has been ready to be restocked
   catchment_time_vector[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] + tdiff
-
-
-
 
 
   # Pick an event number, from those available, using the vector of probabilities
