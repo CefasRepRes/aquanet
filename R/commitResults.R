@@ -11,14 +11,14 @@ commitResults <- function(allStates.table,
                           save_num) {
 
   # create empty dgTMatrix to record site state at each step within the specified commit interval
-  allStates.matrix <- as(object = as.matrix(allStates.table[((n_states + 1):(n_states + n_sites)), ]),
+  matrix_states <- as(object = as.matrix(allStates.table[((n_states + 1):(n_states + n_sites)), ]),
                          Class = "dgTMatrix")
 
   # create data frame of simulation site states at each iteration
-  sim_states <- data.frame(siteID = as.integer(site_indices[(allStates.matrix@i + 1)] + 1),
-                           state = as.integer(allStates.matrix@x),
-                           timeID = as.integer(allStates.matrix@j + ((save_num - 1) * commit_int)),
-                           simNo = as.integer(allStates.table[3, ])[allStates.matrix@j + 1])
+  sim_states <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+                           state = as.integer(matrix_states@x),
+                           timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
+                           simNo = as.integer(allStates.table[3, ])[matrix_states@j + 1])
 
   # create data frame of simulation times
   sim_times <- data.frame(timeID = as.integer(iteration_vector + ((save_num - 1) * commit_int)),
