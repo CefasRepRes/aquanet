@@ -68,10 +68,10 @@ do_event <- function(state_vector,
   site <- site_vector[event] + 1
 
   # Lookup the event number and type, and modify the state appropriately
-  rate.type <- transition_rates[[1]][event]
+  rate_type <- transition_rates[[1]][event]
 
   ##### S --> I | L --> I  ####
-  if (rate.type %in% c(0, 4, 10, 11, 14)) {
+  if (rate_type %in% c(0, 4, 10, 11, 14)) {
 
     # Note the site is in an infectious state
     state_vector[site] <- 1
@@ -90,7 +90,7 @@ do_event <- function(state_vector,
       if (sum(control_matrix[site, 2:5]) == 0) {
         control_matrix[site, 1] <- 1
 
-        if (rate.type %in% c(0,10)) {
+        if (rate_type %in% c(0,10)) {
           source.infection <- transition_rates[[4]][event] + 1
           source_inf_vector[site] <- source.infection
           ########
@@ -104,7 +104,7 @@ do_event <- function(state_vector,
   }
 
   # I --> L - for both farm and fishery
-  if (rate.type %in% c(2,3)) {
+  if (rate_type %in% c(2,3)) {
     # If the site has been infected, but has recovered, before being placed under control, assume that it will not be controlled
     # If the site is controlled, and has recovered, reset the clock
     if (control_matrix[site, 1] == 1) {
@@ -117,7 +117,7 @@ do_event <- function(state_vector,
   }
 
   # I --> C transition | Traced Site --> C transition
-  if (rate.type %in% c(6, 12)) {
+  if (rate_type %in% c(6, 12)) {
     # Note the site no longer needs to be contact traced,
     # since it has been tested through other means
     if (state_vector[site] == 1 && control_matrix[site, 7] == 1) {
@@ -175,7 +175,7 @@ do_event <- function(state_vector,
   }
 
   # C --> F transition
-  if (rate.type == 9) {
+  if (rate_type == 9) {
     # Note the site is now fallow
     control_matrix[site, 4] <- 1
     control_matrix[site, c(2,3)] <- 0
@@ -193,7 +193,7 @@ do_event <- function(state_vector,
   }
 
   # L -> S transition
-  if (rate.type == 5) {
+  if (rate_type == 5) {
     # Note S state
     state_vector[site] <- 0
 
@@ -205,7 +205,7 @@ do_event <- function(state_vector,
   }
 
   # F,I --> F,S transition (decontamination of fallow sites)
-  if (rate.type == 1) {
+  if (rate_type == 1) {
     # Note S state
     state_vector[site] <- 0
 
@@ -276,6 +276,6 @@ do_event <- function(state_vector,
               catchment_time_vector,
               catchments_with_post_fallow_only,
               source_inf_vector,
-              rate.type,
+              rate_type,
               source_inf_matrix))
 }
