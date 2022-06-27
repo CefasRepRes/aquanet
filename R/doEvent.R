@@ -3,11 +3,11 @@ do_event <- function(state_vector,
                      transition.rates,
                      tdiff,
                      move_restricted_sites,
-                     source.infection.vector,
                      infected.source.matrix,
                      non_peak_season,
                      run_time_params,
                      n_catchments,
+                     n_sites,
                      spmatrix_sites_catchment) {
 
   # create vector to record time since catchment status changed
@@ -15,6 +15,9 @@ do_event <- function(state_vector,
 
   # create vector to record catchments in post-fallow state
   catchments_with_post_fallow_only = rep(0, length = no.catchments)
+
+  # create vector to track source sites of infection (via fish movements / river network)
+  source_inf_vector = rep(0, n_sites)
 
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[, 4])
@@ -73,7 +76,7 @@ do_event <- function(state_vector,
 
         if (rate.type %in% c(0,10)) {
           source.infection <- transition.rates[[4]][event] + 1
-          source.infection.vector[site] <- source.infection
+          source_inf_vector[site] <- source.infection
           ########
           infected.source.matrix[source.infection,  site] <- 1
         }
@@ -119,10 +122,10 @@ do_event <- function(state_vector,
     # Note any sites which have been in contact with
     # the infected site and which transmitted infection
     # via live fish movements or river-based transmission
-    source.infection <- source.infection.vector[site]
+    source.infection <- source_inf_vector[site]
 
     if (source.infection != 0) {
-      source.infection.vector[site] <- 0
+      source_inf_vector[site] <- 0
 
       # Don't test a site for infection if it has already
       # been subject to controls
@@ -251,5 +254,5 @@ do_event <- function(state_vector,
     time_vector[sitesReadyRestocked] <- 0
   }
 
-  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source.infection.vector, rate.type, infected.source.matrix))
+  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source_inf_vector, rate.type, infected.source.matrix))
 }
