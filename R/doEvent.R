@@ -73,16 +73,16 @@ do_event <- function(state_vector,
   # S --> I | L --> I
   if (rate_type %in% c(0, 4, 10, 11, 14)) {
 
-    # Note the site is in an infectious state
+    # note the site is in an infectious state
     state_vector[site] <- 1
 
-    # If it is non_peak_season, identify the site as latent
+    # IF it is non_peak_season, define the site as latently infected
     if (non_peak_season == TRUE) {
       control_matrix[site, 6] <- 1
       state_vector[site] <- 1
     }
 
-    # Identify the site as having infection which can potentially be detected
+    # ELSE define the site as having infection which can potentially be detected
     else {
 
       # Lookup the source of the infection and record it, in case contact tracing
