@@ -1,4 +1,17 @@
-do_event <- function(state_vector, control_matrix, transition.rates, tdiff,  movement.restrictions.bySite, catchment_time_vector, catchments.all.sites.c5.status, record_transition_times, source.infection.vector, infected.source.matrix) {
+do_event <- function(state_vector,
+                     control_matrix,
+                     transition.rates,
+                     tdiff,
+                     movement.restrictions.bySite,
+                     catchment_time_vector,
+                     catchments.all.sites.c5.status,
+                     record_transition_times,
+                     source.infection.vector,
+                     infected.source.matrix,
+                     winter,
+                     ListRunTimeParameters,
+                     no.catchments,
+                     graph.catchment2site.matrix2) {
 
   controlled.sites.c4.logical <- as.logical(control_matrix[, 4])
 
