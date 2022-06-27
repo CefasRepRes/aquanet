@@ -11,7 +11,7 @@ do_event <- function(state_vector,
                      non_peak_season,
                      run_time_params,
                      n_catchments,
-                     graph.catchment2site.matrix2) {
+                     spmatrix_sites_catchment) {
 
   controlled.sites.c4.logical <- as.logical(control_matrix[, 4])
 
@@ -234,7 +234,7 @@ do_event <- function(state_vector,
 
   # Print information on catchments where every site has been ready to be restocked, for more than four days
   if (no.catchments.ready.restock > 0) {
-    sitesReadyRestocked <- as.logical((graph.catchment2site.matrix2 * control_matrix[,5]) %*% catchments.ready.restock)
+    sitesReadyRestocked <- as.logical((spmatrix_sites_catchment * control_matrix[,5]) %*% catchments.ready.restock)
 
     control_matrix[sitesReadyRestocked, 5] <- 0
     ###
