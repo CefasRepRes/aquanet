@@ -3,7 +3,6 @@ do_event <- function(state_vector,
                      transition.rates,
                      tdiff,
                      move_restricted_sites,
-                     catchment_time_vector,
                      catchments.all.sites.c5.status,
                      source.infection.vector,
                      infected.source.matrix,
@@ -11,6 +10,9 @@ do_event <- function(state_vector,
                      run_time_params,
                      n_catchments,
                      spmatrix_sites_catchment) {
+
+  # create vector to record time since catchment status changed
+  catchment_time_vector <- rep(0, length = n_catchments)
 
   controlled.sites.c4.logical <- as.logical(control_matrix[, 4])
 
