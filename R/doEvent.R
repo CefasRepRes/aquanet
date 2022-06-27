@@ -9,7 +9,7 @@ do_event <- function(state_vector,
                      n_sites,
                      spmatrix_sites_catchment) {
 
-  ## create function variables to populate ----
+  ## create variables to populate ----
 
   # create vector to record time since catchment status changed
   catchment_time_vector <- rep(0, length = n_catchments)
@@ -26,11 +26,19 @@ do_event <- function(state_vector,
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[, 4])
 
+
+  ## extract transition information (sites, probabilities) ----
+
   # vector of sites subject to transition (possible infection events)
   site_vector <- transition_rates[[2]]
 
   # calculate the total rates of transmission
   rates_total <- sum(transition_rates[[3]])
+
+  # create vector of probabilities
+  prob <- transition_rates[[3]] / rates_total
+  no.rates <- length(prob)
+
 
   # Update vector showing time since application of controls
   # Only start counting when the site has recovered
@@ -43,13 +51,11 @@ do_event <- function(state_vector,
 
 
 
-  # Create a vector of probabilities
-  p <- transition_rates[[3]] / rates_total
-  no.rates <- length(p)
+
 
   # Pick an event number, from those available, using the vector of probabilities
   if (no.rates != 1) {
-    event <- sample.int(no.rates, size=1, prob = p, replace = TRUE)
+    event <- sample.int(no.rates, size=1, prob = prob, replace = TRUE)
   } else {
     event <- 1
   }
