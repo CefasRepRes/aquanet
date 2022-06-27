@@ -3,7 +3,6 @@ do_event <- function(state_vector,
                      transition.rates,
                      tdiff,
                      move_restricted_sites,
-                     infected.source.matrix,
                      non_peak_season,
                      run_time_params,
                      n_catchments,
@@ -18,6 +17,9 @@ do_event <- function(state_vector,
 
   # create vector to track source sites of infection (via fish movements / river network)
   source_inf_vector = rep(0, n_sites)
+
+  # create matrix to track sites infected (via fish movements / river network) to forward contact trace
+  source_inf_matrix = matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[, 4])
@@ -78,7 +80,7 @@ do_event <- function(state_vector,
           source.infection <- transition.rates[[4]][event] + 1
           source_inf_vector[site] <- source.infection
           ########
-          infected.source.matrix[source.infection,  site] <- 1
+          source_inf_matrix[source.infection,  site] <- 1
         }
       }
 
@@ -138,12 +140,12 @@ do_event <- function(state_vector,
     # Note any sites which have been in contacted by
     # the infected site and which transmitted infection
     # via live fish movements or river-based transmission
-    infected.source <- infected.source.matrix[site,]
+    infected.source <- source_inf_matrix[site,]
     infected.sites <- which(infected.source == 1)
 
 
     if(sum(infected.source) != 0){
-      infected.source.matrix[site,] <- 0
+      source_inf_matrix[site,] <- 0
 
       for(i in 1:length(infected.sites)){
         # Don't test a site for infection if it has already
@@ -254,5 +256,5 @@ do_event <- function(state_vector,
     time_vector[sitesReadyRestocked] <- 0
   }
 
-  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source_inf_vector, rate.type, infected.source.matrix))
+  return(list(state_vector, control_matrix, time_vector, catchment_time_vector, catchments_with_post_fallow_only, source_inf_vector, rate.type, source_inf_matrix))
 }
