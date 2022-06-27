@@ -1,6 +1,6 @@
 do_event <- function(state_vector,
                      control_matrix,
-                     transition.rates,
+                     transition_rates,
                      tdiff,
                      move_restricted_sites,
                      non_peak_season,
@@ -8,6 +8,8 @@ do_event <- function(state_vector,
                      n_catchments,
                      n_sites,
                      spmatrix_sites_catchment) {
+
+  ## create function variables to populate ----
 
   # create vector to record time since catchment status changed
   catchment_time_vector <- rep(0, length = n_catchments)
@@ -34,13 +36,13 @@ do_event <- function(state_vector,
   catchment_time_vector[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] + tdiff
 
   # Vector of possible events, expressed as the site to be infected if an event occurred
-  site.vector <- transition.rates[[2]]
+  site.vector <- transition_rates[[2]]
 
   # Calculate the total rate
-  rate.total <- sum(transition.rates[[3]])
+  rate.total <- sum(transition_rates[[3]])
 
   # Create a vector of probabilities
-  p <- transition.rates[[3]] / rate.total
+  p <- transition_rates[[3]] / rate.total
   no.rates <- length(p)
 
   # Pick an event number, from those available, using the vector of probabilities
@@ -54,7 +56,7 @@ do_event <- function(state_vector,
   site <- site.vector[event] + 1
 
   # Lookup the event number and type, and modify the state appropriately
-  rate.type <- transition.rates[[1]][event]
+  rate.type <- transition_rates[[1]][event]
 
   ##### S --> I | L --> I  ####
   if (rate.type %in% c(0, 4, 10, 11, 14)) {
@@ -77,7 +79,7 @@ do_event <- function(state_vector,
         control_matrix[site, 1] <- 1
 
         if (rate.type %in% c(0,10)) {
-          source.infection <- transition.rates[[4]][event] + 1
+          source.infection <- transition_rates[[4]][event] + 1
           source_inf_vector[site] <- source.infection
           ########
           source_inf_matrix[source.infection,  site] <- 1
