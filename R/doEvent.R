@@ -29,6 +29,9 @@ do_event <- function(state_vector,
   # vector of sites subject to transition (possible infection events)
   site_vector <- transition_rates[[2]]
 
+  # calculate the total rates of transmission
+  rates_total <- sum(transition_rates[[3]])
+
   # Update vector showing time since application of controls
   # Only start counting when the site has recovered
   # Time the period over which controls are applied, as well as the period a site has been fallow (these cases are mutally exclusive)
@@ -38,11 +41,10 @@ do_event <- function(state_vector,
   # Increment the time recorded since every site in a catchment has been ready to be restocked
   catchment_time_vector[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] + tdiff
 
-  # Calculate the total rate
-  rate.total <- sum(transition_rates[[3]])
+
 
   # Create a vector of probabilities
-  p <- transition_rates[[3]] / rate.total
+  p <- transition_rates[[3]] / rates_total
   no.rates <- length(p)
 
   # Pick an event number, from those available, using the vector of probabilities
