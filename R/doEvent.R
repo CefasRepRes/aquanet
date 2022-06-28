@@ -254,8 +254,8 @@ do_event <- function(state_vector,
   control_period <- run_time_params[["Early_Controls_Fisheries"]] + # 'Se' in manuscript
     run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
-  controlled.sites.c3.logical <- as.logical(control_matrix[ , 3])
-  allow.all.movements <- (time_vector > control_period) & controlled.sites.c3.logical
+  sites_controlled_movements_imports <- as.logical(control_matrix[ , 3])
+  allow.all.movements <- (time_vector > control_period) & sites_controlled_movements_imports
   allow.all.movements.no <- sum(allow.all.movements)
 
   if (allow.all.movements.no != 0) {
