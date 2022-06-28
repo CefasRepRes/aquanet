@@ -320,9 +320,11 @@ do_event <- function(state_vector,
     # release sites from post-fallow and ready to restock status
     control_matrix[sitesReadyRestocked, 5] <- 0
 
+    # reset the catchments ready for restock in catchments_with_post_fallow_only to FALSE
     catchments_with_post_fallow_only[catchments_ready_restock] <- FALSE
-    catchment_time_vector[catchments_ready_restock] <- 0
 
+    # reset clocks for catchment time and site time post restocking
+    catchment_time_vector[catchments_ready_restock] <- 0
     time_vector[sitesReadyRestocked] <- 0
   }
 
