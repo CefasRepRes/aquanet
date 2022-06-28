@@ -287,12 +287,12 @@ do_event <- function(state_vector,
     control_matrix[sites_recover, 4] <- 0
     control_matrix[sites_recover, 5] <- 1
 
-    checkCatchmentLevelRestocking.objects <- aquanet::checkCatchmentLevelRestocking(control_matrix = control_matrix,
-                                                                                    spmatrix_sites_catchment = spmatrix_sites_catchment,
-                                                                                    n_catchments = n_catchments)
+    catchment_restocking <- aquanet::checkCatchmentLevelRestocking(control_matrix = control_matrix,
+                                                                   spmatrix_sites_catchment = spmatrix_sites_catchment,
+                                                                   n_catchments = n_catchments)
 
-    catchments.some.sites.c4.status <- checkCatchmentLevelRestocking.objects[[2]]
-    catchments_with_post_fallow_only <- checkCatchmentLevelRestocking.objects[[3]]
+    catchments.some.sites.c4.status <- catchment_restocking[[2]]
+    catchments_with_post_fallow_only <- catchment_restocking[[3]]
     catchment_time_vector[catchments.some.sites.c4.status] <- 0
   }
 
