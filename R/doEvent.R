@@ -70,7 +70,8 @@ do_event <- function(state_vector,
   # extract transition rate for selected event - and modify the state appropriately
   rate_type <- transition_rates[[1]][event]
 
-  # S --> I | L --> I
+
+  ## S --> I | L --> I ----
   # IF the transition rate is either via LFM, recrudescence from subclinical, river-based,
   # random mechanism-independent or fomite-based: assign the site an infectious state
   if (rate_type %in% c(0, 4, 10, 11, 14)) {
@@ -106,7 +107,7 @@ do_event <- function(state_vector,
     }
   }
 
-  # I --> L  (both farm and fishery)
+  ## I --> L  (both farm and fishery) ----
   # IF the transition rate is either farm recovers or fishery becomes subclinical/latent:
   if (rate_type %in% c(2, 3)) {
 
@@ -123,7 +124,8 @@ do_event <- function(state_vector,
     control_matrix[site, 6] <- 1
   }
 
-  # I --> C transition | Traced Site --> C transition
+
+  ## I --> C transition | Traced Site --> C transition ----
   if (rate_type %in% c(6, 12)) {
     # Note the site no longer needs to be contact traced,
     # since it has been tested through other means
@@ -181,7 +183,8 @@ do_event <- function(state_vector,
     ########
   }
 
-  # C --> F transition
+
+  ## C --> F transition ----
   if (rate_type == 9) {
     # Note the site is now fallow
     control_matrix[site, 4] <- 1
@@ -199,7 +202,8 @@ do_event <- function(state_vector,
     }
   }
 
-  # L -> S transition
+
+  ## L -> S transition ----
   if (rate_type == 5) {
     # Note S state
     state_vector[site] <- 0
@@ -211,7 +215,8 @@ do_event <- function(state_vector,
 
   }
 
-  # F,I --> F,S transition (decontamination of fallow sites)
+
+  ## F,I --> F,S transition (decontamination of fallow sites) ----
   if (rate_type == 1) {
     # Note S state
     state_vector[site] <- 0
