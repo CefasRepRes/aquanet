@@ -230,7 +230,8 @@ do_event <- function(state_vector,
 
   # update controls 1: sites which have passed a given number of days without infection
   min.trans <- run_time_params[["Early_Controls_Fisheries"]]
-  controlled.sites.c2.logical <- as.logical(control_matrix[, 2]*!state_vector)
+
+  controlled.sites.c2.logical <- as.logical(control_matrix[ , 2] * !state_vector)
   allow.inward.movements <- (time_vector > min.trans) & controlled.sites.c2.logical
   allow.inward.movements.no <- sum(allow.inward.movements)
 
@@ -241,7 +242,8 @@ do_event <- function(state_vector,
 
   # update controls 2: sites which have passed a given number days without infection
   min.trans <- 360 + run_time_params[["Late_Controls_Fisheries"]]
-  controlled.sites.c3.logical <- as.logical(control_matrix[, 3])
+
+  controlled.sites.c3.logical <- as.logical(control_matrix[ , 3])
   allow.all.movements <- (time_vector > min.trans) & controlled.sites.c3.logical
   allow.all.movements.no <- sum(allow.all.movements)
 
@@ -252,15 +254,19 @@ do_event <- function(state_vector,
 
   # update controls 3: sites which have been fallow for more than x number of days
   min.trans <- run_time_params[["Fallow_Period"]]
+
   recover.site <- (time_vector > min.trans) & sites_fallow
   recover.site.no <- sum(recover.site)
+
 
   if (recover.site.no != 0) {
     control_matrix[recover.site, 4] <- 0
     control_matrix[recover.site, 5] <- 1
 
     checkCatchmentLevelRestocking.objects <- checkCatchmentLevelRestocking(control_matrix, tdiff)
+
     control_matrix <- checkCatchmentLevelRestocking.objects[[1]]
+
     catchments.some.sites.c4.status <- checkCatchmentLevelRestocking.objects[[2]]
     catchments_with_post_fallow_only <- checkCatchmentLevelRestocking.objects[[3]]
     catchment_time_vector[catchments.some.sites.c4.status] <- 0
@@ -268,12 +274,13 @@ do_event <- function(state_vector,
 
   # Identify catchments where every site has been ready to be restocked, for more than four days
   catchments.ready.restock <- rep(FALSE, n_catchments)
+
   catchments.ready.restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
   no.catchments.ready.restock <- sum(as.numeric(catchments.ready.restock))
 
   # Print information on catchments where every site has been ready to be restocked, for more than four days
   if (no.catchments.ready.restock > 0) {
-    sitesReadyRestocked <- as.logical((spmatrix_sites_catchment * control_matrix[,5]) %*% catchments.ready.restock)
+    sitesReadyRestocked <- as.logical((spmatrix_sites_catchment * control_matrix[ , 5]) %*% catchments.ready.restock)
 
     control_matrix[sitesReadyRestocked, 5] <- 0
     ###
