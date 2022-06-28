@@ -287,13 +287,14 @@ do_event <- function(state_vector,
     control_matrix[sites_recover, 4] <- 0
     control_matrix[sites_recover, 5] <- 1
 
+    # extract fallow and post-fallow site status at catchment level to inform restocking
     catchment_restocking <- aquanet::checkCatchmentLevelRestocking(control_matrix = control_matrix,
                                                                    spmatrix_sites_catchment = spmatrix_sites_catchment,
                                                                    n_catchments = n_catchments)
 
-    catchments.some.sites.c4.status <- catchment_restocking[[2]]
+    catchment_with_fallow_some <- catchment_restocking[[2]]
     catchments_with_post_fallow_only <- catchment_restocking[[3]]
-    catchment_time_vector[catchments.some.sites.c4.status] <- 0
+    catchment_time_vector[catchment_with_fallow_some] <- 0
   }
 
   # Identify catchments where every site has been ready to be restocked, for more than four days
