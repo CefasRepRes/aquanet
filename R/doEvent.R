@@ -96,9 +96,9 @@ do_event <- function(state_vector,
         # IF the transition rate is via LFM or river-based:
         if (rate_type %in% c(0, 10)) {
           # extract infection source site and update source_inf_vector and source_inf_matrix
-          source.infection <- transition_rates[[4]][event] + 1
-          source_inf_vector[site] <- source.infection
-          source_inf_matrix[source.infection,  site] <- 1
+          source_inf <- transition_rates[[4]][event] + 1
+          source_inf_vector[site] <- source_inf
+          source_inf_matrix[source_inf,  site] <- 1
         }
       }
 
@@ -148,16 +148,16 @@ do_event <- function(state_vector,
     }
 
     # Note: any sites that have been in contact with the infected site and which transmitted infection via LFM or river
-    source.infection <- source_inf_vector[site]
+    source_inf <- source_inf_vector[site]
 
     # IF the source site of infection is not 0: redefine as 0
-    if (source.infection != 0) {
+    if (source_inf != 0) {
       source_inf_vector[site] <- 0
 
       # IF the source site of infection has no controls: define as catchment controls/contact tracing
       # Note: don't test a site for infection if it has already been subject to controls
-      if (sum(control_matrix[source.infection, 2:5]) == 0) {
-        control_matrix[source.infection, 7] <- 1
+      if (sum(control_matrix[source_inf, 2:5]) == 0) {
+        control_matrix[source_inf, 7] <- 1
       }
     }
 
