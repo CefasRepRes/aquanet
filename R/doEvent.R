@@ -304,8 +304,10 @@ do_event <- function(state_vector,
     catchments_with_post_fallow_only <- catchment_restocking[[3]]
   }
 
-
+  # select catchments for restock - with only post-fallow sites ready to restock for >= 4 days
   catchments_ready_restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
+
+  # total number of catchments ready for restock
   n_catchments_ready_restock <- sum(as.numeric(catchments_ready_restock))
 
   # Print information on catchments where every site has been ready to be restocked, for more than four days
