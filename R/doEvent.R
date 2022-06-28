@@ -71,12 +71,12 @@ do_event <- function(state_vector,
   rate_type <- transition_rates[[1]][event]
 
   # S --> I | L --> I
+  # IF the transition rate is either via LFM, recrudescence from subclinical, river-based,
+  # random mechanism-independent or fomite-based: assign the site an infectious state
   if (rate_type %in% c(0, 4, 10, 11, 14)) {
-
-    # assign the site an infectious state
     state_vector[site] <- 1
 
-    # IF it is non_peak_season, define the site as latently infected
+    # IF it is non_peak_season: define the site as latently infected
     if (non_peak_season == TRUE) {
       control_matrix[site, 6] <- 1
       state_vector[site] <- 1
@@ -87,18 +87,21 @@ do_event <- function(state_vector,
 
       # Lookup the source of the infection and record it, in case contact tracing
       # needs to be applied at a later point
+
+      # IF the site has no controls in place: assign the site an infectious state
       if (sum(control_matrix[site, 2:5]) == 0) {
         control_matrix[site, 1] <- 1
 
-        if (rate_type %in% c(0,10)) {
+        # IF the transition rate is via LFM or river-based:
+        if (rate_type %in% c(0, 10)) {
+          # extract infection source site and update source_inf_vector and source_inf_matrix
           source.infection <- transition_rates[[4]][event] + 1
           source_inf_vector[site] <- source.infection
-          ########
           source_inf_matrix[source.infection,  site] <- 1
         }
       }
 
-      # Note the site is no longer latent
+      # define the site as no longer latent
       control_matrix[site, 6] <- 0
     }
   }
