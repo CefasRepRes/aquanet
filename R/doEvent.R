@@ -73,7 +73,7 @@ do_event <- function(state_vector,
   # S --> I | L --> I
   if (rate_type %in% c(0, 4, 10, 11, 14)) {
 
-    # note the site is in an infectious state
+    # assign the site an infectious state
     state_vector[site] <- 1
 
     # IF it is non_peak_season, define the site as latently infected
