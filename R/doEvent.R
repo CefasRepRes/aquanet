@@ -228,20 +228,20 @@ do_event <- function(state_vector,
 
   ## update controls ----
 
-  # update controls 1: sites which have passed a given number of days without infection
+  # Update controls 1: sites which have passed stage 1 surveillance without infection
   # extract minimum period fisheries are under stage 1 controls
   control_period <- run_time_params[["Early_Controls_Fisheries"]] # 'Se' in manuscript
 
   # logical vector of sites subject to movement controls but no longer infected
   sites_controlled_movements <- as.logical(control_matrix[ , 2] * !state_vector)
 
-  # logical vector of sites which have passed a given number of days without infection
+  # logical vector of sites which have passed stage 1 surveillance without infection
   sites_allow_moves_in <- (time_vector > control_period) & sites_controlled_movements
 
-  # total number of sites which have passed a given number of days without infection
+  # total number of sites which have passed stage 1 surveillance without infection
   n_sites_allow_moves_in <- sum(sites_allow_moves_in)
 
-  # IF there are sites that have passed a given number of days without infection:
+  # IF there are sites that have passed stage 1 surveillance without infection:
   if (n_sites_allow_moves_in != 0) {
     # remove movement restriction and allow restocking
     control_matrix[sites_allow_moves_in, 2] <- 0
@@ -249,22 +249,29 @@ do_event <- function(state_vector,
   }
 
 
-  # update controls 2: sites which have passed a given number days without infection
+  # Update controls 2: sites which have passed stage 2 surveillance without infection
   # calculate minimum period fisheries are under stage 1 + 2 controls
   control_period <- run_time_params[["Early_Controls_Fisheries"]] + # 'Se' in manuscript
     run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
+  # logical vector of sites subject to move controls but allowed to import fish
   sites_controlled_movements_imports <- as.logical(control_matrix[ , 3])
+
+  # logical vector of sites which have passed stage 2 surveillance without infection
   sites_allow_moves_all <- (time_vector > control_period) & sites_controlled_movements_imports
+
+  # total number of sites with have passed stage 2 surveillance without infection
   n_sites_allow_moves_all <- sum(sites_allow_moves_all)
 
+  # IF there are sites that have passed stage 2 surveillance without infection:
   if (n_sites_allow_moves_all != 0) {
+    # remove final movement controls and reset clock
     control_matrix[sites_allow_moves_all, 3] <- 0
     time_vector[sites_allow_moves_all] <- 0
   }
 
 
-  # update controls 3: sites which have been fallow for more than x number of days
+  # Update controls 3: sites which have been fallow for more than x number of days
   control_period <- run_time_params[["Fallow_Period"]]
 
   recover.site <- (time_vector > control_period) & sites_fallow
