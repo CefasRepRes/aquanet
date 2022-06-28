@@ -147,7 +147,7 @@ do_event <- function(state_vector,
       control_matrix[site, c(1, 3)] <- 0
     }
 
-    # Note: any sites that have been in contact with the infected site and which transmitted infection via LFM or river
+    # define source of infection
     source_inf <- source_inf_vector[site]
 
     # IF the source site of infection is not 0: redefine as 0
