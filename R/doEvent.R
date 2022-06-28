@@ -250,7 +250,8 @@ do_event <- function(state_vector,
 
 
   # update controls 2: sites which have passed a given number days without infection
-  control_period <- 360 + run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
+  control_period <- run_time_params[["Early_Controls_Fisheries"]] + # 'Se' in manuscript
+    run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
   controlled.sites.c3.logical <- as.logical(control_matrix[ , 3])
   allow.all.movements <- (time_vector > control_period) & controlled.sites.c3.logical
