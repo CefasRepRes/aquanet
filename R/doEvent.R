@@ -219,12 +219,12 @@ do_event <- function(state_vector,
   }
 
 
-  ## F,I --> F,S transition (decontamination of fallow sites) ----
+  ## F,I --> F,S transition ----
+  # IF the transition rate is rate at which fallow sites are disinfected: redefine site ad uninfected
   if (rate_type == 1) {
-    # Note S state
     state_vector[site] <- 0
-
   }
+
 
   # Update controls on those sites which have passed a given no. days without infection
   ## min.trans <- run_time_params[[7]]
