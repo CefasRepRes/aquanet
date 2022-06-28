@@ -185,18 +185,20 @@ do_event <- function(state_vector,
 
 
   ## C --> F transition ----
+  # IF the transition rate is rate at whic controlled sites become fallow:
   if (rate_type == 9) {
-    # Note the site is now fallow
+    # define the site as fallow and reset movement/stocking controls
     control_matrix[site, 4] <- 1
-    control_matrix[site, c(2,3)] <- 0
+    control_matrix[site, c(2, 3)] <- 0
 
-    # Note the site is no longer latent
+    # define the site as no longer latent
     control_matrix[site, 6] <- 0
 
-    # Reset the time on the clock, so that it is possible to check how long the site has been fallow
-    # A site can not have multiple control states at the same time, so this should not interfere with other code
+    # reset the clock (to check how long the site has been fallow)
+    # Note: a site cannot have multiple control states at the same time (so no interfere with other code)
     time_vector[site] <- 0
 
+    # IF it is not the peak transmission season: define site as uninfected
     if (non_peak_season == TRUE) {
       state_vector[site] <- 0
     }
