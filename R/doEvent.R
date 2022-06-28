@@ -319,9 +319,6 @@ do_event <- function(state_vector,
 
     # release sites from post-fallow and ready to restock status
     control_matrix[sitesReadyRestocked, 5] <- 0
-    ###
-    #control_matrix[sitesReadyRestocked, 3] <- 1
-    ###
 
     catchments_with_post_fallow_only[catchments_ready_restock] <- FALSE
     catchment_time_vector[catchments_ready_restock] <- 0
