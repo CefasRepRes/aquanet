@@ -24,7 +24,7 @@ do_event <- function(state_vector,
   source_inf_matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
   # create logical vector of sites that are fallow
-  sites_fallow <- as.logical(control_matrix[, 4])
+  sites_fallow <- as.logical(control_matrix[ , 4])
 
 
   ## extract transition information (sites, probabilities) ----
@@ -271,14 +271,19 @@ do_event <- function(state_vector,
   }
 
 
-  # Update controls 3: sites which have been fallow for more than x number of days
+  # Update controls 3: sites which have been fallow for more than X number of days
+  # extract minimum period sites are fallow for
   control_period <- run_time_params[["Fallow_Period"]]
 
+  # logical vector of sites which have been fallow for more than X number of days
   recover.site <- (time_vector > control_period) & sites_fallow
+
+  # total number of sites that have been fallow for more than X number of days
   recover.site.no <- sum(recover.site)
 
-
+  # IF there are sites that have been fallow for more than X number of days
   if (recover.site.no != 0) {
+    # convert to post-fallow state
     control_matrix[recover.site, 4] <- 0
     control_matrix[recover.site, 5] <- 1
 
