@@ -89,9 +89,6 @@ do_event <- function(state_vector,
     # ELSE define the site as having infection which can potentially be detected
     else {
 
-      # Lookup the source of the infection and record it, in case contact tracing
-      # needs to be applied at a later point
-
       # IF the site has no controls in place: assign the site an infectious state
       if (sum(control_matrix[site, 2:5]) == 0) {
         control_matrix[site, 1] <- 1
@@ -99,6 +96,7 @@ do_event <- function(state_vector,
         # IF the transition rate is via LFM or river-based:
         if (rate_type %in% c(0, 10)) {
           # extract infection source site and update source_inf_vector and source_inf_matrix
+          # in case contact tracing applied later
           source_inf <- transition_rates[[4]][event] + 1
           source_inf_vector[site] <- source_inf
           source_inf_matrix[source_inf,  site] <- 1
