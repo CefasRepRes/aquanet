@@ -226,6 +226,8 @@ do_event <- function(state_vector,
   }
 
 
+  ## update controls ----
+
   # Update controls on those sites which have passed a given no. days without infection
   ## min.trans <- run_time_params[[7]]
   min.trans <- 720
