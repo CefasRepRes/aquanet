@@ -229,16 +229,25 @@ do_event <- function(state_vector,
   ## update controls ----
 
   # update controls 1: sites which have passed a given number of days without infection
+  # extract minimum period fisheries are under controls
   min.trans <- run_time_params[["Early_Controls_Fisheries"]]
 
+  # logical vector of sites subject to movement controls but no longer infected
   controlled.sites.c2.logical <- as.logical(control_matrix[ , 2] * !state_vector)
+
+  # logical vector of sites which have passed a given number of days without infection
   allow.inward.movements <- (time_vector > min.trans) & controlled.sites.c2.logical
+
+  # total number of sites which have passed a given number of days without infection
   allow.inward.movements.no <- sum(allow.inward.movements)
 
+  # IF there are sites that have passed a given number of days without infection:
   if (allow.inward.movements.no != 0) {
+    # remove movement restriction and allow restocking
     control_matrix[allow.inward.movements, 2] <- 0
     control_matrix[allow.inward.movements, 3] <- 1
   }
+
 
   # update controls 2: sites which have passed a given number days without infection
   min.trans <- 360 + run_time_params[["Late_Controls_Fisheries"]]
@@ -251,6 +260,7 @@ do_event <- function(state_vector,
     control_matrix[allow.all.movements, 3] <- 0
     time_vector[allow.all.movements] <- 0
   }
+
 
   # update controls 3: sites which have been fallow for more than x number of days
   min.trans <- run_time_params[["Fallow_Period"]]
