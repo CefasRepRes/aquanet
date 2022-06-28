@@ -292,9 +292,12 @@ do_event <- function(state_vector,
                                                                    spmatrix_sites_catchment = spmatrix_sites_catchment,
                                                                    n_catchments = n_catchments)
 
+    # update catchment time vector for catchments containing fallow sites
     catchment_with_fallow_some <- catchment_restocking[[2]]
-    catchments_with_post_fallow_only <- catchment_restocking[[3]]
     catchment_time_vector[catchment_with_fallow_some] <- 0
+
+    # overwrite catchments_with_post_fallow_only to contain sites ready for restocking
+    catchments_with_post_fallow_only <- catchment_restocking[[3]]
   }
 
   # Identify catchments where every site has been ready to be restocked, for more than four days
