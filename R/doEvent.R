@@ -106,16 +106,20 @@ do_event <- function(state_vector,
     }
   }
 
-  # I --> L - for both farm and fishery
-  if (rate_type %in% c(2,3)) {
-    # If the site has been infected, but has recovered, before being placed under control, assume that it will not be controlled
-    # If the site is controlled, and has recovered, reset the clock
+  # I --> L  (both farm and fishery)
+  # IF the transition rate is either farm recovers or fishery becomes subclinical/latent:
+  if (rate_type %in% c(2, 3)) {
+
+    # IF the site has been infected but has recovered before controls implemented: assume it will not be controlled
     if (control_matrix[site, 1] == 1) {
       control_matrix[site, 1] <- 0
-    } else if (sum(control_matrix[site, c(2,3)]) == 1) {
+
+    # ELSE IF the site has been infected but has recovered and is under controls: reset clock
+    } else if (sum(control_matrix[site, c(2, 3)]) == 1) {
       time_vector[site] <- 0
     }
 
+    # define the site as latent
     control_matrix[site, 6] <- 1
   }
 
