@@ -256,9 +256,9 @@ do_event <- function(state_vector,
 
   sites_controlled_movements_imports <- as.logical(control_matrix[ , 3])
   sites_allow_moves_all <- (time_vector > control_period) & sites_controlled_movements_imports
-  allow.all.movements.no <- sum(sites_allow_moves_all)
+  n_sites_allow_moves_all <- sum(sites_allow_moves_all)
 
-  if (allow.all.movements.no != 0) {
+  if (n_sites_allow_moves_all != 0) {
     control_matrix[sites_allow_moves_all, 3] <- 0
     time_vector[sites_allow_moves_all] <- 0
   }
