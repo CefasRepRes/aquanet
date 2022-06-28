@@ -314,18 +314,18 @@ do_event <- function(state_vector,
   # IF there are catchments ready for restocking:
   if (n_catchments_ready_restock > 0) {
     # create logical vector of sites that are post-fallow state and in a catchment ready for restocking
-    sitesReadyRestocked <- as.logical((spmatrix_sites_catchment * control_matrix[ , 5]) %*%
+    sites_restocked <- as.logical((spmatrix_sites_catchment * control_matrix[ , 5]) %*%
                                         catchments_ready_restock)
 
     # release sites from post-fallow and ready to restock status
-    control_matrix[sitesReadyRestocked, 5] <- 0
+    control_matrix[sites_restocked, 5] <- 0
 
     # reset the catchments ready for restock in catchments_with_post_fallow_only to FALSE
     catchments_with_post_fallow_only[catchments_ready_restock] <- FALSE
 
     # reset clocks for catchment time and site time post restocking
     catchment_time_vector[catchments_ready_restock] <- 0
-    time_vector[sitesReadyRestocked] <- 0
+    time_vector[sites_restocked] <- 0
   }
 
   return(list(state_vector,
