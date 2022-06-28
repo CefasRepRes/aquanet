@@ -291,8 +291,6 @@ do_event <- function(state_vector,
                                                                                     spmatrix_sites_catchment = spmatrix_sites_catchment,
                                                                                     n_catchments = n_catchments)
 
-    control_matrix <- checkCatchmentLevelRestocking.objects[[1]]
-
     catchments.some.sites.c4.status <- checkCatchmentLevelRestocking.objects[[2]]
     catchments_with_post_fallow_only <- checkCatchmentLevelRestocking.objects[[3]]
     catchment_time_vector[catchments.some.sites.c4.status] <- 0
