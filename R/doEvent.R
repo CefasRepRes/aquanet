@@ -287,7 +287,9 @@ do_event <- function(state_vector,
     control_matrix[sites_recover, 4] <- 0
     control_matrix[sites_recover, 5] <- 1
 
-    checkCatchmentLevelRestocking.objects <- checkCatchmentLevelRestocking(control_matrix, tdiff)
+    checkCatchmentLevelRestocking.objects <- aquanet::checkCatchmentLevelRestocking(control_matrix = control_matrix,
+                                                                                    spmatrix_sites_catchment = spmatrix_sites_catchment,
+                                                                                    n_catchments = n_catchments)
 
     control_matrix <- checkCatchmentLevelRestocking.objects[[1]]
 
