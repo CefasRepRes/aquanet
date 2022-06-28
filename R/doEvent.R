@@ -107,6 +107,7 @@ do_event <- function(state_vector,
     }
   }
 
+
   ## I --> L  (both farm and fishery) ----
   # IF the transition rate is either farm recovers or fishery becomes subclinical/latent:
   if (rate_type %in% c(2, 3)) {
