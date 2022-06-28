@@ -26,6 +26,9 @@ do_event <- function(state_vector,
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[ , 4])
 
+  # create logical vector of catchments where every site has been ready to be restocked
+  catchments.ready.restock <- rep(FALSE, n_catchments)
+
 
   ## extract transition information (sites, probabilities) ----
 
@@ -301,8 +304,6 @@ do_event <- function(state_vector,
     catchments_with_post_fallow_only <- catchment_restocking[[3]]
   }
 
-  # Identify catchments where every site has been ready to be restocked, for more than four days
-  catchments.ready.restock <- rep(FALSE, n_catchments)
 
   catchments.ready.restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
   no.catchments.ready.restock <- sum(as.numeric(catchments.ready.restock))
