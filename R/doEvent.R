@@ -172,12 +172,12 @@ do_event <- function(state_vector,
 
       # FOR each infected site: define it as a source
       for(i in 1:length(infected_sites)){
-        source.site <- infected_sites[i]
+        source_site <- infected_sites[i]
 
         # IF the site has no controls in place: place under catchment controls/contact tracing
         # Note: don't test a site for infection if it has already been subject to controls
-        if(sum(control_matrix[source.site, 2:5]) == 0) {
-          control_matrix[source.site,  7] <- 1
+        if(sum(control_matrix[source_site, 2:5]) == 0) {
+          control_matrix[source_site,  7] <- 1
         }
       }
     }
