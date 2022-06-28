@@ -229,8 +229,7 @@ do_event <- function(state_vector,
   ## update controls ----
 
   # Update controls on those sites which have passed a given no. days without infection
-  ## min.trans <- run_time_params[[7]]
-  min.trans <- 720
+  min.trans <- run_time_params[["Early_Controls_Fisheries"]]
   controlled.sites.c2.logical <- as.logical(control_matrix[, 2]*!state_vector)
   allow.inward.movements <- (time_vector > min.trans) & controlled.sites.c2.logical
   allow.inward.movements.no <- sum(allow.inward.movements)
