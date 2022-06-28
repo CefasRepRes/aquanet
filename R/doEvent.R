@@ -163,11 +163,11 @@ do_event <- function(state_vector,
 
     ## forward tracing ----
     # Note: any sites that have been in contact with the infected site and which transmitted infection via LFM or river
-    infected.source <- source_inf_matrix[site, ]
-    infected.sites <- which(infected.source == 1)
+    infected_source <- source_inf_matrix[site, ]
+    infected.sites <- which(infected_source == 1)
 
 
-    if(sum(infected.source) != 0){
+    if(sum(infected_source) != 0){
       source_inf_matrix[site,] <- 0
 
       for(i in 1:length(infected.sites)){
