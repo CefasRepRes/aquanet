@@ -306,10 +306,10 @@ do_event <- function(state_vector,
 
 
   catchments_ready_restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
-  no.catchments.ready.restock <- sum(as.numeric(catchments_ready_restock))
+  n_catchments_ready_restock <- sum(as.numeric(catchments_ready_restock))
 
   # Print information on catchments where every site has been ready to be restocked, for more than four days
-  if (no.catchments.ready.restock > 0) {
+  if (n_catchments_ready_restock > 0) {
     sitesReadyRestocked <- as.logical((spmatrix_sites_catchment * control_matrix[ , 5]) %*% catchments_ready_restock)
 
     control_matrix[sitesReadyRestocked, 5] <- 0
