@@ -239,10 +239,10 @@ do_event <- function(state_vector,
   sites_allow_moves_in <- (time_vector > control_period) & sites_controlled_movements
 
   # total number of sites which have passed a given number of days without infection
-  allow.inward.movements.no <- sum(sites_allow_moves_in)
+  n_sites_allow_moves_in <- sum(sites_allow_moves_in)
 
   # IF there are sites that have passed a given number of days without infection:
-  if (allow.inward.movements.no != 0) {
+  if (n_sites_allow_moves_in != 0) {
     # remove movement restriction and allow restocking
     control_matrix[sites_allow_moves_in, 2] <- 0
     control_matrix[sites_allow_moves_in, 3] <- 1
