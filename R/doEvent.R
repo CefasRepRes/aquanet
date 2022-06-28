@@ -229,14 +229,14 @@ do_event <- function(state_vector,
   ## update controls ----
 
   # update controls 1: sites which have passed a given number of days without infection
-  # extract minimum period fisheries are under controls
+  # extract minimum period fisheries are under stage 1 controls
   control_period <- run_time_params[["Early_Controls_Fisheries"]] # 'Se' in manuscript
 
   # logical vector of sites subject to movement controls but no longer infected
-  controlled.sites.c2.logical <- as.logical(control_matrix[ , 2] * !state_vector)
+  sites_controlled_movements <- as.logical(control_matrix[ , 2] * !state_vector)
 
   # logical vector of sites which have passed a given number of days without infection
-  allow.inward.movements <- (time_vector > control_period) & controlled.sites.c2.logical
+  allow.inward.movements <- (time_vector > control_period) & sites_controlled_movements
 
   # total number of sites which have passed a given number of days without infection
   allow.inward.movements.no <- sum(allow.inward.movements)
@@ -250,6 +250,7 @@ do_event <- function(state_vector,
 
 
   # update controls 2: sites which have passed a given number days without infection
+  # calculate minimum period fisheries are under stage 1 + 2 controls
   control_period <- run_time_params[["Early_Controls_Fisheries"]] + # 'Se' in manuscript
     run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
