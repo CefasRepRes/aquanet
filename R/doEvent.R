@@ -206,7 +206,7 @@ do_event <- function(state_vector,
 
 
   ## L -> S transition ----
-  # IF the transition rate is rate at which fallow sites are disinfected:
+  # IF the transition rate is rate at which site transitions from latent infection (farms and fisheries):
   if (rate_type == 5) {
     # redefine site as uninfected
     state_vector[site] <- 0
