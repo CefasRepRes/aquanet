@@ -255,12 +255,12 @@ do_event <- function(state_vector,
     run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
   sites_controlled_movements_imports <- as.logical(control_matrix[ , 3])
-  allow.all.movements <- (time_vector > control_period) & sites_controlled_movements_imports
-  allow.all.movements.no <- sum(allow.all.movements)
+  sites_allow_moves_all <- (time_vector > control_period) & sites_controlled_movements_imports
+  allow.all.movements.no <- sum(sites_allow_moves_all)
 
   if (allow.all.movements.no != 0) {
-    control_matrix[allow.all.movements, 3] <- 0
-    time_vector[allow.all.movements] <- 0
+    control_matrix[sites_allow_moves_all, 3] <- 0
+    time_vector[sites_allow_moves_all] <- 0
   }
 
 
