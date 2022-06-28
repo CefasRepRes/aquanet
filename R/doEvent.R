@@ -185,7 +185,7 @@ do_event <- function(state_vector,
 
 
   ## C --> F transition ----
-  # IF the transition rate is rate at whic controlled sites become fallow:
+  # IF the transition rate is rate at which controlled sites become fallow:
   if (rate_type == 9) {
     # define the site as fallow and reset movement/stocking controls
     control_matrix[site, 4] <- 1
@@ -206,15 +206,16 @@ do_event <- function(state_vector,
 
 
   ## L -> S transition ----
+  # IF the transition rate is rate at which fallow sites are disinfected:
   if (rate_type == 5) {
-    # Note S state
+    # redefine site as uninfected
     state_vector[site] <- 0
 
-    # Note the site is no longer latent
+    # define the site as no longer latent
     control_matrix[site, 6] <- 0
 
+    # reset the clock
     time_vector[site] <- 0
-
   }
 
 
