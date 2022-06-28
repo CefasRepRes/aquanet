@@ -240,7 +240,7 @@ do_event <- function(state_vector,
   }
 
   # Update controls on those sites which have passed a given no. days without infection
-  min.trans <- 360 + run_time_params[[8]]
+  min.trans <- 360 + run_time_params[["Late_Controls_Fisheries"]]
   controlled.sites.c3.logical <- as.logical(control_matrix[, 3])
   allow.all.movements <- (time_vector > min.trans) & controlled.sites.c3.logical
   allow.all.movements.no <- sum(allow.all.movements)
@@ -251,7 +251,7 @@ do_event <- function(state_vector,
   }
 
   # Update controls on those sites which have been fallow for more than x number of days
-  min.trans <- run_time_params[[10]]
+  min.trans <- run_time_params[["Fallow_Period"]]
   recover.site <- (time_vector > min.trans) & sites_fallow
   recover.site.no <- sum(recover.site)
 
