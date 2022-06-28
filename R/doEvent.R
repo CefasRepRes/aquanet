@@ -279,10 +279,10 @@ do_event <- function(state_vector,
   sites_recover <- (time_vector > control_period) & sites_fallow
 
   # total number of sites that have been fallow for more than X number of days
-  recover.site.no <- sum(sites_recover)
+  n_sites_recover <- sum(sites_recover)
 
   # IF there are sites that have been fallow for more than X number of days
-  if (recover.site.no != 0) {
+  if (n_sites_recover != 0) {
     # convert to post-fallow state
     control_matrix[sites_recover, 4] <- 0
     control_matrix[sites_recover, 5] <- 1
