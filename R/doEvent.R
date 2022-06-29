@@ -122,17 +122,22 @@ do_event <- function(state_vector,
   ## I --> C transition | Traced Site --> C transition ----
   # IF the transition rate is either infection detected and reported or contact traced sites are tested:
   if (rate_type %in% c(6, 12)) {
-    # IF the site is infected and in an infected catchment:
+
+    # place controls on sites that are infected and contact traced (i.e. contact traced sites tested)
+
+    # IF the site is infected and contact traced:
     if (state_vector[site] == 1 && control_matrix[site, 7] == 1) {
-      # define sute as controlled and zero ready to import and catchment controls/contact tracing
+      # define site as controlled and reset control ready to import and contact tracing
       # Note: site no longer needs to be contact traced as it has been tested through other means
       control_matrix[site, 2] <- 1
       control_matrix[site, c(1, 3, 7)] <- 0
     }
 
-    # define the site as no longer in a controlled catchment
+    # define the site as no longer contact traced (if not infected and contact traced)
     control_matrix[site, 7] <- 0
 
+
+    # place controls on sites that are infected and not latent (i.e. infection detected and reported)
 
     # IF the site is infected and infection is not latent: site is controlled and zero ready to import
     # Note: clock is only reset when site is recovered and not when it is placed under control
@@ -141,34 +146,35 @@ do_event <- function(state_vector,
       control_matrix[site, c(1, 3)] <- 0
     }
 
+
     # define source of infection
     source_inf <- source_inf_vector[site]
 
-    # IF the source site of infection is not 0: redefine as 0
+    # IF the source site of infection is known due to infection via LFM/river: reset to 0
     if (source_inf != 0) {
       source_inf_vector[site] <- 0
 
-      # IF the source site of infection has no controls: place under catchment controls/contact tracing
+      # IF the source site of infection has no controls: update site for contact tracing
       # Note: don't test a site for infection if it has already been subject to controls
       if (sum(control_matrix[source_inf, 2:5]) == 0) {
         control_matrix[source_inf, 7] <- 1
       }
     }
 
-    ## forward tracing ----
+    ## forward tracing (who was at risk before controls implemented at this site) ----
     # Note: any sites that have been in contact with the infected site and which transmitted infection via LFM or river
     infected_source <- source_inf_matrix[site, ]
     infected_sites <- which(infected_source == 1)
 
-    # IF there are infected sites in contact with site: redefine as 0
+    # IF there are sites which may have been infected via contact with site: redefine as 0
     if(sum(infected_source) != 0){
       source_inf_matrix[site, ] <- 0
 
-      # FOR each infected site: define it as a source
+      # FOR each infected site: define it as the source
       for(i in 1:length(infected_sites)){
         source_site <- infected_sites[i]
 
-        # IF the site has no controls in place: place under catchment controls/contact tracing
+        # IF the source site has no controls in place: define it as contact traced
         # Note: don't test a site for infection if it has already been subject to controls
         if(sum(control_matrix[source_site, 2:5]) == 0) {
           control_matrix[source_site,  7] <- 1
