@@ -7,24 +7,14 @@ do_event <- function(state_vector,
                      run_time_params,
                      n_catchments,
                      n_sites,
-                     spmatrix_sites_catchment) {
+                     spmatrix_sites_catchment,
+                     time_vector,
+                     catchment_time_vector,
+                     catchments_with_post_fallow_only,
+                     source_inf_vector,
+                     source_inf_matrix) {
 
   ## create variables to populate ----
-
-  # create a vector to record time since application of controls
-  time_vector <- rep(0, n_sites)
-
-  # create vector to record time since catchment status changed
-  catchment_time_vector <- rep(0, length = n_catchments)
-
-  # create vector to record catchments in post-fallow state
-  catchments_with_post_fallow_only <- rep(0, length = n_catchments)
-
-  # create vector to track source sites of infection (via fish movements / river network)
-  source_inf_vector <- rep(0, n_sites)
-
-  # create matrix to track sites infected (via fish movements / river network) to forward contact trace
-  source_inf_matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
   # create logical vector of sites that are fallow
   sites_fallow <- as.logical(control_matrix[ , 4])
