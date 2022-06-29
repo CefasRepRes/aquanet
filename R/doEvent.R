@@ -11,6 +11,9 @@ do_event <- function(state_vector,
 
   ## create variables to populate ----
 
+  # create a vector to record time since application of controls
+  time_vector <- rep(0, n_sites)
+
   # create vector to record time since catchment status changed
   catchment_time_vector <- rep(0, length = n_catchments)
 
