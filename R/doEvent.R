@@ -141,7 +141,7 @@ do_event <- function(state_vector,
       control_matrix[site, c(1, 3, 7)] <- 0
     }
 
-    # define the site as no longer latent
+    # define the site as no longer in a controlled catchment
     control_matrix[site, 7] <- 0
 
 
