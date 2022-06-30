@@ -95,9 +95,6 @@ simulationCode <- function(graph.contactp.objects,
   summaryStates.table[,as.character(iterationID.vector):=empty.vector.byState]
   summaryStates.table[,c("empty.vector.byState"):=NULL]
 
-  # Create a vector to record transition times, for diagnostic purposes
-  record_transition_times <- c()
-
   for (k in 1:runs) {
     # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
     simNo <- k + ((batchNo - 1) * runs)
@@ -284,7 +281,6 @@ simulationCode <- function(graph.contactp.objects,
       time_vector <- event.objects[[3]]
       catchment_time_vector <- event.objects[[4]]
       catchments.all.sites.c5.status <- event.objects[[5]]
-      record_transition_times <- event.objects[[6]]
       source.infection.vector <- event.objects[[7]]
       rate.type <- event.objects[[8]]
       ########
