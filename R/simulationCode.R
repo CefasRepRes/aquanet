@@ -47,19 +47,12 @@ simulationCode <- function(graph.contactp.objects,
                            locationSaveResults,
                            initialNoInfections) {
 
-  # record number of steps, operations (including premature termination), and full saves per simulation
-  n_steps <- 0
-  n_operations <- 0
-  n_saves <- 0
+  ## extract information from input parameters ----
 
   # Retrieve the contact network, and the number of sites in the network
   n_sites <- graph.contactp.objects[[1]]
   contactp <- graph.contactp.objects[[3]]
   contactp.siteNames <- dimnames(contactp)[[1]]
-
-  # Each site within the model has a unique position within a matrix
-  # When necessary, this position can be expressed as a number, using the site index
-  site.index <- 0:(n_sites - 1)
 
   # Matrix representing the site / catchment relationship
   graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
@@ -70,14 +63,25 @@ simulationCode <- function(graph.contactp.objects,
   # Number of catchments within the model0
   n_catchments <- graph.catchment2site.matrix2@Dim[2]
 
-  # Save the results every x number of iterations
+
+  ## create variables to populate ----
+
+  # record number of steps, operations (including premature termination), and full saves per simulation
+  n_steps <- 0
+  n_operations <- 0
+  n_saves <- 0
+
+  # define interval at which results should be saved
   commitInterval <- 5000
   iterationID.vector <- 1:commitInterval
+
+  # create vector of 0-based site indices (unique positions within matrix)
+  site.index <- 0:(n_sites - 1)
 
   # Number of different combinations of states possible within the model
   no.variables <- 42
 
-  # Create empty records, which are used to force enough memory to be allocated for results
+    # Create empty records, which are used to force enough memory to be allocated for results
   empty.vector <- rep(0, n_sites + no.variables)
   empty.vector.t <- rep(0, 2)
   empty.vector.byState <- rep(0, no.variables + 8)
@@ -92,6 +96,9 @@ simulationCode <- function(graph.contactp.objects,
   summaryStates.table <- data.table(empty.vector.byState)
   summaryStates.table[ , as.character(iterationID.vector) := empty.vector.byState]
   summaryStates.table[ , c("empty.vector.byState") := NULL]
+
+
+  ## simulate each model run ----
 
   for (k in 1:runs) {
     # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
