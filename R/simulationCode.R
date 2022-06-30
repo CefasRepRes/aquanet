@@ -157,7 +157,7 @@ simulationCode <- function(graph.contactp.objects,
                                                         movements_prob = graph.contactp.objects,
                                                         river_prob = graph.riverDistance.objects,
                                                         site_distances_prob = graph.estimateSiteDistances.objects,
-                                                        run_time_params = ListRunTimeParams,
+                                                        run_time_params = ListRunTimeParameters,
                                                         non_peak_season = winter)
 
       # List of every transition
