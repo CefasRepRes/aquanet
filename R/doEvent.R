@@ -1,3 +1,131 @@
+#' doEvent
+#'
+#' First, create variable a logical vector to store information on whether all sites in a catchment
+#' have been in a post-fallow state for at least 4 days and are therefore ready to restock.
+#'
+#' Next, extract required information from function inputs: sites that are fallow,  sites subject to
+#'  transition identified in `transition rates[[2]]`, total number of possible site transitions, a
+#' corrected probability of each transition occurring (number of transitions), and the number of
+#' transition probabilities.
+#'
+#' Identify sites that are under surveillance with no visible infection and for these sites and update
+#' the `time_vector` by adding the time that has passed since the last step in the simulation
+#' `tdiff`. This keeps record of the amount of time these sites are under surveillance.
+#'
+#' To initiate the event, if there is more than one transition probability select a transition event
+#'  at random and for this event extract the site ID and rate type `trans_type` for the event.
+#'
+#' Depending on the `trans_type` of the selected transition event update the infection status of the
+#'  site (whether it is listed as infected or susceptible in `state_vector`), update the controls in
+#'  place at the site, and if transmission occurs from a known source record this information. If
+#' the site transitions from Controlled -> Fallow, or Infected -> Latent, or Latent -> Susceptible
+#' via recovery or clearance then reset the time in time_vector.
+#'
+#' Finally, update the time-dependent controls at the site within `control_matrix` for sites of
+#' interest:
+#'
+#' For sites that are in stage 1 surveillance and have not been reinfected check whether sites have
+#' been under surveillance for required number days and transition those that have to stage 2
+#' surveillance.
+#'
+#' For sites that are in stage 2 surveillance and have not been reinfected check whether sites have
+#' been under surveillance for required number of days and transition those that have to no disease
+#' control state.
+#'
+#' If sites have been in a fallow state for required number of days convert controls to post-fallow
+#' state. Check catchment level restocking to identify catchments containing only post-fallow sites
+#'  and reset the `catchment_time_vector` to 0 for these. If these catchments have been in a ready
+#' to restock state for greater than or equal to 4 days then move the sites within these catchments
+#' to a no disease control state and reset the `time_vector` for these sites.
+#'
+#'
+#' TODO: update function names
+#' TODO: should 4 days be hard coded?
+#' TODO: should update control 2 have !state_vector included in sites (i.e. not reinfected)
+#' TODO: fix time_vector reset for controls and param definition
+#'
+#' @param state_vector (class numeric) numeric binary vector of length number of sites containing
+#' information about the state of each site in relation to a condition (E.g. is the site
+#' 1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
+#' 1 = infected or 0 = susceptible state. (Note: created within the `simulationCode` function for
+#' loop).
+#'
+#' @param control_matrix (class matrix) matrix containing 7 columns depicting different control
+#' states and rows (of length number of sites) depicting whether each sites is 1 = in the specified
+#' control state or 0 = not in the specified control state.
+#'
+#' @param transition_rates (class list) of length 4 containing:
+#' 1. (class numeric) vector of transition types.
+#' 2. (class integer) vector of sites subject to transition.
+#' 3. (class integer) vector of transition rates (transmission probability).
+#' 4. (class numeric) vector of source sites (of disease in case of transmission).
+#'
+#' @param tdiff (class numeric) size of current time step generated in `simulationCode()` by picking
+#'  a random number from exponential distribution weighted by sum of transition rates.
+#'
+#' @param move_restricted_sites (class logical) logical vector of length number of sites that
+#' states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
+#' (Note: created in the `update_rate` function of aquanet-mod and also input to
+#' `excludeWithinCatchmentMovements` function).
+#'
+#' @param non_peak_season (class logical) logical indicating whether the current timestep in the
+#' model is within non peak season where transmission (of e.g. a pathogen) is lower.
+#'
+#' @param run_time_params (class data frame) of model run time parameters imported from original
+#' parameter file which is subsequently split into model set up and model run time parameters. Data
+#' frame contains probabilities from the scenarios of interest for listing transition rates.
+#'
+#' @param n_catchments (class integer) number of catchments.
+#'
+#' @param spmatrix_sites_catchment (class dgCMatrix, Matrix package) sparse matrix containing site
+#' to catchment summary.
+#'
+#' @param time_vector (class numeric) vector of length 'number of sites' to record the amount of
+#' simulation time that a site has remained in a susceptible/recovered or fallow state.
+#'
+#' @param catchment_time_vector (class numeric) vector of length `n_catchments` to record the
+#' amount of simulation time since every site in a catchment has been ready to be restocked.
+#'
+#' @param catchments_with_post_fallow_only (class logical) vector of length number of catchments
+#' (`n_catchments`) depicting whether catchments contain only post-fallow sites ready for restocking
+#'  with no fallow sites.
+#'
+#' @param source_inf_vector (class numeric) vector of length 'number of sites' to track which sites
+#' are responsible for infection when infection is transmitted via either Live Fish Movements or via
+#' river network connectivity.
+#'
+#' @param source_inf_matrix (class matrix) matrix of dimensions 'number of sites' x 'number of
+#' sites' to track the sites that are infected either by Live Fish Movements of via river network
+#' connectivity'. Note: this matrix is used for forward contact tracing.
+#'
+#'
+#' @return (class list) of length 8 containing:
+#' 1. (class numeric) `state_vector` numeric binary vector of length number of sites containing
+#' information about the state of each site in relation to a condition (E.g. is the site
+#' 1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
+#' 1 = infected or 0 = susceptible state. (Note: created within the `simulationCode` function for
+#' loop).
+#' 2. (class matrix) `control_matrix` updated matrix containing 7 columns depicting different
+#' control states and rows (of length number of sites) depicting whether each sites is 1 = in the
+#' specified control state or 0 = not in the specified control state.
+#' 3. (class numeric) `time_vector` updated vector of length 'number of sites' to record the amount
+#' of simulation time that a site has remained in a susceptible/recovered or fallow state.
+#' 4. (class numeric) `catchment_time_vector` updated vector of length `n_catchments` to record the
+#' amount of simulation time since every site in a catchment has been ready to be restocked.
+#' 5. (class logical) `catchments_with_post_fallow_only` vector of length number of catchments
+#' (`n_catchments`) depicting whether catchments contain only post-fallow sites ready for restocking
+#'  with no fallow sites.
+#' 6. (class matrix) `source_inf_vector` updated matrix of dimensions 'number of sites' x 'number of
+#'  sites' to track the sites that are infected either by Live Fish Movements of via river network
+#' connectivity'. Note: this matrix is used for forward contact tracing.
+#' 7. (class numeric) `rate_type` transition type for the site selected by `doEvent()` (extracted
+#' from `transition_rates`).
+#' 8. (class matrix) `source_inf_matrix` matrix of dimensions 'number of sites' x 'number of
+#' sites' to track the sites that are infected either by Live Fish Movements of via river network
+#' connectivity'. Note: this matrix is used for forward contact tracing.
+#'
+#' @export
+#'
 doEvent <- function(state_vector,
                     control_matrix,
                     transition_rates,
