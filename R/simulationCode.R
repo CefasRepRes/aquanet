@@ -8,7 +8,7 @@
 #'
 #' @param batch_num TODO [was batchNo]
 #'
-#' @param ListRunTimeParameters TODO
+#' @param run_time_params TODO
 #'
 #' @param graph.withinCatchmentEdges.objects TODO
 #'
@@ -37,7 +37,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            runs,
                            tmax,
                            batch_num,
-                           ListRunTimeParameters,
+                           run_time_params,
                            graph.withinCatchmentEdges.objects,
                            graph.catchment2Site.objects,
                            graph.riverDistance.objects,
@@ -190,7 +190,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         movements_prob = createContactProbabilityMatrix_out,
                                                         river_prob = graph.riverDistance.objects,
                                                         site_distances_prob = graph.estimateSiteDistances.objects,
-                                                        run_time_params = ListRunTimeParameters,
+                                                        run_time_params = run_time_params,
                                                         non_peak_season = winter)
 
       # List of every transition
@@ -278,7 +278,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        tdiff = tdiff,
                                        move_restricted_sites = movement.restrictions.bySite,
                                        non_peak_season = winter,
-                                       run_time_params = ListRunTimeParameters,
+                                       run_time_params = run_time_params,
                                        n_catchments = n_catchments,
                                        spmatrix_sites_catchment = graph.catchment2site.matrix2,
                                        time_vector = time_vector,
