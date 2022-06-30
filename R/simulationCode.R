@@ -20,7 +20,7 @@
 #'
 #' @param farm_vector TODO
 #'
-#' @param associatedSiteControlType TODO
+#' @param type_catchment_controls TODO
 #'
 #' @param filepath_results TODO
 #'
@@ -41,7 +41,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            graph.riverDistance.objects,
                            createDistanceMatrix_out,
                            farm_vector,
-                           associatedSiteControlType,
+                           type_catchment_controls,
                            filepath_results) {
 
   ## extract information from input parameters ----
@@ -143,7 +143,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                              graph.withinCatchmentEdges.matrix,
                                              controlled.catchments.previous,
                                              listContacts.exclude,
-                                             associatedSiteControlType,
+                                             type_catchment_controls,
                                              secondary.controlled.sites,
                                              no.controlled.catchments)
 
