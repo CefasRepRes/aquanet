@@ -22,7 +22,7 @@
 #'
 #' @param associatedSiteControlType TODO
 #'
-#' @param locationSaveResults TODO
+#' @param filepath_results TODO
 #'
 #' @param initialNoInfections TODO
 #'
@@ -44,7 +44,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            createDistanceMatrix_out,
                            farm_vector,
                            associatedSiteControlType,
-                           locationSaveResults,
+                           filepath_results,
                            initialNoInfections) {
 
   ## extract information from input parameters ----
@@ -266,7 +266,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
        #                        batch_num = batch_num,
        #                        simulation_num = simNo,
        #                        save_num = n_saves,
-       #                        filepath_results = locationSaveResults)
+       #                        filepath_results = filepath_results)
       #  allStates.table[,as.character(iterationID.vector):=empty.vector]
       #  allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
       #}
@@ -318,10 +318,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   #                        batch_num = batch_num,
   #                        simulation_num = simNo,
   #                        save_num = n_saves,
-  #                        filepath_results = locationSaveResults)
+  #                        filepath_results = filepath_results)
 
   save(summaryStates.table,
-       file = paste(locationSaveResults,"/Summary/batchNo-", batch_num,".RData", sep = ""),
+       file = paste(filepath_results,"/Summary/batchNo-", batch_num,".RData", sep = ""),
        compress=FALSE)
 
   return(batch_num)
