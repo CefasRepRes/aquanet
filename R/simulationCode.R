@@ -76,7 +76,7 @@ simulationCode <- function(graph.contactp.objects,
   iterationID.vector <- 1:commitInterval
 
   # create vector of 0-based site indices (unique positions within matrix)
-  site.index <- 0:(n_sites - 1)
+  site_index <- 0:(n_sites - 1)
 
   # Number of different combinations of states possible within the model
   no.variables <- 42
@@ -187,7 +187,7 @@ simulationCode <- function(graph.contactp.objects,
                                                         state_vector = state_vector,
                                                         farm_vector =  farm_vector,
                                                         culling_vector = culling_vector,
-                                                        site_indices = site.index,
+                                                        site_indices = site_index,
                                                         catchment_movements = withinCatchmentMovements.objects,
                                                         movements_prob = graph.contactp.objects,
                                                         river_prob = graph.riverDistance.objects,
@@ -262,7 +262,7 @@ simulationCode <- function(graph.contactp.objects,
        #                        df_time = allStates.table.t,
        #                        n_states = no.variables,
        #                        n_sites = n_sites,
-       #                        site_indices = site.index,
+       #                        site_indices = site_index,
        #                        commit_int = commitInterval,
        #                        iteration_vector = iterationID.vector,
        #                        batch_num = batchNo,
@@ -314,7 +314,7 @@ simulationCode <- function(graph.contactp.objects,
   #                        df_time = allStates.table.t,
   #                        n_states = no.variables,
   #                        n_sites = n_sites,
-  #                        site_indices = site.index,
+  #                        site_indices = site_index,
   #                        commit_int = commitInterval,
   #                        iteration_vector = iterationID.vector,
   #                        batch_num = batchNo,
