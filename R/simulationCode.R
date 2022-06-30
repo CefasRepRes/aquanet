@@ -49,7 +49,7 @@ simulationCode <- function(graph.contactp.objects,
 
   # record number of steps, operations (including premature termination), and full saves per simulation
   n_steps <- 0
-  noOperations <- 0
+  n_operations <- 0
   numberFullSaves <- 0
 
   # Retrieve the contact network, and the number of sites in the network
@@ -215,13 +215,13 @@ simulationCode <- function(graph.contactp.objects,
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = no.variables)
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = no.variables)
 
-      noOperations <- noOperations + 1
+      n_operations <- n_operations + 1
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
-                      j = as.character(noOperations),
+                      j = as.character(n_operations),
                       value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
-      if (noOperations %% commitInterval == (commitInterval - 1)) {
+      if (n_operations %% commitInterval == (commitInterval - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)) := empty.vector.byState]
       }
 
