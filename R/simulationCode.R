@@ -56,29 +56,6 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
   # Create a vector to record transition times, for diagnostic purposes
   record_transition_times = c()
 
-  listTransitionRates = function(state_vector, trans.type, site.index, state.match) {
-
-
-    prob = ListRunTimeParameters[[trans.type]]
-
-    ## Reduce detection time when the number of cumulative infected sites gets above 10
-    #if(sum(cumulativeState_vector) > 10 & trans.type == 6){
-    #  prob = 14
-    #}
-    #else {
-    #  prob = ListRunTimeParameters[[trans.type]]
-    #}
-
-    state.logical = state_vector == state.match
-    state.pos = site.index[state.logical]
-    state.no = length(state.pos)
-    state.rate = rep(1 / prob, times = state.no)
-    state.rate.type = rep(trans.type, times = state.no)
-    source.infection = rep(NA, times = state.no)
-
-    return(list(state.rate.type, state.pos, state.rate, source.infection, state.no))
-  }
-
   calcRandomSpillover = function(state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
     spread.onSite.Index = site.index[!state_vector & !spread.onSite.prevented]
     spread.offSite.Index = site.index[state_vector & !spread.offSite.prevented]
@@ -228,7 +205,10 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     # Create a vector with the rate at which sites lapse into latency, or recover
     # State 3 and 2 leads to recovery and latency, respectively
     infected.sites = state_vector * infected.sites.withRecovery*farm_vector
-    infected.sites.recover.rate.objects = listTransitionRates(infected.sites, 3, site.index, 1)
+    infected.sites.recover.rate.objects = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                       state_vector = infected.sites,
+                                                                       trans_type = "Site_Recovers",
+                                                                       site_indices = site.index)
     transition.rates = combineTransitions(infected.sites.recover.rate.objects, transition.rates)
     ########
 
@@ -238,7 +218,10 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     # Create a vector with the rate at which sites lapse into latency, or recover
     # State 3 and 2 leads to recovery and latency, respectively
     infected.sites = state_vector * infected.sites.withRecovery*!farm_vector
-    infected.sites.recover.rate.objects = listTransitionRates(infected.sites, 2, site.index, 1)
+    infected.sites.recover.rate.objects = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                       state_vector = infected.sites,
+                                                                       trans_type = "Infection_Becomes_Subclinical",
+                                                                       site_indices = site.index)
     transition.rates = combineTransitions(infected.sites.recover.rate.objects, transition.rates)
     ########
 
@@ -256,21 +239,30 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     # Create a vector showing the position of latent sites
     # Create a vector with the recovery rate of latent sites
     latent.sites = as.logical(control_matrix[,6])
-    latent.sites.recovery.rate.objects = listTransitionRates(latent.sites, 5, site.index, 1)
+    latent.sites.recovery.rate.objects = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                      state_vector = latent.sites,
+                                                                      trans_type = "Clearing_Of_Latency_From_Infected_Sites",
+                                                                      site_indices = site.index)
     transition.rates = combineTransitions(latent.sites.recovery.rate.objects, transition.rates)
 
     # Identify sites that are fallow, and infected
     # Create a vector showing the position of sites that are fallow and infected
     # Create a vector showing the rate at which fallow sites are disinfected
     fallow.infected.sites = state_vector * (control_matrix[,4] + control_matrix[,5])
-    fallow.infected.sites.rate.disinfection = listTransitionRates(fallow.infected.sites, 1, site.index, 1)
+    fallow.infected.sites.rate.disinfection = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                           state_vector = fallow.infected.sites,
+                                                                           trans_type = "Reinfection_After_Restocking_Const",
+                                                                           site_indices = site.index)
     transition.rates = combineTransitions(fallow.infected.sites.rate.disinfection, transition.rates)
 
     # Identify sites which have been contact traced
     # Create a vector showing the position of sites which have been contact traced
     # Create a vector showing the rate at which contact traced sites will be tested
     contact.traced.sites = control_matrix[,7]
-    contact.traced.sites.rate.testing = listTransitionRates(contact.traced.sites, 12, site.index, 1)
+    contact.traced.sites.rate.testing = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                     state_vector = contact.traced.sites,
+                                                                     trans_type = "Contact_Detection",
+                                                                     site_indices = site.index)
     transition.rates = combineTransitions(contact.traced.sites.rate.testing, transition.rates)
 
     ########
@@ -289,14 +281,20 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     # Create a vector showing the position of sites that can be controlled
     # Create a vector with the control rate of infected sites
     infected.sites.notControlled = control_matrix[,1]
-    infected.sites.control.rate.objects = listTransitionRates(infected.sites.notControlled, 6, site.index, 1)
+    infected.sites.control.rate.objects = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                       state_vector = infected.sites.notControlled,
+                                                                       trans_type = "Detection_Reporting_Disease",
+                                                                       site_indices = site.index)
     transition.rates = combineTransitions(infected.sites.control.rate.objects, transition.rates)
 
     if (winter == FALSE) {
       # Identify any latent, infected sites
       # Create a vector showing the position of latent sites
       # Create a vector with the rate at which sites revert to active expression of disease
-      latent.sites.secondOutbreak = listTransitionRates(latent.sites, 4, site.index, 1)
+      latent.sites.secondOutbreak = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                 state_vector = latent.sites,
+                                                                 trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
+                                                                 site_indices = site.index)
       transition.rates = combineTransitions(latent.sites.secondOutbreak, transition.rates)
 
 
@@ -326,7 +324,10 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     # Create a vector showing the position of sites that can become fallow
     # Create a vector with the rate at which sites become fallow
     controlled.farms = movement.restrictions.allSite * culling_vector
-    controlled.sites.fallow.rate.objects = listTransitionRates(controlled.farms, 9, site.index, 1)
+    controlled.sites.fallow.rate.objects = aquanet::listTransitionRates(run_time_params = ListRunTimeParameters,
+                                                                        state_vector = controlled.farms,
+                                                                        trans_type = "Time_Required_Cull_Site",
+                                                                        site_indices = site.index)
     transition.rates = combineTransitions(controlled.sites.fallow.rate.objects, transition.rates)
 
     return(list(transition.rates, withinCatchmentMovements.objects, movement.restrictions.bySite))
