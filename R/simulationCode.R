@@ -86,14 +86,14 @@ simulationCode <- function(graph.contactp.objects,
 
   # Preallocate memory for storing results
   allStates.table <- data.table::data.table(empty.vector)
-  allStates.table[,as.character(iterationID.vector):=empty.vector]
+  allStates.table[ , as.character(iterationID.vector) := empty.vector]
 
   allStates.table.t <- data.table(empty.vector.t)
-  allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
+  allStates.table.t[ , as.character(iterationID.vector) := empty.vector.t]
 
   summaryStates.table <- data.table(empty.vector.byState)
-  summaryStates.table[,as.character(iterationID.vector):=empty.vector.byState]
-  summaryStates.table[,c("empty.vector.byState"):=NULL]
+  summaryStates.table[ , as.character(iterationID.vector) := empty.vector.byState]
+  summaryStates.table[ , c("empty.vector.byState") := NULL]
 
   for (k in 1:runs) {
     # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
@@ -116,9 +116,9 @@ simulationCode <- function(graph.contactp.objects,
     # and how long it has been in a specific state of infection or control
     state_vector <- rep(0, n_sites)
     cumulativeState_vector <- state_vector
-    farmcumulativeState_vector <- state_vector*farm_vector
-    #farmcumulativeState_vector <- state_vector*mediumfish_vector
-    fisherycumulativeState_vector <- state_vector*as.numeric(!farm_vector)
+    farmcumulativeState_vector <- state_vector * farm_vector
+    #farmcumulativeState_vector <- state_vector * mediumfish_vector
+    fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
     control_matrix <- matrix(data = 0, nrow = n_sites, ncol = 7)
     time_vector <- rep(0, n_sites)
 
@@ -128,10 +128,9 @@ simulationCode <- function(graph.contactp.objects,
 
     ######## Create a matrix to track the sites are infected by certain sites via LFM or river network - This is for forward contact tracing
     infected.source.matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
-    ########
 
     # Save the list of contacts that were effected by catchment level restrictions in the previous time step
-    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites,n_sites))
+    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites, n_sites))
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
     # to avoid expensive recalculation
@@ -140,7 +139,13 @@ simulationCode <- function(graph.contactp.objects,
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
     no.controlled.catchments <- 0
 
-    withinCatchmentMovements.objects <- list(graph.catchment2site.matrix2, graph.withinCatchmentEdges.matrix, controlled.catchments.previous, listContacts.exclude, associatedSiteControlType, secondary.controlled.sites,no.controlled.catchments)
+    withinCatchmentMovements.objects <- list(graph.catchment2site.matrix2,
+                                             graph.withinCatchmentEdges.matrix,
+                                             controlled.catchments.previous,
+                                             listContacts.exclude,
+                                             associatedSiteControlType,
+                                             secondary.controlled.sites,
+                                             no.controlled.catchments)
 
     ######## Pick the first infected site, at random, and update it's recorded status appropriately - these are all seeded at farms
     d <- 0
@@ -148,23 +153,21 @@ simulationCode <- function(graph.contactp.objects,
 
     for(d in 0:length(farm_vector)){
       d <- d + 1
-      value <- farm_vector[d]*d
-      farm.select <- c(farm.select,value)
+      value <- farm_vector[d] * d
+      farm.select <- c(farm.select, value)
     }
 
     farm.select <- as.vector(stats::na.omit(farm.select))
     farm.select <- subset(farm.select, farm.select > 0)
-    primary.event <- sample(farm.select,1)
+    primary.event <- sample(farm.select, 1)
 
     state_vector[primary.event] <- 1
     noSusceptibleSites <- sum(!state_vector)
-    ########
 
-
-    ######## Produce a vector for culling a random number of fisheries
+    # Produce a vector for culling a random number of fisheries
     culling <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
     culling_vector <- ifelse(culling < 0.5, 1, 0)
-    ########
+
 
     while(t<tmax){
 
@@ -198,25 +201,30 @@ simulationCode <- function(graph.contactp.objects,
       movement.restrictions.bySite <- update_rate.output.objects[[3]]
 
       # Combine all of the site's attributes into a single state, count the total number of sites per state
-      combinedStates_vector <- as.integer((state_vector * 10) + (secondary.controlled.sites * 20) + (control_matrix[,2:6] %*% 2:6) + control_matrix[,7])
+      combinedStates_vector <- as.integer((state_vector * 10) +
+                                            (secondary.controlled.sites * 20) +
+                                            (control_matrix[ , 2:6] %*% 2:6) +
+                                            control_matrix[ , 7])
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
-      farmStates.vector <- farm_vector*state_vector
+      farmStates.vector <- farm_vector * state_vector
       farmcumulativeState_vector <- (farmStates.vector | farmcumulativeState_vector)
-      fisheriesStates.vector <- state_vector*as.numeric(!farm_vector)
+      fisheriesStates.vector <- state_vector * as.numeric(!farm_vector)
       fisherycumulativeState_vector <- (fisheriesStates.vector | fisherycumulativeState_vector)
 
-      combfarm.vector <- farm_vector*combinedStates_vector
-      comfishery.vector <- as.numeric(!farm_vector)*combinedStates_vector
+      combfarm.vector <- farm_vector * combinedStates_vector
+      comfishery.vector <- as.numeric(!farm_vector) * combinedStates_vector
       combinedStates.total <- tabulate(combinedStates_vector, nbins = no.variables)
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = no.variables)
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = no.variables)
 
       noOperations <- noOperations + 1
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
-      data.table::set(x = summaryStates.table, j = as.character(noOperations), value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), farmcombinedstates.total))
+      data.table::set(x = summaryStates.table,
+                      j = as.character(noOperations),
+                      value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), farmcombinedstates.total))
 
       if (noOperations %% commitInterval == (commitInterval - 1)) {
-        summaryStates.table[,as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)):=empty.vector.byState]
+        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)) := empty.vector.byState]
       }
 
       # If there are no infectious sites on the network stop the simulation
@@ -283,16 +291,12 @@ simulationCode <- function(graph.contactp.objects,
       catchments.all.sites.c5.status <- event.objects[[5]]
       source.infection.vector <- event.objects[[7]]
       rate.type <- event.objects[[8]]
-      ########
       infected.source.matrix <- event.objects[[9]]
-      ########
 
       if (noSteps%%100 == 1) {
         print(c(k,noSteps,length(state_vector),sum(state_vector),tdiff,length(transition.rates[[3]])))
       }
     }
-
-
   }
 
   # Print diagnositic information, and format results as appriopriate
@@ -313,7 +317,9 @@ simulationCode <- function(graph.contactp.objects,
   #                        save_num = numberFullSaves,
   #                        filepath_results = locationSaveResults)
 
-  save(summaryStates.table, file = paste(locationSaveResults,"/Summary/batchNo-",batchNo,".RData",sep=""),compress=FALSE)
+  save(summaryStates.table,
+       file = paste(locationSaveResults,"/Summary/batchNo-", batchNo,".RData", sep = ""),
+       compress=FALSE)
 
   return(batchNo)
 }
