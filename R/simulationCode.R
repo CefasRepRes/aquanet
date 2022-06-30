@@ -1,23 +1,38 @@
 #' simulationCode
 #'
-#' @param graph.contactp.objects
-#' @param runs
-#' @param tmax
-#' @param batchNo
-#' @param ListRunTimeParameters
-#' @param graph.withinCatchmentEdges.objects
-#' @param graph.catchment2Site.objects
-#' @param graph.riverDistance.objects
-#' @param graph.estimateSiteDistances.objects
-#' @param farm_vector
-#' @param associatedSiteControlType
-#' @param locationSaveResults
-#' @param initialNoInfections
+#' @param graph.contactp.objects TODO
+#'
+#' @param runs TODO
+#'
+#' @param tmax TODO
+#'
+#' @param batchNo TODO
+#'
+#' @param ListRunTimeParameters TODO
+#'
+#' @param graph.withinCatchmentEdges.objects TODO
+#'
+#' @param graph.catchment2Site.objects TODO
+#'
+#' @param graph.riverDistance.objects TODO
+#'
+#' @param graph.estimateSiteDistances.objects TODO
+#'
+#' @param farm_vector TODO
+#'
+#' @param associatedSiteControlType TODO
+#'
+#' @param locationSaveResults TODO
+#'
+#' @param initialNoInfections TODO
 #'
 #' @return
 #'
 #' @export
 #'
+#' @importFrom methods new
+#' @importFrom stats na.omit rexp runif
+#' @importFrom data.table set data.table :=
 simulationCode <- function(graph.contactp.objects,
                            runs,
                            tmax,
@@ -75,7 +90,7 @@ simulationCode <- function(graph.contactp.objects,
   empty.vector.byState <- rep(0, no.variables + 8)
 
   # Preallocate memory for storing results
-  allStates.table <- data.table(empty.vector)
+  allStates.table <- data.table::data.table(empty.vector)
   allStates.table[,as.character(iterationID.vector):=empty.vector]
 
   allStates.table.t <- data.table(empty.vector.t)
@@ -124,7 +139,7 @@ simulationCode <- function(graph.contactp.objects,
     ########
 
     # Save the list of contacts that were effected by catchment level restrictions in the previous time step
-    listContacts.exclude <- new(Class = "dgTMatrix", Dim = c(contactp.length,contactp.length))
+    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(contactp.length,contactp.length))
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
     # to avoid expensive recalculation
@@ -145,7 +160,7 @@ simulationCode <- function(graph.contactp.objects,
       farm.select <- c(farm.select,value)
     }
 
-    farm.select <- as.vector(na.omit(farm.select))
+    farm.select <- as.vector(stats::na.omit(farm.select))
     farm.select <- subset(farm.select, farm.select > 0)
     primary.event <- sample(farm.select,1)
 
@@ -155,7 +170,7 @@ simulationCode <- function(graph.contactp.objects,
 
 
     ######## Produce a vector for culling a random number of fisheries
-    culling <- ifelse(farm_vector == 1, 0, runif(length(farm_vector)))
+    culling <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
     culling_vector <- ifelse(culling < 0.5, 1, 0)
     ########
 
@@ -206,7 +221,7 @@ simulationCode <- function(graph.contactp.objects,
 
       noOperations <- noOperations + 1
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
-      set(x = summaryStates.table, j = as.character(noOperations), value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), farmcombinedstates.total))
+      data.table::set(x = summaryStates.table, j = as.character(noOperations), value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), farmcombinedstates.total))
 
       if (noOperations %% commitInterval == (commitInterval - 1)) {
         summaryStates.table[,as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)):=empty.vector.byState]
@@ -218,7 +233,7 @@ simulationCode <- function(graph.contactp.objects,
       }
 
       # Randomly pick next time step, based on a weighted expontial distribution
-      tdiff <- rexp(1, sum(transition.rates[[3]]))
+      tdiff <- stats::rexp(1, sum(transition.rates[[3]]))
 
       t <- t + tdiff
       noSteps.sinceLastCommit <- noSteps %% commitInterval
@@ -230,9 +245,9 @@ simulationCode <- function(graph.contactp.objects,
       # The following line of code should combine all the site's attributes into a single number,
       # which uniquely represents all of the attributes co-occuring within the same site
 
-      #set(x = allStates.table, i = (no.variables + 1):(no.variables + contactp.length),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
-      #set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
-      #set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
+      #data.table::set(x = allStates.table, i = (no.variables + 1):(no.variables + contactp.length),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
+      #data.table::set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
+      #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
 
       # Save the results to disk
