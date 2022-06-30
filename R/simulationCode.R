@@ -24,8 +24,6 @@
 #'
 #' @param filepath_results TODO
 #'
-#' @param initialNoInfections TODO
-#'
 #' @return
 #'
 #' @export
@@ -44,8 +42,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            createDistanceMatrix_out,
                            farm_vector,
                            associatedSiteControlType,
-                           filepath_results,
-                           initialNoInfections) {
+                           filepath_results) {
 
   ## extract information from input parameters ----
 
