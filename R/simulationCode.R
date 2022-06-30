@@ -1,6 +1,6 @@
 #' simulationCode
 #'
-#' @param graph.contactp.objects TODO
+#' @param createContactProbabilityMatrix_out TODO [ was graph.contactp.objects]
 #'
 #' @param runs TODO
 #'
@@ -33,7 +33,7 @@
 #' @importFrom methods new
 #' @importFrom stats na.omit rexp runif
 #' @importFrom data.table set data.table :=
-simulationCode <- function(graph.contactp.objects,
+simulationCode <- function(createContactProbabilityMatrix_out,
                            runs,
                            tmax,
                            batch_num,
@@ -50,8 +50,8 @@ simulationCode <- function(graph.contactp.objects,
   ## extract information from input parameters ----
 
   # Retrieve the contact network, and the number of sites in the network
-  n_sites <- graph.contactp.objects[[1]]
-  matrix_movements_prob <- graph.contactp.objects[[3]]
+  n_sites <- createContactProbabilityMatrix_out[[1]]
+  matrix_movements_prob <- createContactProbabilityMatrix_out[[3]]
 
   # Matrix representing the site / catchment relationship
   graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
@@ -187,7 +187,7 @@ simulationCode <- function(graph.contactp.objects,
                                                         culling_vector = culling_vector,
                                                         site_indices = site_index,
                                                         catchment_movements = withinCatchmentMovements.objects,
-                                                        movements_prob = graph.contactp.objects,
+                                                        movements_prob = createContactProbabilityMatrix_out,
                                                         river_prob = graph.riverDistance.objects,
                                                         site_distances_prob = graph.estimateSiteDistances.objects,
                                                         run_time_params = ListRunTimeParameters,
