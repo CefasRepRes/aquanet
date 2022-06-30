@@ -56,29 +56,6 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
   # Create a vector to record transition times, for diagnostic purposes
   record_transition_times = c()
 
-  calcRandomSpillover = function(state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
-    spread.onSite.Index = site.index[!state_vector & !spread.onSite.prevented]
-    spread.offSite.Index = site.index[state_vector & !spread.offSite.prevented]
-    Fomite_Transmission_Independant_Prob = 1 / ListRunTimeParameters[[trans.type]]
-    noInfectedSites = length(spread.offSite.Index)
-    noSusceptibleSites = length(spread.onSite.Index)
-
-    if (noSusceptibleSites != 0) {
-      site = sample.int(noSusceptibleSites, size=1, replace = TRUE)
-
-      listInfectionRates.objects = list(rep.int(trans.type, times = noInfectedSites),
-                                        rep.int(spread.onSite.Index[site], times = noInfectedSites),
-                                        rep.int(Fomite_Transmission_Independant_Prob, times = noInfectedSites),
-                                        rep.int(NA, times = noInfectedSites),
-                                        noInfectedSites)
-    } else {
-      listInfectionRates.objects = list(NULL,NULL,NULL,NULL)
-    }
-
-
-    return(listInfectionRates.objects)
-  }
-
   calcRiverTransmission = function(distanceMatrix, state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
     distanceMatrix = distanceMatrix * (state_vector * !spread.offSite.prevented)
     distanceMatrix = t(distanceMatrix) * !spread.onSite.prevented
@@ -315,7 +292,12 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
       #Identify potential transitions from infected to susceptable sites that could occur randomly, regardless of the proposed mechanism
       #Exclude contacts from sites that can not perticipate in such a mechanism of transmition
       if (sum(!state_vector & !spread.onSite.prevented) != 0) {
-        spill.over.objects = calcRandomSpillover(clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 11)
+        spill.over.objects = aquanet::calcRandomSpillover(clinical_state_vector = clinical.vector,
+                                                          spread_restricted_off = spread.offSite.prevented,
+                                                          spread_restricted_on = spread.onSite.prevented,
+                                                          site_indices = site.index,
+                                                          trans_type = "Fomite_Transmission_Independant_Prob",
+                                                          run_time_params = ListRunTimeParameters)
         transition.rates = combineTransitions(spill.over.objects, transition.rates)
       }
     }
