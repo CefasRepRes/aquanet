@@ -6,7 +6,7 @@
 #'
 #' @param tmax TODO
 #'
-#' @param batchNo TODO
+#' @param batch_num TODO [was batchNo]
 #'
 #' @param ListRunTimeParameters TODO
 #'
@@ -36,7 +36,7 @@
 simulationCode <- function(graph.contactp.objects,
                            runs,
                            tmax,
-                           batchNo,
+                           batch_num,
                            ListRunTimeParameters,
                            graph.withinCatchmentEdges.objects,
                            graph.catchment2Site.objects,
@@ -80,18 +80,17 @@ simulationCode <- function(graph.contactp.objects,
   # Number of different combinations of states possible within the model
   n_states <- 42
 
-    # Create empty records, which are used to force enough memory to be allocated for results
-  empty.vector <- rep(0, n_sites + n_states)
-  empty.vector.t <- rep(0, 2)
-  empty.vector.byState <- rep(0, n_states + 8)
-
+  # Create empty records, which are used to force enough memory to be allocated for results
   # Preallocate memory for storing results
+  empty.vector <- rep(0, n_sites + n_states)
   allStates.table <- data.table::data.table(empty.vector)
   allStates.table[ , as.character(iterationID.vector) := empty.vector]
 
+  empty.vector.t <- rep(0, 2)
   allStates.table.t <- data.table(empty.vector.t)
   allStates.table.t[ , as.character(iterationID.vector) := empty.vector.t]
 
+  empty.vector.byState <- rep(0, n_states + 8)
   summaryStates.table <- data.table(empty.vector.byState)
   summaryStates.table[ , as.character(iterationID.vector) := empty.vector.byState]
   summaryStates.table[ , c("empty.vector.byState") := NULL]
@@ -101,7 +100,7 @@ simulationCode <- function(graph.contactp.objects,
 
   for (k in 1:runs) {
     # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
-    simNo <- k + ((batchNo - 1) * runs)
+    simNo <- k + ((batch_num - 1) * runs)
 
     # Record the current time,
     # the time difference between two steps in the simulation,
@@ -225,7 +224,7 @@ simulationCode <- function(graph.contactp.objects,
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
+                      value = c(batch_num,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (n_operations %% commitInterval == (commitInterval - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)) := empty.vector.byState]
@@ -250,7 +249,7 @@ simulationCode <- function(graph.contactp.objects,
       # which uniquely represents all of the attributes co-occuring within the same site
 
       #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
-      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
+      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), combinedStates.total)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
 
@@ -264,7 +263,7 @@ simulationCode <- function(graph.contactp.objects,
        #                        site_indices = site_index,
        #                        commit_int = commitInterval,
        #                        iteration_vector = iterationID.vector,
-       #                        batch_num = batchNo,
+       #                        batch_num = batch_num,
        #                        simulation_num = simNo,
        #                        save_num = n_saves,
        #                        filepath_results = locationSaveResults)
@@ -316,14 +315,14 @@ simulationCode <- function(graph.contactp.objects,
   #                        site_indices = site_index,
   #                        commit_int = commitInterval,
   #                        iteration_vector = iterationID.vector,
-  #                        batch_num = batchNo,
+  #                        batch_num = batch_num,
   #                        simulation_num = simNo,
   #                        save_num = n_saves,
   #                        filepath_results = locationSaveResults)
 
   save(summaryStates.table,
-       file = paste(locationSaveResults,"/Summary/batchNo-", batchNo,".RData", sep = ""),
+       file = paste(locationSaveResults,"/Summary/batchNo-", batch_num,".RData", sep = ""),
        compress=FALSE)
 
-  return(batchNo)
+  return(batch_num)
 }
