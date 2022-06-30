@@ -52,7 +52,6 @@ simulationCode <- function(graph.contactp.objects,
   # Retrieve the contact network, and the number of sites in the network
   n_sites <- graph.contactp.objects[[1]]
   matrix_movements_prob <- graph.contactp.objects[[3]]
-  contactp.siteNames <- dimnames(matrix_movements_prob)[[1]]
 
   # Matrix representing the site / catchment relationship
   graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
