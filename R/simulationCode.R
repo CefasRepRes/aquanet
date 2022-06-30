@@ -16,7 +16,7 @@
 #'
 #' @param graph.riverDistance.objects TODO
 #'
-#' @param graph.estimateSiteDistances.objects TODO
+#' @param createDistanceMatrix_out TODO [was graph.estimateSiteDistances.objects]
 #'
 #' @param farm_vector TODO
 #'
@@ -41,7 +41,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            createWithinCatchmentEdges_out,
                            createCatchmentToSiteMatrix_out,
                            graph.riverDistance.objects,
-                           graph.estimateSiteDistances.objects,
+                           createDistanceMatrix_out,
                            farm_vector,
                            associatedSiteControlType,
                            locationSaveResults,
@@ -54,7 +54,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   matrix_movements_prob <- createContactProbabilityMatrix_out[[3]]
 
   # Matrix representing the site / catchment relationship
-  graph.catchment2site.matrix2 <- createCatchmentToSiteMatrix_out[[2]]
+  graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
 
   # Matrix identifying which of the contacts occur between sites in the same catchment
   graph.withinCatchmentEdges.matrix <- createWithinCatchmentEdges_out[[1]]
@@ -189,7 +189,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         catchment_movements = withinCatchmentMovements.objects,
                                                         movements_prob = createContactProbabilityMatrix_out,
                                                         river_prob = graph.riverDistance.objects,
-                                                        site_distances_prob = graph.estimateSiteDistances.objects,
+                                                        site_distances_prob = createDistanceMatrix_out,
                                                         run_time_params = run_time_params,
                                                         non_peak_season = winter)
 
