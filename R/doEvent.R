@@ -63,13 +63,13 @@ doEvent <- function(state_vector,
   site <- site_vector[event] + 1
 
   # extract transition rate for selected event - and modify the state appropriately
-  rate_type <- transition_rates[[1]][event]
+  trans_type <- transition_rates[[1]][event]
 
 
   ## S --> I | L --> I ----
   # IF the transition rate is either via LFM, recrudescence from subclinical, river-based,
   # random mechanism-independent or fomite-based: assign the site an infectious state
-  if (rate_type %in% c(0, 4, 10, 11, 14)) {
+  if (trans_type %in% c(0, 4, 10, 11, 14)) {
     state_vector[site] <- 1
 
     # IF it is non_peak_season: define the site as latently infected
@@ -86,7 +86,7 @@ doEvent <- function(state_vector,
         control_matrix[site, 1] <- 1
 
         # IF the transition rate is via LFM or river-based:
-        if (rate_type %in% c(0, 10)) {
+        if (trans_type %in% c(0, 10)) {
           # extract infection source site and update source_inf_vector and source_inf_matrix
           # in case contact tracing applied later
           source_inf <- transition_rates[[4]][event] + 1
@@ -103,7 +103,7 @@ doEvent <- function(state_vector,
 
   ## I --> L  (both farm and fishery) ----
   # IF the transition rate is either farm recovers or fishery becomes subclinical/latent:
-  if (rate_type %in% c(2, 3)) {
+  if (trans_type %in% c(2, 3)) {
 
     # IF the site has been infected but has recovered before controls implemented: assume it will not be controlled
     if (control_matrix[site, 1] == 1) {
@@ -121,7 +121,7 @@ doEvent <- function(state_vector,
 
   ## I --> C transition | Traced Site --> C transition ----
   # IF the transition rate is either infection detected and reported or contact traced sites are tested:
-  if (rate_type %in% c(6, 12)) {
+  if (trans_type %in% c(6, 12)) {
 
     # place controls on sites that are infected and contact traced (i.e. contact traced sites tested)
 
@@ -186,7 +186,7 @@ doEvent <- function(state_vector,
 
   ## C --> F transition ----
   # IF the transition rate is rate at which controlled sites become fallow:
-  if (rate_type == 9) {
+  if (trans_type == 9) {
     # define the site as fallow and reset movement/stocking controls
     control_matrix[site, 4] <- 1
     control_matrix[site, c(2, 3)] <- 0
@@ -207,7 +207,7 @@ doEvent <- function(state_vector,
 
   ## L -> S transition ----
   # IF the transition rate is rate at which site transitions from latent infection (farms and fisheries):
-  if (rate_type == 5) {
+  if (trans_type == 5) {
     # redefine site as uninfected
     state_vector[site] <- 0
 
@@ -221,7 +221,7 @@ doEvent <- function(state_vector,
 
   ## F,I --> F,S transition ----
   # IF the transition rate is rate at which fallow sites are disinfected: redefine site ad uninfected
-  if (rate_type == 1) {
+  if (trans_type == 1) {
     state_vector[site] <- 0
   }
 
@@ -330,6 +330,6 @@ doEvent <- function(state_vector,
               catchment_time_vector,
               catchments_with_post_fallow_only,
               source_inf_vector,
-              rate_type,
+              trans_type,
               source_inf_matrix))
 }
