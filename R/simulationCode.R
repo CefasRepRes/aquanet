@@ -47,10 +47,8 @@ simulationCode <- function(graph.contactp.objects,
                            locationSaveResults,
                            initialNoInfections) {
 
-  # Record the number of steps in the simulation,
-  # the number of operations in the simulation (including iterations where the model terminates prematurely)
-  # the number of saved results, per a simulation
-  noSteps <- 0
+  # record number of steps, operations (including premature termination), and full saves per simulation
+  n_steps <- 0
   noOperations <- 0
   numberFullSaves <- 0
 
@@ -236,8 +234,8 @@ simulationCode <- function(graph.contactp.objects,
       tdiff <- stats::rexp(1, sum(transition.rates[[3]]))
 
       t <- t + tdiff
-      noSteps.sinceLastCommit <- noSteps %% commitInterval
-      noSteps <- noSteps + 1
+      noSteps.sinceLastCommit <- n_steps %% commitInterval
+      n_steps <- n_steps + 1
 
       # Record the current state of the network, for analysis over all time periods and simulations
       # Make sure that all of the variables stored in the 'allStates.table' are integers (hence the [0-9]L syntax)
@@ -252,7 +250,7 @@ simulationCode <- function(graph.contactp.objects,
 
       # Save the results to disk
       #if (noSteps.sinceLastCommit == (commitInterval - 1)) {
-      #  numberFullSaves <- noSteps %/% commitInterval
+      #  numberFullSaves <- n_steps %/% commitInterval
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
        #                        n_states = no.variables,
@@ -293,14 +291,14 @@ simulationCode <- function(graph.contactp.objects,
       rate.type <- event.objects[[8]]
       infected.source.matrix <- event.objects[[9]]
 
-      if (noSteps%%100 == 1) {
-        print(c(k,noSteps,length(state_vector),sum(state_vector),tdiff,length(transition.rates[[3]])))
+      if (n_steps%%100 == 1) {
+        print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition.rates[[3]])))
       }
     }
   }
 
   # Print diagnositic information, and format results as appriopriate
-  print(c("No Iterations", noSteps))
+  print(c("No Iterations", n_steps))
 
   #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
   #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
