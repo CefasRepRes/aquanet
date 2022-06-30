@@ -55,13 +55,13 @@ simulationCode <- function(graph.contactp.objects,
   numberFullSaves <- 0
 
   # Retrieve the contact network, and the number of sites in the network
-  contactp.length <- graph.contactp.objects[[1]]
+  n_sites <- graph.contactp.objects[[1]]
   contactp <- graph.contactp.objects[[3]]
   contactp.siteNames <- dimnames(contactp)[[1]]
 
   # Each site within the model has a unique position within a matrix
   # When necessary, this position can be expressed as a number, using the site index
-  site.index <- 0:(contactp.length - 1)
+  site.index <- 0:(n_sites - 1)
 
   # Matrix representing the site / catchment relationship
   graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
@@ -80,7 +80,7 @@ simulationCode <- function(graph.contactp.objects,
   no.variables <- 42
 
   # Create empty records, which are used to force enough memory to be allocated for results
-  empty.vector <- rep(0, contactp.length + no.variables)
+  empty.vector <- rep(0, n_sites + no.variables)
   empty.vector.t <- rep(0, 2)
   empty.vector.byState <- rep(0, no.variables + 8)
 
@@ -114,30 +114,30 @@ simulationCode <- function(graph.contactp.objects,
 
     # Create empty vectors to record a site's state of infection, control,
     # and how long it has been in a specific state of infection or control
-    state_vector <- rep(0, contactp.length)
+    state_vector <- rep(0, n_sites)
     cumulativeState_vector <- state_vector
     farmcumulativeState_vector <- state_vector*farm_vector
     #farmcumulativeState_vector <- state_vector*mediumfish_vector
     fisherycumulativeState_vector <- state_vector*as.numeric(!farm_vector)
-    control_matrix <- matrix(data = 0, nrow = contactp.length, ncol = 7)
-    time_vector <- rep(0, contactp.length)
+    control_matrix <- matrix(data = 0, nrow = n_sites, ncol = 7)
+    time_vector <- rep(0, n_sites)
 
     # Create a vector to track which site was responsible for infection (when infection
     # was transmitted via live fish movements or the river network)
-    source.infection.vector <- rep(0, contactp.length)
+    source.infection.vector <- rep(0, n_sites)
 
     ######## Create a matrix to track the sites are infected by certain sites via LFM or river network - This is for forward contact tracing
-    infected.source.matrix <- matrix(data = 0, nrow = contactp.length, ncol = contactp.length)
+    infected.source.matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
     ########
 
     # Save the list of contacts that were effected by catchment level restrictions in the previous time step
-    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(contactp.length,contactp.length))
+    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites,n_sites))
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
     # to avoid expensive recalculation
     controlled.catchments.previous <- vector(mode = "numeric", length = no.catchments)
     controlled.catchments.previous <- as(object = controlled.catchments.previous, Class = "dgeMatrix")
-    secondary.controlled.sites <- vector(mode = "logical", length = contactp.length)
+    secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
     no.controlled.catchments <- 0
 
     withinCatchmentMovements.objects <- list(graph.catchment2site.matrix2, graph.withinCatchmentEdges.matrix, controlled.catchments.previous, listContacts.exclude, associatedSiteControlType, secondary.controlled.sites,no.controlled.catchments)
@@ -237,7 +237,7 @@ simulationCode <- function(graph.contactp.objects,
       # The following line of code should combine all the site's attributes into a single number,
       # which uniquely represents all of the attributes co-occuring within the same site
 
-      #data.table::set(x = allStates.table, i = (no.variables + 1):(no.variables + contactp.length),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
+      #data.table::set(x = allStates.table, i = (no.variables + 1):(no.variables + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
       #data.table::set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
@@ -248,7 +248,7 @@ simulationCode <- function(graph.contactp.objects,
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
        #                        n_states = no.variables,
-       #                        n_sites = contactp.length,
+       #                        n_sites = n_sites,
        #                        site_indices = site.index,
        #                        commit_int = commitInterval,
        #                        iteration_vector = iterationID.vector,
@@ -304,7 +304,7 @@ simulationCode <- function(graph.contactp.objects,
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
   #                        n_states = no.variables,
-  #                        n_sites = contactp.length,
+  #                        n_sites = n_sites,
   #                        site_indices = site.index,
   #                        commit_int = commitInterval,
   #                        iteration_vector = iterationID.vector,
