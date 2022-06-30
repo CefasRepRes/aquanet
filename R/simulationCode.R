@@ -10,7 +10,7 @@
 #'
 #' @param run_time_params TODO
 #'
-#' @param graph.withinCatchmentEdges.objects TODO
+#' @param createWithinCatchmentEdges_out TODO [was graph.withinCatchmentEdges.objects]
 #'
 #' @param graph.catchment2Site.objects TODO
 #'
@@ -38,7 +38,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            tmax,
                            batch_num,
                            run_time_params,
-                           graph.withinCatchmentEdges.objects,
+                           createWithinCatchmentEdges_out,
                            graph.catchment2Site.objects,
                            graph.riverDistance.objects,
                            graph.estimateSiteDistances.objects,
@@ -57,7 +57,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   graph.catchment2site.matrix2 <- graph.catchment2Site.objects[[2]]
 
   # Matrix identifying which of the contacts occur between sites in the same catchment
-  graph.withinCatchmentEdges.matrix <- graph.withinCatchmentEdges.objects[[1]]
+  graph.withinCatchmentEdges.matrix <- createWithinCatchmentEdges_out[[1]]
 
   # Number of catchments within the model0
   n_catchments <- graph.catchment2site.matrix2@Dim[2]
