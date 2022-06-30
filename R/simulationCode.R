@@ -81,19 +81,6 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
 
   }
 
-  combineTransitions = function(transition.objects, transition.rates) {
-    # Type of transition
-    transition.rates[[1]] = c(transition.rates[[1]],transition.objects[[1]])
-    # Site subject to transition
-    transition.rates[[2]] = c(transition.rates[[2]],transition.objects[[2]])
-    # Transition rate
-    transition.rates[[3]] = c(transition.rates[[3]],transition.objects[[3]])
-    # Source of disease (in the case of transmissions)
-    transition.rates[[4]] = c(transition.rates[[4]],transition.objects[[4]])
-
-    return(transition.rates)
-  }
-
   update_rate = function(state_vector, control_matrix, withinCatchmentMovements.objects) {
 
     # Setup objects containing:
@@ -160,7 +147,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
     susceptable.sites.exposure.rate.objects = aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = atriskcontacts,
                                                                                         state_vector = state_vector,
                                                                                         trans_type = 0)
-    transition.rates = combineTransitions(susceptable.sites.exposure.rate.objects, transition.rates)
+    transition.rates = aquanet::combineTransitions(list.append = susceptable.sites.exposure.rate.objects,
+                                                   list_base = transition.rates)
 
     ######## An attempt to make separate the parameters between the fisheries and farms
     ######## Here i will calculate the transition from infected to subclinical for the two types of site separately
@@ -187,7 +175,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                        state_vector = infected.sites,
                                                                        trans_type = "Infection_Becomes_Subclinical",
                                                                        site_indices = site.index)
-    transition.rates = combineTransitions(infected.sites.recover.rate.objects, transition.rates)
+    transition.rates = aquanet::combineTransitions(list_append = infected.sites.recover.rate.objects,
+                                                   list_base = transition.rates)
     ########
 
     ######## This is the original code
@@ -208,7 +197,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                       state_vector = latent.sites,
                                                                       trans_type = "Clearing_Of_Latency_From_Infected_Sites",
                                                                       site_indices = site.index)
-    transition.rates = combineTransitions(latent.sites.recovery.rate.objects, transition.rates)
+    transition.rates = aquanet::combineTransitions(list.append = latent.sites.recovery.rate.objects,
+                                                   list.base = transition.rates)
 
     # Identify sites that are fallow, and infected
     # Create a vector showing the position of sites that are fallow and infected
@@ -218,7 +208,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                            state_vector = fallow.infected.sites,
                                                                            trans_type = "Reinfection_After_Restocking_Const",
                                                                            site_indices = site.index)
-    transition.rates = combineTransitions(fallow.infected.sites.rate.disinfection, transition.rates)
+    transition.rates = aquanet::combineTransitions(list.append = fallow.infected.sites.rate.disinfection,
+                                                   list.base = transition.rates)
 
     # Identify sites which have been contact traced
     # Create a vector showing the position of sites which have been contact traced
@@ -228,7 +219,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                      state_vector = contact.traced.sites,
                                                                      trans_type = "Contact_Detection",
                                                                      site_indices = site.index)
-    transition.rates = combineTransitions(contact.traced.sites.rate.testing, transition.rates)
+    transition.rates = aquanet::combineTransitions(list_append = contact.traced.sites.rate.testing,
+                                                   list_base = transition.rates)
 
     ########
     # Identify sites that are under surveillance or management
@@ -250,7 +242,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                        state_vector = infected.sites.notControlled,
                                                                        trans_type = "Detection_Reporting_Disease",
                                                                        site_indices = site.index)
-    transition.rates = combineTransitions(infected.sites.control.rate.objects, transition.rates)
+    transition.rates = aquanet::combineTransitions(list_append = infected.sites.control.rate.objects,
+                                                   list_base = transition.rates)
 
     if (winter == FALSE) {
       # Identify any latent, infected sites
@@ -260,7 +253,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                  state_vector = latent.sites,
                                                                  trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
                                                                  site_indices = site.index)
-      transition.rates = combineTransitions(latent.sites.secondOutbreak, transition.rates)
+      transition.rates = aquanet::combineTransitions(list_append = latent.sites.secondOutbreak,
+                                                     list_base = transition.rates)
 
 
       # Calculate the probability of a contact occuring downstream of an outbreak, through the river network
@@ -271,7 +265,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                                              spread_restricted_off = spread.offSite.prevented,
                                                                                              spread_restricted_on = spread.onSite.prevented,
                                                                                              trans_type = 10)
-      transition.rates = combineTransitions(susceptable.sites.exposure.byRiver.downstream.objects, transition.rates)
+      transition.rates = aquanet::combineTransitions(list_append = susceptable.sites.exposure.byRiver.downstream.objects,
+                                                     list_base = transition.rates)
 
       ########
       ######## Calculate the probability of a contact occuring due to local fomite transmission
@@ -281,7 +276,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                                     spread_restricted_off = spread.offSite.prevented,
                                                                                     spread_restricted_on = spread.onSite.prevented,
                                                                                     trans_type = 14)
-      transition.rates = combineTransitions(susceptable.sites.exposure.byFomites.objects, transition.rates)
+      transition.rates = aquanet::combineTransitions(list_append = susceptable.sites.exposure.byFomites.objects,
+                                                     list_base = transition.rates)
       ########
 
 
@@ -294,7 +290,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                           site_indices = site.index,
                                                           trans_type = "Fomite_Transmission_Independant_Prob",
                                                           run_time_params = ListRunTimeParameters)
-        transition.rates = combineTransitions(spill.over.objects, transition.rates)
+        transition.rates = aquanet::combineTransitions(list_append = spill.over.objects,
+                                                       list_base = transition.rates)
       }
     }
 
@@ -306,7 +303,8 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
                                                                         state_vector = controlled.farms,
                                                                         trans_type = "Time_Required_Cull_Site",
                                                                         site_indices = site.index)
-    transition.rates = combineTransitions(controlled.sites.fallow.rate.objects, transition.rates)
+    transition.rates = aquanet::combineTransitions(list_append = controlled.sites.fallow.rate.objects,
+                                                   list_base = transition.rates)
 
     return(list(transition.rates, withinCatchmentMovements.objects, movement.restrictions.bySite))
   }
