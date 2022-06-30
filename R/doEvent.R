@@ -15,14 +15,14 @@ doEvent <- function(state_vector,
 
   ## create variables to populate ----
 
-  # create logical vector of sites that are fallow
-  sites_fallow <- as.logical(control_matrix[ , 4])
-
   # create logical vector of catchments where every site has been ready to be restocked
   catchments_ready_restock <- rep(FALSE, n_catchments)
 
 
   ## extract transition information (sites, probabilities) ----
+
+  # create logical vector of sites that are fallow
+  sites_fallow <- as.logical(control_matrix[ , 4])
 
   # vector of sites subject to transition (possible infection events)
   site_vector <- transition_rates[[2]]
