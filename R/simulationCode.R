@@ -79,12 +79,12 @@ simulationCode <- function(graph.contactp.objects,
   site_index <- 0:(n_sites - 1)
 
   # Number of different combinations of states possible within the model
-  no.variables <- 42
+  n_states <- 42
 
     # Create empty records, which are used to force enough memory to be allocated for results
-  empty.vector <- rep(0, n_sites + no.variables)
+  empty.vector <- rep(0, n_sites + n_states)
   empty.vector.t <- rep(0, 2)
-  empty.vector.byState <- rep(0, no.variables + 8)
+  empty.vector.byState <- rep(0, n_states + 8)
 
   # Preallocate memory for storing results
   allStates.table <- data.table::data.table(empty.vector)
@@ -218,9 +218,9 @@ simulationCode <- function(graph.contactp.objects,
 
       combfarm.vector <- farm_vector * combinedStates_vector
       comfishery.vector <- as.numeric(!farm_vector) * combinedStates_vector
-      combinedStates.total <- tabulate(combinedStates_vector, nbins = no.variables)
-      farmcombinedstates.total <- tabulate(combfarm.vector, nbins = no.variables)
-      fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = no.variables)
+      combinedStates.total <- tabulate(combinedStates_vector, nbins = n_states)
+      farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
+      fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
       n_operations <- n_operations + 1
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
@@ -250,8 +250,8 @@ simulationCode <- function(graph.contactp.objects,
       # The following line of code should combine all the site's attributes into a single number,
       # which uniquely represents all of the attributes co-occuring within the same site
 
-      #data.table::set(x = allStates.table, i = (no.variables + 1):(no.variables + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
-      #data.table::set(x = allStates.table, i = (1:(no.variables + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
+      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
+      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batchNo, k, k + ((batchNo - 1) * runs), combinedStates.total)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
 
@@ -260,7 +260,7 @@ simulationCode <- function(graph.contactp.objects,
       #  n_saves <- n_steps %/% commitInterval
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
-       #                        n_states = no.variables,
+       #                        n_states = n_states,
        #                        n_sites = n_sites,
        #                        site_indices = site_index,
        #                        commit_int = commitInterval,
@@ -312,7 +312,7 @@ simulationCode <- function(graph.contactp.objects,
   #n_saves <- n_saves + 1
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
-  #                        n_states = no.variables,
+  #                        n_states = n_states,
   #                        n_sites = n_sites,
   #                        site_indices = site_index,
   #                        commit_int = commitInterval,
