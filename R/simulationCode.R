@@ -70,7 +70,7 @@ simulationCode <- function(graph.contactp.objects,
   graph.withinCatchmentEdges.matrix <- graph.withinCatchmentEdges.objects[[1]]
 
   # Number of catchments within the model0
-  no.catchments <- graph.catchment2site.matrix2@Dim[2]
+  n_catchments <- graph.catchment2site.matrix2@Dim[2]
 
   # Save the results every x number of iterations
   commitInterval <- 5000
@@ -108,9 +108,9 @@ simulationCode <- function(graph.contactp.objects,
     # Create empty vectors to record the time since a catchment's status was last changed,
     # whether there are any fallow sites in a catchment,
     # or whether all the sites in a catchment are ready to be restocked
-    catchment_time_vector <- rep(0, length = no.catchments)
-    catchments.some.sites.c4.status <- rep(0, length = no.catchments)
-    catchments.all.sites.c5.status <- rep(0, length = no.catchments)
+    catchment_time_vector <- rep(0, length = n_catchments)
+    catchments.some.sites.c4.status <- rep(0, length = n_catchments)
+    catchments.all.sites.c5.status <- rep(0, length = n_catchments)
 
     # Create empty vectors to record a site's state of infection, control,
     # and how long it has been in a specific state of infection or control
@@ -134,7 +134,7 @@ simulationCode <- function(graph.contactp.objects,
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
     # to avoid expensive recalculation
-    controlled.catchments.previous <- vector(mode = "numeric", length = no.catchments)
+    controlled.catchments.previous <- vector(mode = "numeric", length = n_catchments)
     controlled.catchments.previous <- as(object = controlled.catchments.previous, Class = "dgeMatrix")
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
     no.controlled.catchments <- 0
@@ -276,7 +276,7 @@ simulationCode <- function(graph.contactp.objects,
                                        move_restricted_sites = movement.restrictions.bySite,
                                        non_peak_season = winter,
                                        run_time_params = ListRunTimeParameters,
-                                       n_catchments = no.catchments,
+                                       n_catchments = n_catchments,
                                        spmatrix_sites_catchment = graph.catchment2site.matrix2,
                                        time_vector = time_vector,
                                        catchment_time_vector = catchment_time_vector,
