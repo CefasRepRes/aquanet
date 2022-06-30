@@ -47,11 +47,6 @@ simulationCode <- function(graph.contactp.objects,
                            locationSaveResults,
                            initialNoInfections) {
 
-  # Sparse Matrices and Data Tables are used for memory or computational efficiency
-  # The packages are loaded here, since parallel execution does not allow them to be loaded earlier
-  library(Matrix)
-  library(data.table)
-
   # Record the number of steps in the simulation,
   # the number of operations in the simulation (including iterations where the model terminates prematurely)
   # the number of saved results, per a simulation
