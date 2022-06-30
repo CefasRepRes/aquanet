@@ -50,7 +50,7 @@ simulationCode <- function(graph.contactp.objects,
   # record number of steps, operations (including premature termination), and full saves per simulation
   n_steps <- 0
   n_operations <- 0
-  numberFullSaves <- 0
+  n_saves <- 0
 
   # Retrieve the contact network, and the number of sites in the network
   n_sites <- graph.contactp.objects[[1]]
@@ -250,7 +250,7 @@ simulationCode <- function(graph.contactp.objects,
 
       # Save the results to disk
       #if (noSteps.sinceLastCommit == (commitInterval - 1)) {
-      #  numberFullSaves <- n_steps %/% commitInterval
+      #  n_saves <- n_steps %/% commitInterval
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
        #                        n_states = no.variables,
@@ -260,7 +260,7 @@ simulationCode <- function(graph.contactp.objects,
        #                        iteration_vector = iterationID.vector,
        #                        batch_num = batchNo,
        #                        simulation_num = simNo,
-       #                        save_num = numberFullSaves,
+       #                        save_num = n_saves,
        #                        filepath_results = locationSaveResults)
       #  allStates.table[,as.character(iterationID.vector):=empty.vector]
       #  allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
@@ -302,7 +302,7 @@ simulationCode <- function(graph.contactp.objects,
 
   #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
   #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
-  #numberFullSaves <- numberFullSaves + 1
+  #n_saves <- n_saves + 1
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
   #                        n_states = no.variables,
@@ -312,7 +312,7 @@ simulationCode <- function(graph.contactp.objects,
   #                        iteration_vector = iterationID.vector,
   #                        batch_num = batchNo,
   #                        simulation_num = simNo,
-  #                        save_num = numberFullSaves,
+  #                        save_num = n_saves,
   #                        filepath_results = locationSaveResults)
 
   save(summaryStates.table,
