@@ -1,17 +1,17 @@
-do_event <- function(state_vector,
-                     control_matrix,
-                     transition_rates,
-                     tdiff,
-                     move_restricted_sites,
-                     non_peak_season,
-                     run_time_params,
-                     n_catchments,
-                     spmatrix_sites_catchment,
-                     time_vector,
-                     catchment_time_vector,
-                     catchments_with_post_fallow_only,
-                     source_inf_vector,
-                     source_inf_matrix) {
+doEvent <- function(state_vector,
+                    control_matrix,
+                    transition_rates,
+                    tdiff,
+                    move_restricted_sites,
+                    non_peak_season,
+                    run_time_params,
+                    n_catchments,
+                    spmatrix_sites_catchment,
+                    time_vector,
+                    catchment_time_vector,
+                    catchments_with_post_fallow_only,
+                    source_inf_vector,
+                    source_inf_matrix) {
 
   ## create variables to populate ----
 
