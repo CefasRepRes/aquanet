@@ -1,3 +1,23 @@
+#' simulationCode
+#'
+#' @param graph.contactp.objects
+#' @param runs
+#' @param tmax
+#' @param batchNo
+#' @param ListRunTimeParameters
+#' @param graph.withinCatchmentEdges.objects
+#' @param graph.catchment2Site.objects
+#' @param graph.riverDistance.objects
+#' @param graph.estimateSiteDistances.objects
+#' @param farm_vector
+#' @param associatedSiteControlType
+#' @param locationSaveResults
+#' @param initialNoInfections
+#'
+#' @return
+#'
+#' @export
+#'
 simulationCode <- function(graph.contactp.objects,
                            runs,
                            tmax,
