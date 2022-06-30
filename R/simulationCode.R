@@ -56,18 +56,6 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
   # Create a vector to record transition times, for diagnostic purposes
   record_transition_times = c()
 
-  calcRiverTransmission = function(distanceMatrix, state_vector, spread.offSite.prevented, spread.onSite.prevented, trans.type) {
-    distanceMatrix = distanceMatrix * (state_vector * !spread.offSite.prevented)
-    distanceMatrix = t(distanceMatrix) * !spread.onSite.prevented
-    distanceMatrix = t(distanceMatrix)
-
-    listInfectionRates.objects = aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = distanceMatrix,
-                                                                           state_vector = state_vector,
-                                                                           trans_type = trans.type)
-
-    return(listInfectionRates.objects)
-  }
-
   checkCatchmentLevelRestocking = function(control_matrix, tdiff) {
     # Extract a list of sites that are fallow, and those which are waiting to be restocked
     controlled.sites.c4.numeric = control_matrix[,4]
@@ -278,13 +266,21 @@ simulationCode = function(graph.contactp.objects, runs, tmax, batchNo, ListRunTi
       # Calculate the probability of a contact occuring downstream of an outbreak, through the river network
       graph.riverDownstream.objects = graph.riverDistance.objects[[1]]
       riverDownstream.matrix = graph.riverDownstream.objects[[2]]
-      susceptable.sites.exposure.byRiver.downstream.objects = calcRiverTransmission(riverDownstream.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 10)
+      susceptable.sites.exposure.byRiver.downstream.objects = aquanet::calcRiverTransmission(matrix_river_distances_prob = riverDownstream.matrix,
+                                                                                             clinical_state_vector = clinical.vector,
+                                                                                             spread_restricted_off = spread.offSite.prevented,
+                                                                                             spread_restricted_on = spread.onSite.prevented,
+                                                                                             trans_type = 10)
       transition.rates = combineTransitions(susceptable.sites.exposure.byRiver.downstream.objects, transition.rates)
 
       ########
       ######## Calculate the probability of a contact occuring due to local fomite transmission
       fomite.matrix = graph.estimateSiteDistances.objects[[2]]
-      susceptable.sites.exposure.byFomites.objects = calcRiverTransmission(fomite.matrix, clinical.vector, spread.offSite.prevented, spread.onSite.prevented, 14)
+      susceptable.sites.exposure.byFomites.objects = aquanet::calcRiverTransmission(matrix_river_distances_prob = fomite.matrix,
+                                                                                    clinical_state_vector = clinical.vector,
+                                                                                    spread_restricted_off = spread.offSite.prevented,
+                                                                                    spread_restricted_on = spread.onSite.prevented,
+                                                                                    trans_type = 14)
       transition.rates = combineTransitions(susceptable.sites.exposure.byFomites.objects, transition.rates)
       ########
 
