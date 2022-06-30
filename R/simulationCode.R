@@ -221,7 +221,7 @@ simulationCode <- function(graph.contactp.objects,
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(noOperations),
-                      value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), farmcombinedstates.total))
+                      value = c(batchNo,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (noOperations %% commitInterval == (commitInterval - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)) := empty.vector.byState]
