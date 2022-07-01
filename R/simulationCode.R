@@ -209,7 +209,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                             non_peak_season = non_peak_season)
 
       # extract list of all transition rates
-      transition.rates <- updated_rates[[1]]
+      transition_rates <- updated_rates[[1]]
 
       # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
       list_catchment_movements <- updated_rates[[2]]
@@ -246,12 +246,12 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       }
 
       # If there are no infectious sites on the network stop the simulation
-      if (length(transition.rates[[3]]) == 0) {
+      if (length(transition_rates[[3]]) == 0) {
         break()
       }
 
       # Randomly pick next time step, based on a weighted expontial distribution
-      tdiff <- stats::rexp(1, sum(transition.rates[[3]]))
+      tdiff <- stats::rexp(1, sum(transition_rates[[3]]))
 
       t <- t + tdiff
       noSteps.sinceLastCommit <- n_steps %% commit_int
@@ -289,7 +289,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # Pick the next event, and modify a site's state accordingly
       event.objects <- aquanet::doEvent(state_vector = state_vector,
                                        control_matrix = control_matrix,
-                                       transition_rates = transition.rates,
+                                       transition_rates = transition_rates,
                                        tdiff = tdiff,
                                        move_restricted_sites = movement.restrictions.bySite,
                                        non_peak_season = non_peak_season,
@@ -312,7 +312,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       source_inf_matrix <- event.objects[[9]]
 
       if (n_steps%%100 == 1) {
-        print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition.rates[[3]])))
+        print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition_rates[[3]])))
       }
     }
   }
