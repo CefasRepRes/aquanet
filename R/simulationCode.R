@@ -273,16 +273,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       noSteps.sinceLastCommit <- n_steps %% commit_int
       n_steps <- n_steps + 1
 
-      # Record the current state of the network, for analysis over all time periods and simulations
-      # Make sure that all of the variables stored in the 'allStates.table' are integers (hence the [0-9]L syntax)
-      # For analysis outside of the model, treating a site's state as multidimensional is going to be really confusing
-      # The following line of code should combine all the site's attributes into a single number,
-      # which uniquely represents all of the attributes co-occuring within the same site
-
       #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(sites_states_vector))
       #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
-
 
       # Save the results to disk
       #if (noSteps.sinceLastCommit == (commit_int - 1)) {
