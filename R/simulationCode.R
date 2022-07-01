@@ -229,7 +229,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
       combinedStates.total <- tabulate(sites_states_vector, nbins = n_states)
 
-      farm_states_vector <- farm_vector * state_vector
+      farm_states_vector <- state_vector * farm_vector
       farmcumulativeState_vector <- (farm_states_vector | farmcumulativeState_vector)
       combfarm.vector <- farm_vector * sites_states_vector
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
