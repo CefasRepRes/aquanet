@@ -131,7 +131,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
 
     # vector to record source sites responsible for infection via Live Fish Movements/river network
-    source.infection.vector <- rep(0, n_sites)
+    source_inf_vector <- rep(0, n_sites)
 
     # matrix to forward trace sites becoming infected (connected via live fish movements/river network)
     source_inf_matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
@@ -302,7 +302,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        time_vector = time_vector,
                                        catchment_time_vector = catchment_time_vector,
                                        catchments_with_post_fallow_only = catchments.all.sites.c5.status,
-                                       source_inf_vector = source.infection.vector,
+                                       source_inf_vector = source_inf_vector,
                                        source_inf_matrix = source_inf_matrix)
 
       state_vector <- event.objects[[1]]
@@ -310,7 +310,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       time_vector <- event.objects[[3]]
       catchment_time_vector <- event.objects[[4]]
       catchments.all.sites.c5.status <- event.objects[[5]]
-      source.infection.vector <- event.objects[[7]]
+      source_inf_vector <- event.objects[[7]]
       trans_type <- event.objects[[8]]
       source_inf_matrix <- event.objects[[9]]
 
