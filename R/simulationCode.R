@@ -184,10 +184,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     }
 
     # select farm to seed from list of start sites
-    primary.event <- sample(farm_select, 1)
+    seed_farm <- sample(farm_select, 1)
 
     # mark this site as infected
-    state_vector[primary.event] <- 1
+    state_vector[seed_farm] <- 1
 
 
     while(t<tmax){
