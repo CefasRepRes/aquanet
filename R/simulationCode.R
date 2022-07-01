@@ -220,31 +220,37 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # extract updated logical vector of sites with controlled status
       sites_controlled <- list_catchment_movements[[6]]
 
+      # update the number of controlled catchments (updated in excludeWithinCatchmentMovements in updateRates)
+      n_catchments_controlled <- list_catchment_movements[[7]]
+
       # calculate site attributes (infection and control status) as a single state per site
       sites_states_vector <- as.integer((state_vector * 10) +
                                           (sites_controlled * 20) +
                                           (control_matrix[ , 2:6] %*% 2:6) +
                                           control_matrix[ , 7])
 
-      # sites: summarise number of sites in each of the n_states ----
-      sites_states_totals <- tabulate(sites_states_vector, nbins = n_states)
 
+      # sites: summarise number of sites in each of the n_states ----
+
+      sites_states_totals <- tabulate(sites_states_vector, nbins = n_states)
       sites_states_cumulative <- (state_vector | sites_states_cumulative)
 
 
       # farms: summarise number of farms in each of the n_states ----
+
       farm_states_vector <- state_vector * farm_vector
       farm_states_cumulative <- (farm_states_vector | farm_states_cumulative)
 
+
       # fisheries: summarise number of fisheries in each of the n_states ----
+
       fishery_state_vector <- state_vector * as.numeric(!farm_vector)
       fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
 
+
+
       # increment the number of operations
       n_operations <- n_operations + 1
-
-      # update the number of controlled catchments (updated in excludeWithinCatchmentMovements in updateRates)
-      n_catchments_controlled <- list_catchment_movements[[7]]
 
 
       data.table::set(x = summaryStates.table,
