@@ -102,7 +102,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # reset the time, time step, and rate type for the run
     t <- 0
     tdiff <- 0
-    rate.type <- 0
+    trans_type <- 0
 
     # Create empty vectors to record the time since a catchment's status was last changed,
     # whether there are any fallow sites in a catchment,
@@ -220,7 +220,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, sim_num, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
+                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
@@ -289,7 +289,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       catchment_time_vector <- event.objects[[4]]
       catchments.all.sites.c5.status <- event.objects[[5]]
       source.infection.vector <- event.objects[[7]]
-      rate.type <- event.objects[[8]]
+      trans_type <- event.objects[[8]]
       infected.source.matrix <- event.objects[[9]]
 
       if (n_steps%%100 == 1) {
