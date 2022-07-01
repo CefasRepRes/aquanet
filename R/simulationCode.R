@@ -234,16 +234,15 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # farms: summarise number of farms in each of the n_states ----
       farm_states_vector <- state_vector * farm_vector
-      farm_states_cumulative <- (farm_states_vector | farm_states_cumulative)
       combfarm.vector <- farm_vector * sites_states_vector
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
+      farm_states_cumulative <- (farm_states_vector | farm_states_cumulative)
 
       # fisheries: summarise number of fisheries in each of the n_states ----
       fishery_state_vector <- state_vector * as.numeric(!farm_vector)
-      fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
       comfishery.vector <- as.numeric(!farm_vector) * sites_states_vector
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
-
+      fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
 
       n_operations <- n_operations + 1
 
