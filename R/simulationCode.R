@@ -176,19 +176,19 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # reset for loop input and farm selection vector
     d <- 0
-    farm.select <- c()
+    farm_select <- c()
 
-    # for each site generate a value and if this is > 0 & not NA add to farm.select vector
+    # for each site generate a value and if this is > 0 & not NA add to farm_select vector
     for(d in 0:length(farm_vector)) {
       d <- d + 1
       value <- farm_vector[d] * d
       if (value > 0 * !stats::is.na(value)) {
-      farm.select <- c(farm.select, value)
+      farm_select <- c(farm_select, value)
       }
     }
 
     # select farm to seed from list of start sites
-    primary.event <- sample(farm.select, 1)
+    primary.event <- sample(farm_select, 1)
 
     # mark this site as infected
     state_vector[primary.event] <- 1
