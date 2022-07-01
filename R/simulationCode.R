@@ -169,14 +169,15 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     d <- 0
     farm.select <- c()
 
-    for(d in 0:length(farm_vector)){
+    for(d in 0:length(farm_vector)) {
       d <- d + 1
       value <- farm_vector[d] * d
+
+      if (value > 0 * !stats::is.na(value)) {
       farm.select <- c(farm.select, value)
+      }
     }
 
-    farm.select <- as.vector(stats::na.omit(farm.select))
-    farm.select <- subset(farm.select, farm.select > 0)
     primary.event <- sample(farm.select, 1)
 
     state_vector[primary.event] <- 1
