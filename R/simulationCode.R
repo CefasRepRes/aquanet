@@ -135,7 +135,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     source.infection.vector <- rep(0, n_sites)
 
     # matrix to forward trace sites becoming infected (connected via live fish movements/river network)
-    infected.source.matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
+    source_inf_matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
     # matrix to record contacts affected by catchment-level restrictions in previous time step
     listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites, n_sites))
@@ -304,7 +304,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        catchment_time_vector = catchment_time_vector,
                                        catchments_with_post_fallow_only = catchments.all.sites.c5.status,
                                        source_inf_vector = source.infection.vector,
-                                       source_inf_matrix = infected.source.matrix)
+                                       source_inf_matrix = source_inf_matrix)
 
       state_vector <- event.objects[[1]]
       control_matrix <- event.objects[[2]]
@@ -313,7 +313,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       catchments.all.sites.c5.status <- event.objects[[5]]
       source.infection.vector <- event.objects[[7]]
       trans_type <- event.objects[[8]]
-      infected.source.matrix <- event.objects[[9]]
+      source_inf_matrix <- event.objects[[9]]
 
       if (n_steps%%100 == 1) {
         print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition.rates[[3]])))
