@@ -220,8 +220,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # extract updated logical vector of sites with controlled status
       sites_controlled <- list_catchment_movements[[6]]
 
-      # Combine all of the site's attributes into a single state, count the total number of sites per state
-      combinedStates_vector <- as.integer((state_vector * 10) +
+      # calculate site attributes (infection and control status) as a single state per site
+      sites_states_vector <- as.integer((state_vector * 10) +
                                             (sites_controlled * 20) +
                                             (control_matrix[ , 2:6] %*% 2:6) +
                                             control_matrix[ , 7])
@@ -232,9 +232,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fisheriesStates.vector <- state_vector * as.numeric(!farm_vector)
       fisherycumulativeState_vector <- (fisheriesStates.vector | fisherycumulativeState_vector)
 
-      combfarm.vector <- farm_vector * combinedStates_vector
-      comfishery.vector <- as.numeric(!farm_vector) * combinedStates_vector
-      combinedStates.total <- tabulate(combinedStates_vector, nbins = n_states)
+      combfarm.vector <- farm_vector * sites_states_vector
+      comfishery.vector <- as.numeric(!farm_vector) * sites_states_vector
+      combinedStates.total <- tabulate(sites_states_vector, nbins = n_states)
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
@@ -268,7 +268,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # The following line of code should combine all the site's attributes into a single number,
       # which uniquely represents all of the attributes co-occuring within the same site
 
-      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(combinedStates_vector))
+      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(sites_states_vector))
       #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), combinedStates.total)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
