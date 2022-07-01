@@ -29,7 +29,7 @@
 #' @export
 #'
 #' @importFrom methods new
-#' @importFrom stats na.omit rexp runif
+#' @importFrom stats na.omit rexp runif setNames
 #' @importFrom data.table set data.table :=
 simulationCode <- function(createContactProbabilityMatrix_out,
                            runs,
@@ -65,30 +65,34 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   n_operations <- 0
   n_saves <- 0
 
-  # define interval at which results should be saved
+  # define number of possible states within the model
+  n_states <- 42
+
+  # define interval at which results should be saved and create vector of iterations
   commit_int <- 5000
   iteration_vector <- 1:commit_int
 
   # create vector of 0-based site indices (unique positions within matrix)
   site_index <- 0:(n_sites - 1)
 
-  # Number of different combinations of states possible within the model
-  n_states <- 42
+  # create empty result tables to populate (speeds up for loop by memory pre-allocation)
+  empty.vector <- rep(0, n_sites + n_states) # TODO delete when other instances sorted
+  allStates.table <- stats::setNames(data.table::data.table(matrix(0,
+                                                                   nrow = n_sites + n_states,
+                                                                   ncol = commit_int + 1)),
+                                     c("empty.vector", as.character(iteration_vector)))
 
-  # Create empty records, which are used to force enough memory to be allocated for results
-  # Preallocate memory for storing results
-  empty.vector <- rep(0, n_sites + n_states)
-  allStates.table <- data.table::data.table(empty.vector)
-  allStates.table[ , as.character(iteration_vector) := empty.vector]
+  empty.vector.t <- rep(0, 2)  # TODO delete when other instances sorted
+  allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
+                                                                     nrow = 2,
+                                                                     ncol = commit_int + 1)),
+                                       c("empty.vector.t", as.character(iteration_vector)))
 
-  empty.vector.t <- rep(0, 2)
-  allStates.table.t <- data.table(empty.vector.t)
-  allStates.table.t[ , as.character(iteration_vector) := empty.vector.t]
-
-  empty.vector.byState <- rep(0, n_states + 8)
-  summaryStates.table <- data.table(empty.vector.byState)
-  summaryStates.table[ , as.character(iteration_vector) := empty.vector.byState]
-  summaryStates.table[ , c("empty.vector.byState") := NULL]
+  empty.vector.byState <- rep(0, n_states + 8)  # TODO delete when other instances sorted
+  summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
+                                                                       nrow = n_states + 8,
+                                                                       ncol = commit_int)),
+                                         as.character(iteration_vector))
 
 
   ## simulate each model run ----
