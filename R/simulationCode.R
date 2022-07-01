@@ -137,7 +137,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     source_inf_matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
     # matrix to record contacts affected by catchment-level restrictions in previous time step
-    listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites, n_sites))
+    matrix_contacts_exclude  <- methods::new(Class = "dgTMatrix", Dim = c(n_sites, n_sites))
 
     # matrix to record catchments controlled in the previous time step (avoids recalculation)
     catchments_controlled_prev <- as(Matrix::Matrix(nrow = n_catchments, ncol = 1,
@@ -153,7 +153,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
                                              lgmatrix_catch_catch,
                                              catchments_controlled_prev,
-                                             listContacts.exclude,
+                                             matrix_contacts_exclude ,
                                              type_catchment_controls,
                                              secondary.controlled.sites,
                                              n_catchments_controlled)
