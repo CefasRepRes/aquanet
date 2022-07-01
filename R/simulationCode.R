@@ -104,38 +104,53 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     tdiff <- 0
     trans_type <- 0
 
-    # Create empty vectors to record the time since a catchment's status was last changed,
-    # whether there are any fallow sites in a catchment,
-    # or whether all the sites in a catchment are ready to be restocked
+
+    ## create empty variables to record run data ----
+
+    # vector to record time since last status change of catchment
     catchment_time_vector <- rep(0, length = n_catchments)
+
+    # vector to indicate presence of fallow sites in catchment
     catchments.some.sites.c4.status <- rep(0, length = n_catchments)
+
+    # vector to indicate catchments ready to be restocked
     catchments.all.sites.c5.status <- rep(0, length = n_catchments)
 
-    # Create empty vectors to record a site's state of infection, control,
-    # and how long it has been in a specific state of infection or control
+    # vector to record time sites have been in state of infection or surveillance/controls
+    time_vector <- rep(0, n_sites)
+
+    # matrix to record control measures (columns) in place at each site (rows)
+    # TODO: replace column numbers with names & fix other functions with control_matrix input
+    control_matrix <- matrix(data = 0, nrow = n_sites, ncol = 7)
+
+    # vector (0/1) to record infection status at sites
     state_vector <- rep(0, n_sites)
+
+
     cumulativeState_vector <- state_vector
     farmcumulativeState_vector <- state_vector * farm_vector
     #farmcumulativeState_vector <- state_vector * mediumfish_vector
     fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
-    control_matrix <- matrix(data = 0, nrow = n_sites, ncol = 7)
-    time_vector <- rep(0, n_sites)
 
-    # Create a vector to track which site was responsible for infection (when infection
-    # was transmitted via live fish movements or the river network)
+
+    # vector to record source sites responsible for infection via Live Fish Movements/river network
     source.infection.vector <- rep(0, n_sites)
 
-    ######## Create a matrix to track the sites are infected by certain sites via LFM or river network - This is for forward contact tracing
+    # matrix to forward trace sites becoming infected (connected via live fish movements/river network)
     infected.source.matrix <- matrix(data = 0, nrow = n_sites, ncol = n_sites)
 
-    # Save the list of contacts that were effected by catchment level restrictions in the previous time step
+    # matrix to record contacts affected by catchment-level restrictions in previous time step
     listContacts.exclude <- methods::new(Class = "dgTMatrix", Dim = c(n_sites, n_sites))
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
-    # to avoid expensive recalculation
+    # matrix to record catchments controlled in the previous time step (avoids recalculation)
     controlled.catchments.previous <- vector(mode = "numeric", length = n_catchments)
     controlled.catchments.previous <- as(object = controlled.catchments.previous, Class = "dgeMatrix")
+
+    # vector to record sites controlled in the previous time step (avoids recalculation)
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
+
+    # reset number of controlled catchments
     no.controlled.catchments <- 0
 
     withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
