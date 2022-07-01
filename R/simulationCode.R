@@ -145,8 +145,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # matrix to record catchments controlled in the previous time step (avoids recalculation)
     controlled.catchments.previous <- as(Matrix::Matrix(nrow = n_catchments, ncol = 1,
-                                                        data = 0, sparse = T),
-                                         "dgeMatrix")
+                                                        data = 0, sparse = T), "dgeMatrix")
 
     # vector to record sites controlled in the previous time step (avoids recalculation)
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
@@ -163,7 +162,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                              secondary.controlled.sites,
                                              no.controlled.catchments)
 
-    ######## Pick the first infected site, at random, and update it's recorded status appropriately - these are all seeded at farms
+
+    ## randomly select initial site to seed infection (Note: always a farm) ----
+
+    # reset for loop input and farm selection vector
     d <- 0
     farm.select <- c()
 
