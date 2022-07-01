@@ -222,9 +222,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # calculate site attributes (infection and control status) as a single state per site
       sites_states_vector <- as.integer((state_vector * 10) +
-                                            (sites_controlled * 20) +
-                                            (control_matrix[ , 2:6] %*% 2:6) +
-                                            control_matrix[ , 7])
+                                          (sites_controlled * 20) +
+                                          (control_matrix[ , 2:6] %*% 2:6) +
+                                          control_matrix[ , 7])
 
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
       farmStates.vector <- farm_vector * state_vector
