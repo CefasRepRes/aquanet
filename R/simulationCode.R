@@ -226,8 +226,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                           (control_matrix[ , 2:6] %*% 2:6) +
                                           control_matrix[ , 7])
 
-      state_vector_cumulative <- (state_vector | state_vector_cumulative)
+      # summarise number of sites in each of the n_states
       sites_states_totals <- tabulate(sites_states_vector, nbins = n_states)
+
+      state_vector_cumulative <- (state_vector | state_vector_cumulative)
 
       farm_states_vector <- state_vector * farm_vector
       farmcumulativeState_vector <- (farm_states_vector | farmcumulativeState_vector)
