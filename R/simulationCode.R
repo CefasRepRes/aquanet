@@ -76,19 +76,16 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   site_index <- 0:(n_sites - 1)
 
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
-  empty.vector <- rep(0, n_sites + n_states) # TODO delete when other instances sorted
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                    nrow = n_sites + n_states,
                                                                    ncol = commit_int + 1)),
                                      c("empty.vector", as.character(iteration_vector)))
 
-  empty.vector.t <- rep(0, 2)  # TODO delete when other instances sorted
   allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
                                                                      nrow = 2,
                                                                      ncol = commit_int + 1)),
                                        c("empty.vector.t", as.character(iteration_vector)))
 
-  empty.vector.byState <- rep(0, n_states + 8)  # TODO delete when other instances sorted
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                        nrow = n_states + 8,
                                                                        ncol = commit_int)),
@@ -226,7 +223,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                       value = c(batch_num,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
-        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := empty.vector.byState]
+        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
       }
 
       # If there are no infectious sites on the network stop the simulation
@@ -266,8 +263,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
        #                        simulation_num = simNo,
        #                        save_num = n_saves,
        #                        filepath_results = filepath_results)
-      #  allStates.table[,as.character(iteration_vector):=empty.vector]
-      #  allStates.table.t[,as.character(iteration_vector):=empty.vector.t]
+      #  allStates.table[,as.character(iteration_vector):= rep(0, n_sites + n_states)]
+      #  allStates.table.t[,as.character(iteration_vector):= rep(0, 2)]
       #}
 
       # Pick the next event, and modify a site's state accordingly
