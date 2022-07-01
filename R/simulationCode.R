@@ -126,8 +126,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     state_vector <- rep(0, n_sites)
 
     # TODO: check which of these are needed
-    cumulativeState_vector <- state_vector
-    farmcumulativeState_vector <- state_vector * farm_vector
+    cumulativeState_vector <- state_vector # this is needed!
+    farmcumulativeState_vector <- state_vector * farm_vector # these are needed if interested in separate fish/farm data
     fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
 
 
@@ -227,16 +227,18 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                           control_matrix[ , 7])
 
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
+      combinedStates.total <- tabulate(sites_states_vector, nbins = n_states)
+
       farmStates.vector <- farm_vector * state_vector
       farmcumulativeState_vector <- (farmStates.vector | farmcumulativeState_vector)
+      combfarm.vector <- farm_vector * sites_states_vector
+      farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
+
       fisheriesStates.vector <- state_vector * as.numeric(!farm_vector)
       fisherycumulativeState_vector <- (fisheriesStates.vector | fisherycumulativeState_vector)
-
-      combfarm.vector <- farm_vector * sites_states_vector
       comfishery.vector <- as.numeric(!farm_vector) * sites_states_vector
-      combinedStates.total <- tabulate(sites_states_vector, nbins = n_states)
-      farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
+
 
       n_operations <- n_operations + 1
 
