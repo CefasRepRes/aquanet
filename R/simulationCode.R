@@ -54,7 +54,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   spmatrix_sites_catchment <- createCatchmentToSiteMatrix_out[[2]]
 
   # Matrix identifying which of the contacts occur between sites in the same catchment
-  graph.withinCatchmentEdges.matrix <- createWithinCatchmentEdges_out[[1]]
+  lgmatrix_catch_catch <- createWithinCatchmentEdges_out[[1]]
 
   # Number of catchments within the model0
   n_catchments <- spmatrix_sites_catchment@Dim[2]
@@ -140,7 +140,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     no.controlled.catchments <- 0
 
     withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
-                                             graph.withinCatchmentEdges.matrix,
+                                             lgmatrix_catch_catch,
                                              controlled.catchments.previous,
                                              listContacts.exclude,
                                              type_catchment_controls,
