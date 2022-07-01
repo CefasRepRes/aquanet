@@ -196,27 +196,27 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     while(t < tmax) {
 
       # update transition rates, catchment movements, and movement restricted sites
-      update_rate.output.objects <- aquanet::updateRates(control_matrix = control_matrix,
-                                                        state_vector = state_vector,
-                                                        farm_vector =  farm_vector,
-                                                        culling_vector = culling_vector,
-                                                        site_indices = site_index,
-                                                        catchment_movements = list_catchment_movements,
-                                                        movements_prob = createContactProbabilityMatrix_out,
-                                                        river_prob = createRiverDistanceProbabilityMatrix_out_list,
-                                                        site_distances_prob = createDistanceMatrix_out,
-                                                        run_time_params = run_time_params,
-                                                        non_peak_season = non_peak_season)
+      updated_rates <- aquanet::updateRates(control_matrix = control_matrix,
+                                            state_vector = state_vector,
+                                            farm_vector =  farm_vector,
+                                            culling_vector = culling_vector,
+                                            site_indices = site_index,
+                                            catchment_movements = list_catchment_movements,
+                                            movements_prob = createContactProbabilityMatrix_out,
+                                            river_prob = createRiverDistanceProbabilityMatrix_out_list,
+                                            site_distances_prob = createDistanceMatrix_out,
+                                            run_time_params = run_time_params,
+                                            non_peak_season = non_peak_season)
 
       # extract list of all transition rates
-      transition.rates <- update_rate.output.objects[[1]]
+      transition.rates <- updated_rates[[1]]
 
       # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
-      list_catchment_movements <- update_rate.output.objects[[2]]
+      list_catchment_movements <- updated_rates[[2]]
       sites_controlled <- list_catchment_movements[[6]]
 
       # Retrieve logical vectors for each type of controlled state, to avoid recalculation
-      movement.restrictions.bySite <- update_rate.output.objects[[3]]
+      movement.restrictions.bySite <- updated_rates[[3]]
 
       # Combine all of the site's attributes into a single state, count the total number of sites per state
       combinedStates_vector <- as.integer((state_vector * 10) +
