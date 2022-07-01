@@ -95,8 +95,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   ## simulate each model run ----
 
   for (k in 1:runs) {
-    # Calculate a simulation number, which is equivilent to k, but valid across every thread / process
-    simNo <- k + ((batch_num - 1) * runs)
+
+    # calculate simulation number (equivalent to k and valid across every parallel thread)
+    sim_num <- k + ((batch_num - 1) * runs)
 
     # Record the current time,
     # the time difference between two steps in the simulation,
@@ -220,7 +221,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
+                      value = c(batch_num,k, t, tdiff, sim_num, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
@@ -260,7 +261,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
        #                        commit_int = commit_int,
        #                        iteration_vector = iteration_vector,
        #                        batch_num = batch_num,
-       #                        simulation_num = simNo,
+       #                        simulation_num = sim_num,
        #                        save_num = n_saves,
        #                        filepath_results = filepath_results)
       #  allStates.table[,as.character(iteration_vector):= rep(0, n_sites + n_states)]
@@ -312,7 +313,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   #                        commit_int = commit_int,
   #                        iteration_vector = iteration_vector,
   #                        batch_num = batch_num,
-  #                        simulation_num = simNo,
+  #                        simulation_num = sim_num,
   #                        save_num = n_saves,
   #                        filepath_results = filepath_results)
 
