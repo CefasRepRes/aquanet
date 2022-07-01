@@ -244,9 +244,12 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
       fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
 
+      # increment the number of operations
       n_operations <- n_operations + 1
 
+      # update the number of controlled catchments (updated in excludeWithinCatchmentMovements in updateRates)
       n_catchments_controlled <- list_catchment_movements[[7]]
+
 
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
