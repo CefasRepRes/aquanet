@@ -147,7 +147,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
 
     # reset number of controlled catchments
-    no.controlled.catchments <- 0
+    n_catchments_controlled <- 0
 
     # create list of catchment_movement objects
     withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
@@ -156,7 +156,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                              listContacts.exclude,
                                              type_catchment_controls,
                                              secondary.controlled.sites,
-                                             no.controlled.catchments)
+                                             n_catchments_controlled)
 
 
     ## add fisheries that can be culled to culling vector of farms ----
@@ -239,10 +239,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
       n_operations <- n_operations + 1
-      no.controlled.catchments <- withinCatchmentMovements.objects[[7]]
+      n_catchments_controlled <- withinCatchmentMovements.objects[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
+                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), combinedStates.total))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
