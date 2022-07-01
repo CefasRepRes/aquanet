@@ -211,18 +211,21 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # extract list of all transition rates
       transition_rates <- updated_rates[[1]]
 
-      # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
+      # extract updated list of catchment movement rules - edited by excludeWithinCatchmentMovements() in updateRates()
       list_catchment_movements <- updated_rates[[2]]
-      sites_controlled <- list_catchment_movements[[6]]
 
-      # Retrieve logical vectors for each type of controlled state, to avoid recalculation
+      # extract updated logical vector of sites with movement restrictions
       movement.restrictions.bySite <- updated_rates[[3]]
+
+      # extract updated logical vector of sites with controlled status
+      sites_controlled <- list_catchment_movements[[6]]
 
       # Combine all of the site's attributes into a single state, count the total number of sites per state
       combinedStates_vector <- as.integer((state_vector * 10) +
                                             (sites_controlled * 20) +
                                             (control_matrix[ , 2:6] %*% 2:6) +
                                             control_matrix[ , 7])
+
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
       farmStates.vector <- farm_vector * state_vector
       farmcumulativeState_vector <- (farmStates.vector | farmcumulativeState_vector)
@@ -236,7 +239,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
       n_operations <- n_operations + 1
+
       n_catchments_controlled <- list_catchment_movements[[7]]
+
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
                       value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), combinedStates.total))
