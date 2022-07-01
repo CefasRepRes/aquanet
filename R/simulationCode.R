@@ -31,6 +31,7 @@
 #' @importFrom methods new
 #' @importFrom stats na.omit rexp runif setNames
 #' @importFrom data.table set data.table :=
+#' @importFrom Matrix Matrix
 simulationCode <- function(createContactProbabilityMatrix_out,
                            runs,
                            tmax,
@@ -144,8 +145,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # Save the list of catchments and sites which were controlled in the previous time-step,
     # matrix to record catchments controlled in the previous time step (avoids recalculation)
-    controlled.catchments.previous <- vector(mode = "numeric", length = n_catchments)
-    controlled.catchments.previous <- as(object = controlled.catchments.previous, Class = "dgeMatrix")
+    controlled.catchments.previous <- as(Matrix::Matrix(nrow = n_catchments, ncol = 1,
+                                                        data = 0, sparse = T),
+                                         "dgeMatrix")
 
     # vector to record sites controlled in the previous time step (avoids recalculation)
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
