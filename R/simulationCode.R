@@ -141,7 +141,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # matrix to record catchments controlled in the previous time step (avoids recalculation)
     catchments_controlled_prev <- as(Matrix::Matrix(nrow = n_catchments, ncol = 1,
-                                                        data = 0, sparse = T), "dgeMatrix")
+                                                    data = 0, sparse = T), "dgeMatrix")
 
     # vector to record sites controlled in the previous time step (avoids recalculation)
     sites_controlled <- vector(mode = "logical", length = n_sites)
@@ -150,7 +150,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     n_catchments_controlled <- 0
 
     # create list of catchment_movement objects
-    withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
+    list_catchment_movements <- list(spmatrix_sites_catchment,
                                              lgmatrix_catch_catch,
                                              catchments_controlled_prev,
                                              matrix_contacts_exclude ,
@@ -204,7 +204,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         farm_vector =  farm_vector,
                                                         culling_vector = culling_vector,
                                                         site_indices = site_index,
-                                                        catchment_movements = withinCatchmentMovements.objects,
+                                                        catchment_movements = list_catchment_movements,
                                                         movements_prob = createContactProbabilityMatrix_out,
                                                         river_prob = createRiverDistanceProbabilityMatrix_out_list,
                                                         site_distances_prob = createDistanceMatrix_out,
@@ -215,8 +215,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       transition.rates <- update_rate.output.objects[[1]]
 
       # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
-      withinCatchmentMovements.objects <- update_rate.output.objects[[2]]
-      sites_controlled <- withinCatchmentMovements.objects[[6]]
+      list_catchment_movements <- update_rate.output.objects[[2]]
+      sites_controlled <- list_catchment_movements[[6]]
 
       # Retrieve logical vectors for each type of controlled state, to avoid recalculation
       movement.restrictions.bySite <- update_rate.output.objects[[3]]
@@ -239,7 +239,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
       n_operations <- n_operations + 1
-      n_catchments_controlled <- withinCatchmentMovements.objects[[7]]
+      n_catchments_controlled <- list_catchment_movements[[7]]
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
                       value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), combinedStates.total))
