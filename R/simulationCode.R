@@ -112,7 +112,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     catchment_time_vector <- rep(0, length = n_catchments)
 
     # vector to indicate catchments ready to be restocked
-    catchments.all.sites.c5.status <- rep(0, length = n_catchments)
+    catchments_with_post_fallow_only <- rep(0, length = n_catchments)
 
     # vector to record time sites have been in state of infection or surveillance/controls
     time_vector <- rep(0, n_sites)
@@ -301,7 +301,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        spmatrix_sites_catchment = spmatrix_sites_catchment,
                                        time_vector = time_vector,
                                        catchment_time_vector = catchment_time_vector,
-                                       catchments_with_post_fallow_only = catchments.all.sites.c5.status,
+                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
                                        source_inf_vector = source_inf_vector,
                                        source_inf_matrix = source_inf_matrix)
 
@@ -309,7 +309,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       control_matrix <- event.objects[[2]]
       time_vector <- event.objects[[3]]
       catchment_time_vector <- event.objects[[4]]
-      catchments.all.sites.c5.status <- event.objects[[5]]
+      catchments_with_post_fallow_only <- event.objects[[5]]
       source_inf_vector <- event.objects[[7]]
       trans_type <- event.objects[[8]]
       source_inf_matrix <- event.objects[[9]]
