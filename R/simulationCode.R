@@ -125,6 +125,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     state_vector <- rep(0, n_sites)
 
 
+    # TODO: check which of these are needed
     cumulativeState_vector <- state_vector
     farmcumulativeState_vector <- state_vector * farm_vector
     fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
@@ -151,12 +152,12 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # create list of catchment_movement objects
     list_catchment_movements <- list(spmatrix_sites_catchment,
-                                             lgmatrix_catch_catch,
-                                             catchments_controlled_prev,
-                                             matrix_contacts_exclude ,
-                                             type_catchment_controls,
-                                             sites_controlled,
-                                             n_catchments_controlled)
+                                     lgmatrix_catch_catch,
+                                     catchments_controlled_prev,
+                                     matrix_contacts_exclude,
+                                     type_catchment_controls,
+                                     sites_controlled,
+                                     n_catchments_controlled)
 
 
     ## add fisheries that can be culled to culling vector of farms ----
