@@ -193,9 +193,6 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # mark this site as infected
     state_vector[primary.event] <- 1
 
-    # calculate number of susceptible sites
-    noSusceptibleSites <- sum(!state_vector)
-
 
     while(t<tmax){
 
