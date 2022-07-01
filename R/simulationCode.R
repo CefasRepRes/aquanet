@@ -128,7 +128,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # TODO: check which of these are needed
     sites_states_cumulative <- state_vector # this is needed!
     farm_states_cumulative <- state_vector * farm_vector # these are needed if interested in separate fish/farm data
-    fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
+    fishery_states_cumulative <- state_vector * as.numeric(!farm_vector)
 
 
     # vector to record source sites responsible for infection via Live Fish Movements/river network
@@ -240,7 +240,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # fisheries: summarise number of fisheries in each of the n_states ----
       fishery_state_vector <- state_vector * as.numeric(!farm_vector)
-      fisherycumulativeState_vector <- (fishery_state_vector | fisherycumulativeState_vector)
+      fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
       comfishery.vector <- as.numeric(!farm_vector) * sites_states_vector
       fisheriescombinedstates.total <- tabulate(comfishery.vector, nbins = n_states)
 
