@@ -144,7 +144,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         data = 0, sparse = T), "dgeMatrix")
 
     # vector to record sites controlled in the previous time step (avoids recalculation)
-    secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
+    sites_controlled <- vector(mode = "logical", length = n_sites)
 
     # reset number of controlled catchments
     n_catchments_controlled <- 0
@@ -155,7 +155,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                              catchments_controlled_prev,
                                              matrix_contacts_exclude ,
                                              type_catchment_controls,
-                                             secondary.controlled.sites,
+                                             sites_controlled,
                                              n_catchments_controlled)
 
 
@@ -216,14 +216,14 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
       withinCatchmentMovements.objects <- update_rate.output.objects[[2]]
-      secondary.controlled.sites <- withinCatchmentMovements.objects[[6]]
+      sites_controlled <- withinCatchmentMovements.objects[[6]]
 
       # Retrieve logical vectors for each type of controlled state, to avoid recalculation
       movement.restrictions.bySite <- update_rate.output.objects[[3]]
 
       # Combine all of the site's attributes into a single state, count the total number of sites per state
       combinedStates_vector <- as.integer((state_vector * 10) +
-                                            (secondary.controlled.sites * 20) +
+                                            (sites_controlled * 20) +
                                             (control_matrix[ , 2:6] %*% 2:6) +
                                             control_matrix[ , 7])
       cumulativeState_vector <- (state_vector | cumulativeState_vector)
