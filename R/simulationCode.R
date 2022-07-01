@@ -51,13 +51,13 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   matrix_movements_prob <- createContactProbabilityMatrix_out[[3]]
 
   # Matrix representing the site / catchment relationship
-  graph.catchment2site.matrix2 <- createCatchmentToSiteMatrix_out[[2]]
+  spmatrix_sites_catchment <- createCatchmentToSiteMatrix_out[[2]]
 
   # Matrix identifying which of the contacts occur between sites in the same catchment
   graph.withinCatchmentEdges.matrix <- createWithinCatchmentEdges_out[[1]]
 
   # Number of catchments within the model0
-  n_catchments <- graph.catchment2site.matrix2@Dim[2]
+  n_catchments <- spmatrix_sites_catchment@Dim[2]
 
 
   ## create variables to populate ----
@@ -139,7 +139,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     secondary.controlled.sites <- vector(mode = "logical", length = n_sites)
     no.controlled.catchments <- 0
 
-    withinCatchmentMovements.objects <- list(graph.catchment2site.matrix2,
+    withinCatchmentMovements.objects <- list(spmatrix_sites_catchment,
                                              graph.withinCatchmentEdges.matrix,
                                              controlled.catchments.previous,
                                              listContacts.exclude,
@@ -277,7 +277,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        non_peak_season = winter,
                                        run_time_params = run_time_params,
                                        n_catchments = n_catchments,
-                                       spmatrix_sites_catchment = graph.catchment2site.matrix2,
+                                       spmatrix_sites_catchment = spmatrix_sites_catchment,
                                        time_vector = time_vector,
                                        catchment_time_vector = catchment_time_vector,
                                        catchments_with_post_fallow_only = catchments.all.sites.c5.status,
