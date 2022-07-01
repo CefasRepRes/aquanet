@@ -5,47 +5,44 @@
 \title{simulationCode}
 \usage{
 simulationCode(
-  graph.contactp.objects,
+  createContactProbabilityMatrix_out,
   runs,
   tmax,
-  batchNo,
-  ListRunTimeParameters,
-  graph.withinCatchmentEdges.objects,
-  graph.catchment2Site.objects,
-  graph.riverDistance.objects,
-  graph.estimateSiteDistances.objects,
+  batch_num,
+  run_time_params,
+  createWithinCatchmentEdges_out,
+  createCatchmentToSiteMatrix_out,
+  createRiverDistanceProbabilityMatrix_out_list,
+  createDistanceMatrix_out,
   farm_vector,
-  associatedSiteControlType,
-  locationSaveResults,
-  initialNoInfections
+  type_catchment_controls,
+  filepath_results
 )
 }
 \arguments{
-\item{graph.contactp.objects}{TODO}
+\item{createContactProbabilityMatrix_out}{TODO (was graph.contactp.objects)}
 
 \item{runs}{TODO}
 
 \item{tmax}{TODO}
 
-\item{batchNo}{TODO}
+\item{batch_num}{TODO (was batchNo)}
 
-\item{ListRunTimeParameters}{TODO}
+\item{run_time_params}{TODO}
 
-\item{graph.withinCatchmentEdges.objects}{TODO}
+\item{createWithinCatchmentEdges_out}{TODO (was graph.withinCatchmentEdges.objects)}
 
-\item{graph.catchment2Site.objects}{TODO}
+\item{createCatchmentToSiteMatrix_out}{TODO}
 
-\item{graph.riverDistance.objects}{TODO}
+\item{createRiverDistanceProbabilityMatrix_out_list}{TODO}
 
-\item{graph.estimateSiteDistances.objects}{TODO}
+\item{createDistanceMatrix_out}{TODO (was graph.estimateSiteDistances.objects)}
 
 \item{farm_vector}{TODO}
 
-\item{associatedSiteControlType}{TODO}
+\item{type_catchment_controls}{TODO}
 
-\item{locationSaveResults}{TODO}
-
-\item{initialNoInfections}{TODO}
+\item{filepath_results}{TODO}
 }
 \value{
 

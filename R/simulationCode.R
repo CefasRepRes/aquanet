@@ -1,22 +1,22 @@
 #' simulationCode
 #'
-#' @param createContactProbabilityMatrix_out TODO [ was graph.contactp.objects]
+#' @param createContactProbabilityMatrix_out TODO (was graph.contactp.objects)
 #'
 #' @param runs TODO
 #'
 #' @param tmax TODO
 #'
-#' @param batch_num TODO [was batchNo]
+#' @param batch_num TODO (was batchNo)
 #'
 #' @param run_time_params TODO
 #'
-#' @param createWithinCatchmentEdges_out TODO [was graph.withinCatchmentEdges.objects]
+#' @param createWithinCatchmentEdges_out TODO (was graph.withinCatchmentEdges.objects)
 #'
 #' @param createCatchmentToSiteMatrix_out TODO
 #'
-#' @param graph.riverDistance.objects TODO
+#' @param createRiverDistanceProbabilityMatrix_out_list TODO
 #'
-#' @param createDistanceMatrix_out TODO [was graph.estimateSiteDistances.objects]
+#' @param createDistanceMatrix_out TODO (was graph.estimateSiteDistances.objects)
 #'
 #' @param farm_vector TODO
 #'
@@ -38,7 +38,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            run_time_params,
                            createWithinCatchmentEdges_out,
                            createCatchmentToSiteMatrix_out,
-                           graph.riverDistance.objects,
+                           createRiverDistanceProbabilityMatrix_out_list,
                            createDistanceMatrix_out,
                            farm_vector,
                            type_catchment_controls,
@@ -185,7 +185,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         site_indices = site_index,
                                                         catchment_movements = withinCatchmentMovements.objects,
                                                         movements_prob = createContactProbabilityMatrix_out,
-                                                        river_prob = graph.riverDistance.objects,
+                                                        river_prob = createRiverDistanceProbabilityMatrix_out_list,
                                                         site_distances_prob = createDistanceMatrix_out,
                                                         run_time_params = run_time_params,
                                                         non_peak_season = winter)
