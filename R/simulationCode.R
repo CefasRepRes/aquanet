@@ -127,7 +127,6 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     cumulativeState_vector <- state_vector
     farmcumulativeState_vector <- state_vector * farm_vector
-    #farmcumulativeState_vector <- state_vector * mediumfish_vector
     fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
 
 
