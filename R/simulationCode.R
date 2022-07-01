@@ -99,8 +99,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # calculate simulation number (equivalent to k and valid across every parallel thread)
     sim_num <- k + ((batch_num - 1) * runs)
 
-    # Record the current time,
-    # the time difference between two steps in the simulation,
+    # reset the time, time step, and rate type for the run
     t <- 0
     tdiff <- 0
     rate.type <- 0
