@@ -37,6 +37,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            tmax,
                            batch_num,
                            run_time_params,
+                           non_peak_season,
                            createWithinCatchmentEdges_out,
                            createCatchmentToSiteMatrix_out,
                            createRiverDistanceProbabilityMatrix_out_list,
@@ -124,7 +125,6 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # vector (0/1) to record infection status at sites
     state_vector <- rep(0, n_sites)
 
-
     # TODO: check which of these are needed
     cumulativeState_vector <- state_vector
     farmcumulativeState_vector <- state_vector * farm_vector
@@ -191,13 +191,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     state_vector[seed_farm] <- 1
 
 
-    while(t<tmax){
+    ## keep iterating until time reached maximum allowed ----
 
-      ## Select seasonality periodicity
-      #winter <- (((t %/% 180) %% 2 ) == 1)  # Winter 180 days, Summer 180 days, Winter occurs first
-      winter <- (((t %/% 90) %% 4 ) == 3)
-      # winter <- (((t %/% 90) %% 4 ) == 1) & (((t %/% 90) %% 4 ) == 3)
-      # winter <- FALSE
+    while(t < tmax){
 
       # Update the list of transitions
       update_rate.output.objects <- aquanet::updateRates(control_matrix = control_matrix,
@@ -210,7 +206,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         river_prob = createRiverDistanceProbabilityMatrix_out_list,
                                                         site_distances_prob = createDistanceMatrix_out,
                                                         run_time_params = run_time_params,
-                                                        non_peak_season = winter)
+                                                        non_peak_season = non_peak_season)
 
       # List of every transition
       transition.rates <- update_rate.output.objects[[1]]
@@ -296,7 +292,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        transition_rates = transition.rates,
                                        tdiff = tdiff,
                                        move_restricted_sites = movement.restrictions.bySite,
-                                       non_peak_season = winter,
+                                       non_peak_season = non_peak_season,
                                        run_time_params = run_time_params,
                                        n_catchments = n_catchments,
                                        spmatrix_sites_catchment = spmatrix_sites_catchment,
