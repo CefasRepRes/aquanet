@@ -111,9 +111,6 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     # vector to record time since last status change of catchment
     catchment_time_vector <- rep(0, length = n_catchments)
 
-    # vector to indicate presence of fallow sites in catchment
-    catchments.some.sites.c4.status <- rep(0, length = n_catchments)
-
     # vector to indicate catchments ready to be restocked
     catchments.all.sites.c5.status <- rep(0, length = n_catchments)
 
