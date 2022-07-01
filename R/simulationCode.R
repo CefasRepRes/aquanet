@@ -215,7 +215,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       list_catchment_movements <- updated_rates[[2]]
 
       # extract updated logical vector of sites with movement restrictions
-      movement.restrictions.bySite <- updated_rates[[3]]
+      sites_all_movement_restricted <- updated_rates[[3]]
 
       # extract updated logical vector of sites with controlled status
       sites_controlled <- list_catchment_movements[[6]]
@@ -296,7 +296,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        control_matrix = control_matrix,
                                        transition_rates = transition_rates,
                                        tdiff = tdiff,
-                                       move_restricted_sites = movement.restrictions.bySite,
+                                       move_restricted_sites = sites_all_movement_restricted,
                                        non_peak_season = non_peak_season,
                                        run_time_params = run_time_params,
                                        n_catchments = n_catchments,
