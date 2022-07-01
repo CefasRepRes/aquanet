@@ -227,7 +227,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                           control_matrix[ , 7])
 
       state_vector_cumulative <- (state_vector | state_vector_cumulative)
-      combinedStates.total <- tabulate(sites_states_vector, nbins = n_states)
+      sites_states_totals <- tabulate(sites_states_vector, nbins = n_states)
 
       farm_states_vector <- state_vector * farm_vector
       farmcumulativeState_vector <- (farm_states_vector | farmcumulativeState_vector)
@@ -246,7 +246,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), combinedStates.total))
+                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), sites_states_totals))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
@@ -271,7 +271,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # which uniquely represents all of the attributes co-occuring within the same site
 
       #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(sites_states_vector))
-      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), combinedStates.total)))
+      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
       #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
 
 
