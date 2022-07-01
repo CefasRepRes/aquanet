@@ -67,7 +67,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
   # define interval at which results should be saved
   commit_int <- 5000
-  iterationID.vector <- 1:commit_int
+  iteration_vector <- 1:commit_int
 
   # create vector of 0-based site indices (unique positions within matrix)
   site_index <- 0:(n_sites - 1)
@@ -79,15 +79,15 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   # Preallocate memory for storing results
   empty.vector <- rep(0, n_sites + n_states)
   allStates.table <- data.table::data.table(empty.vector)
-  allStates.table[ , as.character(iterationID.vector) := empty.vector]
+  allStates.table[ , as.character(iteration_vector) := empty.vector]
 
   empty.vector.t <- rep(0, 2)
   allStates.table.t <- data.table(empty.vector.t)
-  allStates.table.t[ , as.character(iterationID.vector) := empty.vector.t]
+  allStates.table.t[ , as.character(iteration_vector) := empty.vector.t]
 
   empty.vector.byState <- rep(0, n_states + 8)
   summaryStates.table <- data.table(empty.vector.byState)
-  summaryStates.table[ , as.character(iterationID.vector) := empty.vector.byState]
+  summaryStates.table[ , as.character(iteration_vector) := empty.vector.byState]
   summaryStates.table[ , c("empty.vector.byState") := NULL]
 
 
@@ -257,13 +257,13 @@ simulationCode <- function(createContactProbabilityMatrix_out,
        #                        n_sites = n_sites,
        #                        site_indices = site_index,
        #                        commit_int = commit_int,
-       #                        iteration_vector = iterationID.vector,
+       #                        iteration_vector = iteration_vector,
        #                        batch_num = batch_num,
        #                        simulation_num = simNo,
        #                        save_num = n_saves,
        #                        filepath_results = filepath_results)
-      #  allStates.table[,as.character(iterationID.vector):=empty.vector]
-      #  allStates.table.t[,as.character(iterationID.vector):=empty.vector.t]
+      #  allStates.table[,as.character(iteration_vector):=empty.vector]
+      #  allStates.table.t[,as.character(iteration_vector):=empty.vector.t]
       #}
 
       # Pick the next event, and modify a site's state accordingly
@@ -309,7 +309,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   #                        n_sites = n_sites,
   #                        site_indices = site_index,
   #                        commit_int = commit_int,
-  #                        iteration_vector = iterationID.vector,
+  #                        iteration_vector = iteration_vector,
   #                        batch_num = batch_num,
   #                        simulation_num = simNo,
   #                        save_num = n_saves,
