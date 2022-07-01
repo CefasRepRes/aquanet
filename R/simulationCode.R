@@ -46,18 +46,16 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
   ## extract information from input parameters ----
 
-  # Retrieve the contact network, and the number of sites in the network
+  # extract number of sites and matrix of live fish movements contact probabilities
   n_sites <- createContactProbabilityMatrix_out[[1]]
   matrix_movements_prob <- createContactProbabilityMatrix_out[[3]]
 
-  # Matrix representing the site / catchment relationship
+  # extract number of catchments and matrix of catchment to site relationships
   spmatrix_sites_catchment <- createCatchmentToSiteMatrix_out[[2]]
-
-  # Matrix identifying which of the contacts occur between sites in the same catchment
-  lgmatrix_catch_catch <- createWithinCatchmentEdges_out[[1]]
-
-  # Number of catchments within the model0
   n_catchments <- spmatrix_sites_catchment@Dim[2]
+
+  # extract matrix of contacts between sites within the same catchment
+  lgmatrix_catch_catch <- createWithinCatchmentEdges_out[[1]]
 
 
   ## create variables to populate ----
