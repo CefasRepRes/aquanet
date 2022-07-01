@@ -127,7 +127,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
     # TODO: check which of these are needed
     sites_states_cumulative <- state_vector # this is needed!
-    farmcumulativeState_vector <- state_vector * farm_vector # these are needed if interested in separate fish/farm data
+    farm_states_cumulative <- state_vector * farm_vector # these are needed if interested in separate fish/farm data
     fisherycumulativeState_vector <- state_vector * as.numeric(!farm_vector)
 
 
@@ -234,7 +234,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # farms: summarise number of farms in each of the n_states ----
       farm_states_vector <- state_vector * farm_vector
-      farmcumulativeState_vector <- (farm_states_vector | farmcumulativeState_vector)
+      farm_states_cumulative <- (farm_states_vector | farm_states_cumulative)
       combfarm.vector <- farm_vector * sites_states_vector
       farmcombinedstates.total <- tabulate(combfarm.vector, nbins = n_states)
 
@@ -251,7 +251,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farmcumulativeState_vector), sites_states_totals))
+                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farm_states_cumulative), sites_states_totals))
 
       if (n_operations %% commit_int == (commit_int - 1)) {
         summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
