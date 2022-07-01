@@ -191,11 +191,11 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     state_vector[seed_farm] <- 1
 
 
-    ## keep iterating until time reached maximum allowed ----
+    ## keep iterating until time reaches maximum allowed ----
 
-    while(t < tmax){
+    while(t < tmax) {
 
-      # Update the list of transitions
+      # update transition rates, catchment movements, and movement restricted sites
       update_rate.output.objects <- aquanet::updateRates(control_matrix = control_matrix,
                                                         state_vector = state_vector,
                                                         farm_vector =  farm_vector,
@@ -208,7 +208,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                                         run_time_params = run_time_params,
                                                         non_peak_season = non_peak_season)
 
-      # List of every transition
+      # extract list of all transition rates
       transition.rates <- update_rate.output.objects[[1]]
 
       # Cache any calculations on movements out of controlled catchments, to avoid unnecesary recalculation
