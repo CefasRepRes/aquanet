@@ -66,8 +66,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   n_saves <- 0
 
   # define interval at which results should be saved
-  commitInterval <- 5000
-  iterationID.vector <- 1:commitInterval
+  commit_int <- 5000
+  iterationID.vector <- 1:commit_int
 
   # create vector of 0-based site indices (unique positions within matrix)
   site_index <- 0:(n_sites - 1)
@@ -221,8 +221,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                       j = as.character(n_operations),
                       value = c(batch_num,k, t, tdiff, simNo, rate.type, no.controlled.catchments, sum(farmcumulativeState_vector), combinedStates.total))
 
-      if (n_operations %% commitInterval == (commitInterval - 1)) {
-        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commitInterval)) := empty.vector.byState]
+      if (n_operations %% commit_int == (commit_int - 1)) {
+        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := empty.vector.byState]
       }
 
       # If there are no infectious sites on the network stop the simulation
@@ -234,7 +234,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       tdiff <- stats::rexp(1, sum(transition.rates[[3]]))
 
       t <- t + tdiff
-      noSteps.sinceLastCommit <- n_steps %% commitInterval
+      noSteps.sinceLastCommit <- n_steps %% commit_int
       n_steps <- n_steps + 1
 
       # Record the current state of the network, for analysis over all time periods and simulations
@@ -249,14 +249,14 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
 
       # Save the results to disk
-      #if (noSteps.sinceLastCommit == (commitInterval - 1)) {
-      #  n_saves <- n_steps %/% commitInterval
+      #if (noSteps.sinceLastCommit == (commit_int - 1)) {
+      #  n_saves <- n_steps %/% commit_int
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
        #                        n_states = n_states,
        #                        n_sites = n_sites,
        #                        site_indices = site_index,
-       #                        commit_int = commitInterval,
+       #                        commit_int = commit_int,
        #                        iteration_vector = iterationID.vector,
        #                        batch_num = batch_num,
        #                        simulation_num = simNo,
@@ -300,15 +300,15 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   # Print diagnositic information, and format results as appriopriate
   print(c("No Iterations", n_steps))
 
-  #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
-  #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commitInterval):=NULL]
+  #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commit_int):=NULL]
+  #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commit_int):=NULL]
   #n_saves <- n_saves + 1
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
   #                        n_states = n_states,
   #                        n_sites = n_sites,
   #                        site_indices = site_index,
-  #                        commit_int = commitInterval,
+  #                        commit_int = commit_int,
   #                        iteration_vector = iterationID.vector,
   #                        batch_num = batch_num,
   #                        simulation_num = simNo,
