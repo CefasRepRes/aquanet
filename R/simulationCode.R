@@ -166,10 +166,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     ## add fisheries that can be culled to culling vector of farms ----
 
     # if a site is a fishery get random probability it can be culled
-    culling <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
+    culling_vector <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
 
     # if site has culling probability below 0.5 it can be culled (includes farms)
-    culling_vector <- ifelse(culling < 0.5, 1, 0)
+    culling_vector <- ifelse(culling_vector < 0.5, 1, 0)
 
 
     ## randomly select initial site to seed infection (Note: always a farm) ----
