@@ -266,7 +266,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                 sim_num,
                                 trans_type,
                                 n_catchments_controlled,
-                                sum(farm_states_cumulative),
+                                sum(sites_states_cumulative),
                                 sites_states_totals))
 
       # if the simulation is one step prior to reaching a commit interval
