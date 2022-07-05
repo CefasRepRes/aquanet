@@ -26,7 +26,11 @@
 #'
 #' @export
 isNonPeakTransmissionSeason <- function(t, period = c("180", "90", "0")) {
+
+  # check period matches accepted values
   period <- match.arg(arg = period)
+
+  # depending on value of period switch seasonality statement
   switch(
     EXPR = period,
     "180" = ((t %/% 180) %% 2) == 1,
