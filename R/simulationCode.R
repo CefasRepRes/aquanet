@@ -352,17 +352,18 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   allStates.table[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
   allStates.table.t[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
   n_saves <- n_saves + 1
-  # aquanet::commitResults(df_states = allStates.table,
-  #                        df_time = allStates.table.t,
-  #                        n_states = n_states,
-  #                        n_sites = n_sites,
-  #                        site_indices = site_index,
-  #                        commit_int = commit_int,
-  #                        iteration_vector = iteration_vector,
-  #                        batch_num = batch_num,
-  #                        simulation_num = sim_num,
-  #                        save_num = n_saves,
-  #                        filepath_results = filepath_results)
+
+  aquanet::commitResults(df_states = allStates.table,
+                          df_time = allStates.table.t,
+                          n_states = n_states,
+                          n_sites = n_sites,
+                          site_indices = site_index,
+                          commit_int = commit_int,
+                          iteration_vector = iteration_vector,
+                          batch_num = batch_num,
+                          simulation_num = sim_num,
+                          save_num = n_saves,
+                          filepath_results = filepath_results)
 
   save(summaryStates.table,
        file = paste(filepath_results,"/Summary/batchNo-", batch_num,".RData", sep = ""),
