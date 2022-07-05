@@ -292,10 +292,19 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # determine the number of steps since the last commit
       n_steps_since_commit <- n_steps %% commit_int
 
+      data.table::set(x = allStates.table,
+                      i = (n_states + 1):(n_states + n_sites),
+                      j = as.character(n_steps_since_commit + 1),
+                      value = as.integer(sites_states_vector))
 
-      data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(n_steps_since_commit + 1), value = as.integer(sites_states_vector))
-      data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(n_steps_since_commit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
-      data.table::set(x = allStates.table.t, j = as.character(n_steps_since_commit + 1), value = c(tdiff, t - tdiff))
+      data.table::set(x = allStates.table,
+                      i = (1:(n_states + 3)),
+                      j = as.character(n_steps_since_commit + 1),
+                      value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
+
+      data.table::set(x = allStates.table.t,
+                      j = as.character(n_steps_since_commit + 1),
+                      value = c(tdiff, t - tdiff))
 
       # Save the results to disk
       if (n_steps_since_commit == (commit_int - 1)) {
