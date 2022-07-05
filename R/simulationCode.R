@@ -10,6 +10,8 @@
 #'
 #' @param run_time_params TODO
 #'
+#' @param non_peak_season_length TODO
+#'
 #' @param createWithinCatchmentEdges_out TODO (was graph.withinCatchmentEdges.objects)
 #'
 #' @param createCatchmentToSiteMatrix_out TODO
@@ -37,7 +39,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                            tmax,
                            batch_num,
                            run_time_params,
-                           non_peak_season,
+                           non_peak_season_length,
                            createWithinCatchmentEdges_out,
                            createCatchmentToSiteMatrix_out,
                            createRiverDistanceProbabilityMatrix_out_list,
@@ -194,6 +196,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     ## keep iterating until time reaches maximum allowed ----
 
     while(t < tmax) {
+
+      # determine which season it is during time point as this impacts transmission dynamics
+      non_peak_season <- aquanet::isNonPeakTransmissionSeason(t = t, period = non_peak_season_length)
 
       # update transition rates, catchment movements, and movement restricted sites
       updated_rates <- aquanet::updateRates(control_matrix = control_matrix,

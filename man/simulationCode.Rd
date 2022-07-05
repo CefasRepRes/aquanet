@@ -10,6 +10,7 @@ simulationCode(
   tmax,
   batch_num,
   run_time_params,
+  non_peak_season_length,
   createWithinCatchmentEdges_out,
   createCatchmentToSiteMatrix_out,
   createRiverDistanceProbabilityMatrix_out_list,
@@ -29,6 +30,8 @@ simulationCode(
 \item{batch_num}{TODO (was batchNo)}
 
 \item{run_time_params}{TODO}
+
+\item{non_peak_season_length}{TODO}
 
 \item{createWithinCatchmentEdges_out}{TODO (was graph.withinCatchmentEdges.objects)}
 
