@@ -293,27 +293,27 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       n_steps_since_commit <- n_steps %% commit_int
 
 
-      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(n_steps_since_commit + 1), value = as.integer(sites_states_vector))
-      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(n_steps_since_commit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
-      #data.table::set(x = allStates.table.t, j = as.character(n_steps_since_commit + 1), value = c(tdiff, t - tdiff))
+      data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(n_steps_since_commit + 1), value = as.integer(sites_states_vector))
+      data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(n_steps_since_commit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
+      data.table::set(x = allStates.table.t, j = as.character(n_steps_since_commit + 1), value = c(tdiff, t - tdiff))
 
       # Save the results to disk
-      #if (n_steps_since_commit == (commit_int - 1)) {
-      #  n_saves <- n_steps %/% commit_int
-       # aquanet::commitResults(df_states = allStates.table,
-       #                        df_time = allStates.table.t,
-       #                        n_states = n_states,
-       #                        n_sites = n_sites,
-       #                        site_indices = site_index,
-       #                        commit_int = commit_int,
-       #                        iteration_vector = iteration_vector,
-       #                        batch_num = batch_num,
-       #                        simulation_num = sim_num,
-       #                        save_num = n_saves,
-       #                        filepath_results = filepath_results)
-      #  allStates.table[,as.character(iteration_vector):= rep(0, n_sites + n_states)]
-      #  allStates.table.t[,as.character(iteration_vector):= rep(0, 2)]
-      #}
+      if (n_steps_since_commit == (commit_int - 1)) {
+        n_saves <- n_steps %/% commit_int
+        aquanet::commitResults(df_states = allStates.table,
+                               df_time = allStates.table.t,
+                               n_states = n_states,
+                               n_sites = n_sites,
+                               site_indices = site_index,
+                               commit_int = commit_int,
+                               iteration_vector = iteration_vector,
+                               batch_num = batch_num,
+                               simulation_num = sim_num,
+                               save_num = n_saves,
+                               filepath_results = filepath_results)
+        allStates.table[,as.character(iteration_vector):= rep(0, n_sites + n_states)]
+        allStates.table.t[,as.character(iteration_vector):= rep(0, 2)]
+      }
 
       # Pick the next event, and modify a site's state accordingly
       event.objects <- aquanet::doEvent(state_vector = state_vector,
@@ -349,9 +349,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   # Print diagnositic information, and format results as appriopriate
   print(c("No Iterations", n_steps))
 
-  #allStates.table[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
-  #allStates.table.t[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
-  #n_saves <- n_saves + 1
+  allStates.table[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
+  allStates.table.t[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
+  n_saves <- n_saves + 1
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
   #                        n_states = n_states,
