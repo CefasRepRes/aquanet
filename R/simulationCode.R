@@ -181,7 +181,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
     for(d in 0:length(farm_vector)) {
       d <- d + 1
       value <- farm_vector[d] * d
-      if (value > 0 & !stats::is.na(value)) {
+      if (value > 0 & !is.na(value)) {
       farm_select <- c(farm_select, value)
       }
     }
