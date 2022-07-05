@@ -290,15 +290,15 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       n_steps <- n_steps + 1
 
       # determine the number of steps since the last commit
-      noSteps.sinceLastCommit <- n_steps %% commit_int
+      n_steps_since_commit <- n_steps %% commit_int
 
 
-      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(sites_states_vector))
-      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
-      #data.table::set(x = allStates.table.t, j = as.character(noSteps.sinceLastCommit + 1), value = c(tdiff, t - tdiff))
+      #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(n_steps_since_commit + 1), value = as.integer(sites_states_vector))
+      #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(n_steps_since_commit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
+      #data.table::set(x = allStates.table.t, j = as.character(n_steps_since_commit + 1), value = c(tdiff, t - tdiff))
 
       # Save the results to disk
-      #if (noSteps.sinceLastCommit == (commit_int - 1)) {
+      #if (n_steps_since_commit == (commit_int - 1)) {
       #  n_saves <- n_steps %/% commit_int
        # aquanet::commitResults(df_states = allStates.table,
        #                        df_time = allStates.table.t,
@@ -349,8 +349,8 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   # Print diagnositic information, and format results as appriopriate
   print(c("No Iterations", n_steps))
 
-  #allStates.table[,as.character((noSteps.sinceLastCommit + 1):commit_int):=NULL]
-  #allStates.table.t[,as.character((noSteps.sinceLastCommit + 1):commit_int):=NULL]
+  #allStates.table[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
+  #allStates.table.t[,as.character((n_steps_since_commit + 1):commit_int):=NULL]
   #n_saves <- n_saves + 1
   # aquanet::commitResults(df_states = allStates.table,
   #                        df_time = allStates.table.t,
