@@ -253,30 +253,45 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       fishery_states_cumulative <- (fishery_state_vector | fishery_states_cumulative)
 
 
-
       # increment the number of operations
       n_operations <- n_operations + 1
 
-
+      # in column n_operations of summaryStates.table append 50 values from time step
       data.table::set(x = summaryStates.table,
                       j = as.character(n_operations),
-                      value = c(batch_num,k, t, tdiff, sim_num, trans_type, n_catchments_controlled, sum(farm_states_cumulative), sites_states_totals))
+                      value = c(batch_num,
+                                k,
+                                t,
+                                tdiff,
+                                sim_num,
+                                trans_type,
+                                n_catchments_controlled,
+                                sum(farm_states_cumulative),
+                                sites_states_totals))
 
+      # if the simulation is one step prior to reaching a commit interval
       if (n_operations %% commit_int == (commit_int - 1)) {
-        summaryStates.table[ , as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) := rep(0, n_states + 8)]
+        # append another commit_int number of columns of 0 to populate in the next steps
+        summaryStates.table[ ,
+                             as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) :=
+                               rep(0, n_states + 8)]
       }
 
-      # If there are no infectious sites on the network stop the simulation
+      # if there are no infectious sites in the network stop the loop
       if (length(transition_rates[[3]]) == 0) {
         break()
       }
 
-      # Randomly pick next time step, based on a weighted expontial distribution
+      # randomly pick next time step, based on a weighted expontial distribution
       tdiff <- stats::rexp(1, sum(transition_rates[[3]]))
 
+      # increment the time and steps
       t <- t + tdiff
-      noSteps.sinceLastCommit <- n_steps %% commit_int
       n_steps <- n_steps + 1
+
+      # determine the number of steps since the last commit
+      noSteps.sinceLastCommit <- n_steps %% commit_int
+
 
       #data.table::set(x = allStates.table, i = (n_states + 1):(n_states + n_sites),j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(sites_states_vector))
       #data.table::set(x = allStates.table, i = (1:(n_states + 3)), j = as.character(noSteps.sinceLastCommit + 1), value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
