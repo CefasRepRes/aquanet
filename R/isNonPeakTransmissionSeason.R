@@ -13,7 +13,6 @@
 #'
 #' If `period == "0"` the non peak transmission season is 0 days long and never occurs.
 #'
-#'
 #' @param t (class numeric) time in simulation.
 #'
 #' @param period (class string) string containing the number of days that the non peak transmission
