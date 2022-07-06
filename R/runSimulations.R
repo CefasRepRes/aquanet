@@ -1,6 +1,6 @@
-runSimulations = function(graph.contactp.objects, simulationCode, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, noCores, locationSaveResults, seedNo, initialNoInfections) {
-  clearResults = function(locationSaveResults) {
-    files = list.files(path = locationSaveResults, pattern = "\\.RData$",recursive = TRUE)
+runSimulations <- function(graph.contactp.objects, simulationCode, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, noCores, locationSaveResults, seedNo, initialNoInfections) {
+  clearResults <- function(locationSaveResults) {
+    files <- list.files(path = locationSaveResults, pattern = "\\.RData$",recursive = TRUE)
 
     if (length(files) != 0) {
       for (i in 1:length(files)) {
@@ -8,7 +8,7 @@ runSimulations = function(graph.contactp.objects, simulationCode, ListRunTimePar
       }
     }
 
-    files = list.files(path = getwd(),pattern = "debug_file",recursive = TRUE)
+    files <- list.files(path = getwd(),pattern = "debug_file",recursive = TRUE)
 
     #if (length(files) != 0) {
     #  for (i in 1:length(files)) {
@@ -20,31 +20,31 @@ runSimulations = function(graph.contactp.objects, simulationCode, ListRunTimePar
 
   clearResults(locationSaveResults)
 
-  contactp.length = graph.contactp.objects[[1]]
+  contactp.length <- graph.contactp.objects[[1]]
 
-  ## tmax = 130
-  tmax = 3600
+  ## tmax <- 130
+  tmax <- 3600
 
-  noJobs = noCores
-  noSimsPerJob = ceiling(3000/ noJobs)
-  #noSimsPerJob = 1
-  # noSimsPerJob = 1000
+  noJobs <- noCores
+  noSimsPerJob <- ceiling(3000/ noJobs)
+  #noSimsPerJob <- 1
+  # noSimsPerJob <- 1000
 
   # Check number of cores available
   detectCores()
 
   # Assign 12 cores to the cluster, and save all the output to a log file
-  Cluster = makeCluster(noCores, outfile = "log.txt")
+  Cluster <- makeCluster(noCores, outfile = "log.txt")
 
   # Register cluster
   registerDoParallel(Cluster)
 
-  overallNoInterations = noSimsPerJob * noJobs
+  overallNoInterations <- noSimsPerJob * noJobs
 
   print(c(noJobs, noSimsPerJob, overallNoInterations))
 
   set.seed(seedNo)
-  allruns = foreach(batchNo=1:noJobs, .combine=c) %dorng% simulationCode(graph.contactp.objects, noSimsPerJob, tmax,batchNo, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, locationSaveResults, initialNoInfections)
+  allruns <- foreach(batchNo=1:noJobs, .combine=c) %dorng% simulationCode(graph.contactp.objects, noSimsPerJob, tmax,batchNo, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, locationSaveResults, initialNoInfections)
 
   stopCluster(cl = Cluster)
 
