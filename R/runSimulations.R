@@ -22,9 +22,10 @@ runSimulations <- function(graph.contactp.objects,
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
 
+  # define number of simulations per job (n_jobs == n_cores)
   n_sims_per_job <- ceiling(3000/ n_cores)
 
-  # Assign 12 cores to the cluster, and save all the output to a log file
+  # create set of copies of R running in parallel communicating over sockets - save output to log file
   Cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
 
   # Register cluster
