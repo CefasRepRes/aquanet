@@ -335,8 +335,14 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       trans_type <- doEvent_out[[7]]
       source_inf_matrix <- doEvent_out[[8]]
 
-      if (n_steps%%100 == 1) {
-        print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition_rates[[3]])))
+      # every 100 steps print run information to screen #TODO needed?
+      if (n_steps %% 100 == 1) {
+        print(c(k,
+                n_steps,
+                length(state_vector),
+                sum(state_vector),
+                tdiff,
+                length(transition_rates[[3]])))
       }
     }
   }
