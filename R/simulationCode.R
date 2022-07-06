@@ -80,6 +80,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
   site_index <- 0:(n_sites - 1)
 
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
+  # TODO: do these need "empty.vector" columns?
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                    nrow = n_sites + n_states,
                                                                    ncol = commit_int + 1)),
@@ -277,18 +278,22 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       # determine the number of steps since the last commit
       n_steps_since_commit <- n_steps %% commit_int
 
+      # populate allStates.table with state (number) per site in rows n_states + 1 onwards
       data.table::set(x = allStates.table,
-                      i = (n_states + 1):(n_states + n_sites),
-                      j = as.character(n_steps_since_commit + 1),
+                      i = (n_states + 1):(n_states + n_sites), # rows 43 - 2
+                      j = as.character(n_steps_since_commit + 1), # next column
                       value = as.integer(sites_states_vector))
 
+      # populate allStates.table with batch number, simulation number, k and n sites in each state
+      # TODO: fix this - see comment below!
       data.table::set(x = allStates.table,
-                      i = (1:(n_states + 3)),
-                      j = as.character(n_steps_since_commit + 1),
-                      value = as.integer(c(batch_num, k, k + ((batch_num - 1) * runs), sites_states_totals)))
+                      i = (1:(n_states + 3)), # NOTE: this overwrites previous data as specifies rows 1-45!
+                      j = as.character(n_steps_since_commit + 1), # next column
+                      value = as.integer(c(batch_num, k, sim_num), sites_states_totals))
 
+      # populate allStates.table.t with current time and previous time
       data.table::set(x = allStates.table.t,
-                      j = as.character(n_steps_since_commit + 1),
+                      j = as.character(n_steps_since_commit + 1), # next column
                       value = c(tdiff, t - tdiff))
 
       # Save the results to disk
