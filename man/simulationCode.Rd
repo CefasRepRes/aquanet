@@ -16,6 +16,7 @@ simulationCode(
   createRiverDistanceProbabilityMatrix_out_list,
   createDistanceMatrix_out,
   farm_vector,
+  n_states,
   type_catchment_controls,
   filepath_results
 )
@@ -58,6 +59,9 @@ distances (class matrix array), (2) a matrix of distance-based transmission prob
 \item{farm_vector}{(class numeric) numeric binary vector of length number of sites containing
 information on whether each site 1 = is a farm or 0 = is not a farm.}
 
+\item{n_states}{(class numeric) number of different combinations of states possible within the
+model.}
+
 \item{type_catchment_controls}{(class numeric) tnumber selecting catchment level controls to
 apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 infected catchments, and 2 = allows no movements by any of the sites within an infected
@@ -70,5 +74,43 @@ catchment).}
 \code{filepath_results}.
 }
 \description{
-simulationCode
+This function contains the core code to run a simulation of aquanet-mod.
+}
+\details{
+In the first segments of the code, values are extracted from input parameters and empty variables
+to populate with each simulation are created. The latter includes number of steps, operations,
+saves, commit intervals and a \code{site_index}.
+
+The for loop:
+
+Then, for each run a simulation number is calculated, and various variables are reset including:
+the time, time difference, transition type, catchment time vector, catchments with only sites in
+post fallow state, time vector, control matrix, state vector, cumulative site states, infection
+source vector, matrix of contacts to exclude, catchments controlled in the previous run, and
+sites under control. A list of catchment movement objects is created. A vector of farms that are
+able to cull is updated with inclusion of a random number of approximately 50\% fisheries assumed
+to be able to cull.
+
+A vector of farms where infection could be seeded is generated and then a farm is chosen at
+random to seed infection and their infection status updated.
+
+The while loop:
+
+While the simulation time is below the maximum simulation time \code{tmax} determine which season it
+is. Input seasonality information into \code{aquanet::updateRates()} function and extract the outputs.
+Calculate a state number for each of the sites in the network and summarise number of sites in
+each infection/control state.
+
+Increment the number of operations and add the summary of states to the summary states table. If
+the operation is one prior to the commit interval, extend the summary states table in size.
+
+If there are no more infected sites within the network, break the while loop.
+
+Choose a random weighted exponential distribution value to increment the simulation time by and
+increase the number of steps.
+
+Pick the next transmission event with \code{aquanet::doEvent()} and modify site's state accordingly.
+Update variables given outputs.
+
+Finally, after the for and while loop, save the summary states table.
 }
