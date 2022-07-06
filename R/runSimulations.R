@@ -28,22 +28,38 @@ runSimulations <- function(graph.contactp.objects,
   noSimsPerJob <- ceiling(3000/ noJobs)
 
   # Check number of cores available
-  detectCores()
+  parallel::detectCores()
 
   # Assign 12 cores to the cluster, and save all the output to a log file
-  Cluster <- makeCluster(noCores, outfile = "log.txt")
+  Cluster <- parallel::makeCluster(noCores, outfile = "log.txt")
 
   # Register cluster
-  registerDoParallel(Cluster)
+  parallel::registerDoParallel(Cluster)
 
   overallNoInterations <- noSimsPerJob * noJobs
 
   print(c(noJobs, noSimsPerJob, overallNoInterations))
 
   set.seed(seedNo)
-  allruns <- foreach(batchNo=1:noJobs, .combine=c) %dorng% simulationCode(graph.contactp.objects, noSimsPerJob, tmax,batchNo, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, locationSaveResults, n_initial_infections)
 
-  stopCluster(cl = Cluster)
+  allruns <-
+    foreach::foreach(batchNo = 1:noJobs, .combine = c) %dorng% aquanet::simulationCode(
+      graph.contactp.objects,
+      noSimsPerJob,
+      tmax,
+      batchNo,
+      ListRunTimeParameters,
+      graph.withinCatchmentEdges.objects,
+      graph.catchment2Site.objects,
+      graph.riverDistance.objects,
+      graph.estimateSiteDistances.objects,
+      farm_vector,
+      associatedSiteControlType,
+      locationSaveResults,
+      n_initial_infections
+    )
+
+  parallel::stopCluster(cl = Cluster)
 
   return(list(noJobs, allruns))
 }
