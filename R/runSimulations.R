@@ -10,7 +10,8 @@ runSimulations <- function(graph.contactp.objects,
                            noCores,
                            locationSaveResults,
                            seedNo,
-                           n_initial_infections) {
+                           n_initial_infections,
+                           tmax) {
 
   # list files ending in .RData in the results directory
   files <- list.files(path = locationSaveResults,
@@ -22,9 +23,6 @@ runSimulations <- function(graph.contactp.objects,
   do.call(file.remove, list(files))
 
   contactp.length <- graph.contactp.objects[[1]]
-
-  ## tmax <- 130
-  tmax <- 3600
 
   noJobs <- noCores
   noSimsPerJob <- ceiling(3000/ noJobs)
