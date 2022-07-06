@@ -7,7 +7,7 @@ runSimulations <- function(graph.contactp.objects,
                            graph.estimateSiteDistances.objects,
                            farm_vector,
                            associatedSiteControlType,
-                           noCores,
+                           n_cores,
                            locationSaveResults,
                            seedNo,
                            n_initial_infections,
@@ -22,22 +22,22 @@ runSimulations <- function(graph.contactp.objects,
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
 
-  n_sims_per_job <- ceiling(3000/ noCores)
+  n_sims_per_job <- ceiling(3000/ n_cores)
 
   # Assign 12 cores to the cluster, and save all the output to a log file
-  Cluster <- parallel::makeCluster(noCores, outfile = "log.txt")
+  Cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
 
   # Register cluster
   parallel::registerDoParallel(Cluster)
 
-  n_overall_interactions <- n_sims_per_job * noCores
+  n_overall_interactions <- n_sims_per_job * n_cores
 
-  print(c(noCores, n_sims_per_job, n_overall_interactions))
+  print(c(n_cores, n_sims_per_job, n_overall_interactions))
 
   set.seed(seedNo)
 
   allruns <-
-    foreach::foreach(batchNo = 1:noCores, .combine = c) %dorng% aquanet::simulationCode(
+    foreach::foreach(batchNo = 1:n_cores, .combine = c) %dorng% aquanet::simulationCode(
       graph.contactp.objects,
       n_sims_per_job,
       tmax,
@@ -55,5 +55,5 @@ runSimulations <- function(graph.contactp.objects,
 
   parallel::stopCluster(cl = Cluster)
 
-  return(list(noCores, allruns))
+  return(list(n_cores, allruns))
 }
