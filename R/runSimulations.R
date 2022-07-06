@@ -10,7 +10,7 @@ runSimulations <- function(graph.contactp.objects,
                            noCores,
                            locationSaveResults,
                            seedNo,
-                           initialNoInfections) {
+                           n_initial_infections) {
 
   # list files ending in .RData in the results directory
   files <- list.files(path = locationSaveResults,
@@ -45,7 +45,7 @@ runSimulations <- function(graph.contactp.objects,
   print(c(noJobs, noSimsPerJob, overallNoInterations))
 
   set.seed(seedNo)
-  allruns <- foreach(batchNo=1:noJobs, .combine=c) %dorng% simulationCode(graph.contactp.objects, noSimsPerJob, tmax,batchNo, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, locationSaveResults, initialNoInfections)
+  allruns <- foreach(batchNo=1:noJobs, .combine=c) %dorng% simulationCode(graph.contactp.objects, noSimsPerJob, tmax,batchNo, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, locationSaveResults, n_initial_infections)
 
   stopCluster(cl = Cluster)
 
