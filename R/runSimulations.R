@@ -26,8 +26,6 @@ runSimulations <- function(graph.contactp.objects,
 
   noJobs <- noCores
   noSimsPerJob <- ceiling(3000/ noJobs)
-  #noSimsPerJob <- 1
-  # noSimsPerJob <- 1000
 
   # Check number of cores available
   detectCores()
