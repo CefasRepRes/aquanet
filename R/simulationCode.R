@@ -330,9 +330,9 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       time_vector <- doEvent_out[[3]]
       catchment_time_vector <- doEvent_out[[4]]
       catchments_with_post_fallow_only <- doEvent_out[[5]]
-      source_inf_vector <- doEvent_out[[7]]
-      trans_type <- doEvent_out[[8]]
-      source_inf_matrix <- doEvent_out[[9]]
+      source_inf_vector <- doEvent_out[[6]]
+      trans_type <- doEvent_out[[7]]
+      source_inf_matrix <- doEvent_out[[8]]
 
       if (n_steps%%100 == 1) {
         print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition_rates[[3]])))
