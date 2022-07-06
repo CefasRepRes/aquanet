@@ -311,19 +311,19 @@ simulationCode <- function(createContactProbabilityMatrix_out,
 
       # Pick the next event, and modify a site's state accordingly
       doEvent_out <- aquanet::doEvent(state_vector = state_vector,
-                                       control_matrix = control_matrix,
-                                       transition_rates = transition_rates,
-                                       tdiff = tdiff,
-                                       move_restricted_sites = sites_all_movement_restricted,
-                                       non_peak_season = non_peak_season,
-                                       run_time_params = run_time_params,
-                                       n_catchments = n_catchments,
-                                       spmatrix_sites_catchment = spmatrix_sites_catchment,
-                                       time_vector = time_vector,
-                                       catchment_time_vector = catchment_time_vector,
-                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
-                                       source_inf_vector = source_inf_vector,
-                                       source_inf_matrix = source_inf_matrix)
+                                      control_matrix = control_matrix,
+                                      transition_rates = transition_rates,
+                                      tdiff = tdiff,
+                                      move_restricted_sites = sites_all_movement_restricted,
+                                      non_peak_season = non_peak_season,
+                                      run_time_params = run_time_params,
+                                      n_catchments = n_catchments,
+                                      spmatrix_sites_catchment = spmatrix_sites_catchment,
+                                      time_vector = time_vector,
+                                      catchment_time_vector = catchment_time_vector,
+                                      catchments_with_post_fallow_only = catchments_with_post_fallow_only,
+                                      source_inf_vector = source_inf_vector,
+                                      source_inf_matrix = source_inf_matrix)
 
       # reassign variables with updates outputs for next iteration of while loop
       state_vector <- doEvent_out[[1]]
