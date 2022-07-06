@@ -100,15 +100,15 @@ simulationCode <- function(runs,
 
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
   # TODO: do these need "empty.vector" columns?
-  allStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                   nrow = n_sites + n_states,
-                                                                   ncol = commit_int + 1)),
-                                     c("empty.vector", as.character(iteration_vector)))
-
-  allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
-                                                                     nrow = 2,
-                                                                     ncol = commit_int + 1)),
-                                       c("empty.vector.t", as.character(iteration_vector)))
+  # allStates.table <- stats::setNames(data.table::data.table(matrix(0,
+  #                                                                  nrow = n_sites + n_states,
+  #                                                                  ncol = commit_int + 1)),
+  #                                    c("empty.vector", as.character(iteration_vector)))
+  #
+  # allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
+  #                                                                    nrow = 2,
+  #                                                                    ncol = commit_int + 1)),
+  #                                      c("empty.vector.t", as.character(iteration_vector)))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                        nrow = n_states + 8,
