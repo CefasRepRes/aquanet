@@ -22,8 +22,8 @@ runSimulations <- function(graph.contactp.objects,
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
 
-  noJobs <- noCores
-  noSimsPerJob <- ceiling(3000/ noJobs)
+  n_jobs <- noCores
+  noSimsPerJob <- ceiling(3000/ n_jobs)
 
   # Check number of cores available
   parallel::detectCores()
@@ -34,14 +34,14 @@ runSimulations <- function(graph.contactp.objects,
   # Register cluster
   parallel::registerDoParallel(Cluster)
 
-  overallNoInterations <- noSimsPerJob * noJobs
+  overallNoInterations <- noSimsPerJob * n_jobs
 
-  print(c(noJobs, noSimsPerJob, overallNoInterations))
+  print(c(n_jobs, noSimsPerJob, overallNoInterations))
 
   set.seed(seedNo)
 
   allruns <-
-    foreach::foreach(batchNo = 1:noJobs, .combine = c) %dorng% aquanet::simulationCode(
+    foreach::foreach(batchNo = 1:n_jobs, .combine = c) %dorng% aquanet::simulationCode(
       graph.contactp.objects,
       noSimsPerJob,
       tmax,
@@ -59,5 +59,5 @@ runSimulations <- function(graph.contactp.objects,
 
   parallel::stopCluster(cl = Cluster)
 
-  return(list(noJobs, allruns))
+  return(list(n_jobs, allruns))
 }
