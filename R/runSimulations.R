@@ -26,10 +26,10 @@ runSimulations <- function(graph.contactp.objects,
   n_sims_per_job <- ceiling(3000/ n_cores)
 
   # create set of copies of R running in parallel communicating over sockets - save output to log file
-  Cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
+  cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
 
   # Register cluster
-  parallel::registerDoParallel(Cluster)
+  parallel::registerDoParallel(cluster)
 
   n_overall_interactions <- n_sims_per_job * n_cores
 
@@ -54,7 +54,7 @@ runSimulations <- function(graph.contactp.objects,
       n_initial_infections
     )
 
-  parallel::stopCluster(cl = Cluster)
+  parallel::stopCluster(cl = cluster)
 
   return(list(n_cores, allruns))
 }
