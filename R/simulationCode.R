@@ -325,6 +325,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        source_inf_vector = source_inf_vector,
                                        source_inf_matrix = source_inf_matrix)
 
+      # reassign variables with updates outputs for next iteration of while loop
       state_vector <- doEvent_out[[1]]
       control_matrix <- doEvent_out[[2]]
       time_vector <- doEvent_out[[3]]
