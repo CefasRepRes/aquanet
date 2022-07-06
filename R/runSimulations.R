@@ -11,26 +11,15 @@ runSimulations <- function(graph.contactp.objects,
                            locationSaveResults,
                            seedNo,
                            initialNoInfections) {
-  clearResults <- function(locationSaveResults) {
-    files <- list.files(path = locationSaveResults, pattern = "\\.RData$",recursive = TRUE)
 
-    if (length(files) != 0) {
-      for (i in 1:length(files)) {
-        file.remove(paste(locationSaveResults,files[i],sep="/"))
-      }
-    }
+  # list files ending in .RData in the results directory
+  files <- list.files(path = locationSaveResults,
+                      pattern = "\\.RData$",
+                      recursive = TRUE,
+                      full.names = TRUE)
 
-    files <- list.files(path = getwd(),pattern = "debug_file",recursive = TRUE)
-
-    #if (length(files) != 0) {
-    #  for (i in 1:length(files)) {
-    #    file.remove(paste(getwd(),files[i],sep="/"))
-    #  }
-    #}
-
-  }
-
-  clearResults(locationSaveResults)
+  # delete .RData files present to ensure results are from one run
+  do.call(file.remove, list(files))
 
   contactp.length <- graph.contactp.objects[[1]]
 
