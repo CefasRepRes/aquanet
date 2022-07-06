@@ -1,32 +1,51 @@
 #' simulationCode
 #'
-#' @param createContactProbabilityMatrix_out TODO (was graph.contactp.objects)
+#' @param runs (class numeric) number of runs.
 #'
-#' @param runs TODO
+#' @param tmax (class numeric) maximum amount of time in days that each simulation should run for.
 #'
-#' @param tmax TODO
+#' @param batch_num (class numeric) batch number of parallel run.
 #'
-#' @param batch_num TODO (was batchNo)
+#' @param run_time_params (class data frame) of model run time parameters imported from original
+#' parameter file which is subsequently split into model set up and model run time parameters. Data
+#' frame contains probabilities from the scenarios of interest for listing transition rates.
 #'
-#' @param run_time_params TODO
+#' @param non_peak_season_length (class string) the amount of time in days that the non peak
+#' transmission season lasts for (e.g. "90", "180").
 #'
-#' @param non_peak_season_length TODO
+#' @param createContactProbabilityMatrix_out (class list) of length 3 containing (1) number of sites
+#'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
+#' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
-#' @param createWithinCatchmentEdges_out TODO (was graph.withinCatchmentEdges.objects)
+#' @param createWithinCatchmentEdges_out (class list) of length 3 containing (1) lgCMatrix (logical
+#' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
+#' and (3) matrix of source site and receiving site within catchment edges.
 #'
-#' @param createCatchmentToSiteMatrix_out TODO
+#' @param createCatchmentToSiteMatrix_out (class list) of length 2 containing (1) data frame of site
+#'  to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
-#' @param createRiverDistanceProbabilityMatrix_out_list TODO
+#' @param createRiverDistanceProbabilityMatrix_out_list (class list) of length 2 containing (1)
+#' distances between sites on a river network (via river connectivity) connections of 0 distances
+#' are removed (data frame) and (2) sparse matrix containing probability of transmission between
+#' sites connected via the river network by river water (dgTMatrix).
 #'
-#' @param createDistanceMatrix_out TODO (was graph.estimateSiteDistances.objects)
+#' @param createDistanceMatrix_out (class list) of length 3 containing (1) a matrix of site to site
+#' distances (class matrix array), (2) a matrix of distance-based transmission probabilities
+#' (dgTMatrix, Matrix package), and (3) input data frame of site catchment locality
+#' (SpatialPointsDataFrame, sp package).
 #'
-#' @param farm_vector TODO
+#' @param farm_vector (class numeric) numeric binary vector of length number of sites containing
+#' information on whether each site 1 = is a farm or 0 = is not a farm.
 #'
-#' @param type_catchment_controls TODO
+#' @param type_catchment_controls (class numeric) tnumber selecting catchment level controls to
+#' apply (0 = allows movements within the same catchments, 1 = allows movements within or between
+#' infected catchments, and 2 = allows no movements by any of the sites within an infected
+#' catchment).
 #'
-#' @param filepath_results TODO
+#' @param filepath_results (class string) path to results directory for model run.
 #'
-#' @return
+#' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
+#' `filepath_results`.
 #'
 #' @export
 #'
@@ -34,12 +53,12 @@
 #' @importFrom stats na.omit rexp runif setNames
 #' @importFrom data.table set data.table :=
 #' @importFrom Matrix Matrix
-simulationCode <- function(createContactProbabilityMatrix_out,
-                           runs,
+simulationCode <- function(runs,
                            tmax,
                            batch_num,
                            run_time_params,
                            non_peak_season_length,
+                           createContactProbabilityMatrix_out,
                            createWithinCatchmentEdges_out,
                            createCatchmentToSiteMatrix_out,
                            createRiverDistanceProbabilityMatrix_out_list,
