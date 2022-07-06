@@ -22,8 +22,7 @@ runSimulations <- function(graph.contactp.objects,
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
 
-  n_jobs <- noCores
-  n_sims_per_job <- ceiling(3000/ n_jobs)
+  n_sims_per_job <- ceiling(3000/ noCores)
 
   # Assign 12 cores to the cluster, and save all the output to a log file
   Cluster <- parallel::makeCluster(noCores, outfile = "log.txt")
@@ -31,14 +30,14 @@ runSimulations <- function(graph.contactp.objects,
   # Register cluster
   parallel::registerDoParallel(Cluster)
 
-  n_overall_interactions <- n_sims_per_job * n_jobs
+  n_overall_interactions <- n_sims_per_job * noCores
 
-  print(c(n_jobs, n_sims_per_job, n_overall_interactions))
+  print(c(noCores, n_sims_per_job, n_overall_interactions))
 
   set.seed(seedNo)
 
   allruns <-
-    foreach::foreach(batchNo = 1:n_jobs, .combine = c) %dorng% aquanet::simulationCode(
+    foreach::foreach(batchNo = 1:noCores, .combine = c) %dorng% aquanet::simulationCode(
       graph.contactp.objects,
       n_sims_per_job,
       tmax,
@@ -56,5 +55,5 @@ runSimulations <- function(graph.contactp.objects,
 
   parallel::stopCluster(cl = Cluster)
 
-  return(list(n_jobs, allruns))
+  return(list(noCores, allruns))
 }
