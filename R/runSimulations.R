@@ -1,4 +1,16 @@
-runSimulations <- function(graph.contactp.objects, simulationCode, ListRunTimeParameters, graph.withinCatchmentEdges.objects, graph.catchment2Site.objects, graph.riverDistance.objects, graph.estimateSiteDistances.objects, farm_vector, associatedSiteControlType, noCores, locationSaveResults, seedNo, initialNoInfections) {
+runSimulations <- function(graph.contactp.objects,
+                           simulationCode,
+                           ListRunTimeParameters,
+                           graph.withinCatchmentEdges.objects,
+                           graph.catchment2Site.objects,
+                           graph.riverDistance.objects,
+                           graph.estimateSiteDistances.objects,
+                           farm_vector,
+                           associatedSiteControlType,
+                           noCores,
+                           locationSaveResults,
+                           seedNo,
+                           initialNoInfections) {
   clearResults <- function(locationSaveResults) {
     files <- list.files(path = locationSaveResults, pattern = "\\.RData$",recursive = TRUE)
 
