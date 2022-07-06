@@ -37,6 +37,9 @@
 #' @param farm_vector (class numeric) numeric binary vector of length number of sites containing
 #' information on whether each site 1 = is a farm or 0 = is not a farm.
 #'
+#' @param n_states (class numeric) number of different combinations of states possible within the
+#' model.
+#'
 #' @param type_catchment_controls (class numeric) tnumber selecting catchment level controls to
 #' apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
@@ -64,6 +67,7 @@ simulationCode <- function(runs,
                            createRiverDistanceProbabilityMatrix_out_list,
                            createDistanceMatrix_out,
                            farm_vector,
+                           n_states,
                            type_catchment_controls,
                            filepath_results) {
 
@@ -87,9 +91,6 @@ simulationCode <- function(runs,
   n_steps <- 0
   n_operations <- 0
   n_saves <- 0
-
-  # define number of possible states within the model
-  n_states <- 42
 
   # define interval at which results should be saved and create vector of iterations
   commit_int <- 5000
