@@ -28,15 +28,19 @@ runSimulations <- function(graph.contactp.objects,
   # create set of copies of R running in parallel communicating over sockets - save output to log file
   cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
 
-  # Register cluster
+  # register the parallel backend with the foreach package
   parallel::registerDoParallel(cluster)
 
+  # calculate number of interactions
   n_overall_interactions <- n_sims_per_job * n_cores
 
+  # print number of cores/jobs, simulations per jobs and number of interactions
   print(c(n_cores, n_sims_per_job, n_overall_interactions))
 
+  # set seed
   set.seed(seedNo)
 
+  # run simulation in parallel
   allruns <-
     foreach::foreach(batchNo = 1:n_cores, .combine = c) %dorng% aquanet::simulationCode(
       graph.contactp.objects,
@@ -54,6 +58,7 @@ runSimulations <- function(graph.contactp.objects,
       n_initial_infections
     )
 
+  # shut down set of copies of R running in parallel communicating over sockets
   parallel::stopCluster(cl = cluster)
 
   return(list(n_cores, allruns))
