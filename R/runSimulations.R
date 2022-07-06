@@ -31,9 +31,9 @@ runSimulations <- function(graph.contactp.objects,
   # Register cluster
   parallel::registerDoParallel(Cluster)
 
-  overallNoInterations <- noSimsPerJob * n_jobs
+  n_overall_interactions <- noSimsPerJob * n_jobs
 
-  print(c(n_jobs, noSimsPerJob, overallNoInterations))
+  print(c(n_jobs, noSimsPerJob, n_overall_interactions))
 
   set.seed(seedNo)
 
