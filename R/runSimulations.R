@@ -22,8 +22,6 @@ runSimulations <- function(graph.contactp.objects,
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
 
-  contactp.length <- graph.contactp.objects[[1]]
-
   noJobs <- noCores
   noSimsPerJob <- ceiling(3000/ noJobs)
 
