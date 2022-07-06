@@ -374,9 +374,10 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                           save_num = n_saves,
                           filepath_results = filepath_results)
 
+  # save table containing number of sites in each state at each time point
   save(summaryStates.table,
-       file = paste(filepath_results,"/Summary/batchNo-", batch_num,".RData", sep = ""),
-       compress=FALSE)
+       file = paste(filepath_results, "/Summary/batchNo-", batch_num, ".RData", sep = ""),
+       compress = FALSE)
 
   return(batch_num)
 }
