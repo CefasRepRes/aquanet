@@ -25,9 +25,6 @@ runSimulations <- function(graph.contactp.objects,
   n_jobs <- noCores
   noSimsPerJob <- ceiling(3000/ n_jobs)
 
-  # Check number of cores available
-  parallel::detectCores()
-
   # Assign 12 cores to the cluster, and save all the output to a log file
   Cluster <- parallel::makeCluster(noCores, outfile = "log.txt")
 
