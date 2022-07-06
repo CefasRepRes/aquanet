@@ -80,6 +80,8 @@
 #' @param n_states (class numeric) number of different combinations of states possible within the
 #' model.
 #'
+#' @param n_initial_infections (class numeric) number of farms to seed infection at.
+#'
 #' @param type_catchment_controls (class numeric) tnumber selecting catchment level controls to
 #' apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
@@ -108,6 +110,7 @@ simulationCode <- function(runs,
                            createDistanceMatrix_out,
                            farm_vector,
                            n_states,
+                           n_initial_infections,
                            type_catchment_controls,
                            filepath_results) {
 
@@ -245,7 +248,7 @@ simulationCode <- function(runs,
     }
 
     # select farm to seed from list of start sites
-    seed_farm <- sample(farm_select, 1)
+    seed_farm <- sample(farm_select, n_initial_infections)
 
     # mark this site as infected
     state_vector[seed_farm] <- 1

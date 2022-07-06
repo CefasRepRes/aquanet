@@ -17,6 +17,7 @@ simulationCode(
   createDistanceMatrix_out,
   farm_vector,
   n_states,
+  n_initial_infections,
   type_catchment_controls,
   filepath_results
 )
@@ -61,6 +62,8 @@ information on whether each site 1 = is a farm or 0 = is not a farm.}
 
 \item{n_states}{(class numeric) number of different combinations of states possible within the
 model.}
+
+\item{n_initial_infections}{(class numeric) number of farms to seed infection at.}
 
 \item{type_catchment_controls}{(class numeric) tnumber selecting catchment level controls to
 apply (0 = allows movements within the same catchments, 1 = allows movements within or between
