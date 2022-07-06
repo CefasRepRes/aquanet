@@ -310,7 +310,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
       }
 
       # Pick the next event, and modify a site's state accordingly
-      event.objects <- aquanet::doEvent(state_vector = state_vector,
+      doEvent_out <- aquanet::doEvent(state_vector = state_vector,
                                        control_matrix = control_matrix,
                                        transition_rates = transition_rates,
                                        tdiff = tdiff,
@@ -325,14 +325,14 @@ simulationCode <- function(createContactProbabilityMatrix_out,
                                        source_inf_vector = source_inf_vector,
                                        source_inf_matrix = source_inf_matrix)
 
-      state_vector <- event.objects[[1]]
-      control_matrix <- event.objects[[2]]
-      time_vector <- event.objects[[3]]
-      catchment_time_vector <- event.objects[[4]]
-      catchments_with_post_fallow_only <- event.objects[[5]]
-      source_inf_vector <- event.objects[[7]]
-      trans_type <- event.objects[[8]]
-      source_inf_matrix <- event.objects[[9]]
+      state_vector <- doEvent_out[[1]]
+      control_matrix <- doEvent_out[[2]]
+      time_vector <- doEvent_out[[3]]
+      catchment_time_vector <- doEvent_out[[4]]
+      catchments_with_post_fallow_only <- doEvent_out[[5]]
+      source_inf_vector <- doEvent_out[[7]]
+      trans_type <- doEvent_out[[8]]
+      source_inf_matrix <- doEvent_out[[9]]
 
       if (n_steps%%100 == 1) {
         print(c(k,n_steps,length(state_vector),sum(state_vector),tdiff,length(transition_rates[[3]])))
