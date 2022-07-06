@@ -309,7 +309,7 @@ simulationCode <- function(createContactProbabilityMatrix_out,
         allStates.table.t[,as.character(iteration_vector):= rep(0, 2)]
       }
 
-      # Pick the next event, and modify a site's state accordingly
+      # pick the next transmission event and modify a site's state accordingly
       doEvent_out <- aquanet::doEvent(state_vector = state_vector,
                                       control_matrix = control_matrix,
                                       transition_rates = transition_rates,
