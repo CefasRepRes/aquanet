@@ -12,6 +12,8 @@
 #'
 #' @param n_cores (class numeric) the number of cores to use for parallel computing.
 #'
+#' @param n_sims (class numeric) number of simulations.
+#'
 #' @param seed_num (class numeric) number used to generate random seed for result replication.
 #'
 #' @param clear_results (class logical) TRUE/FALSE stating whether .RData results should be cleared
@@ -73,6 +75,7 @@
 #' @importFrom foreach foreach
 #' @import doRNG
 runSimulations <- function(n_cores,
+                           n_sims,
                            seed_num,
                            clear_results,
                            tmax,
@@ -101,7 +104,7 @@ runSimulations <- function(n_cores,
   }
 
   # define number of simulations per job (n_jobs == n_cores)
-  n_sims_per_job <- ceiling(3000/ n_cores)
+  n_sims_per_job <- ceiling(n_sims/ n_cores)
 
   # create set of copies of R running in parallel communicating over sockets - save output to log file
   cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
