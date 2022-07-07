@@ -13,8 +13,10 @@ runSimulations <- function(graph.contactp.objects,
                            n_initial_infections,
                            tmax,
                            n_states,
-                           non_peak_season_length) {
+                           non_peak_season_length,
+                           clear_results) {
 
+  if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
   files <- list.files(path = locationSaveResults,
                       pattern = "\\.RData$",
@@ -23,6 +25,7 @@ runSimulations <- function(graph.contactp.objects,
 
   # delete .RData files present to ensure results are from one run
   do.call(file.remove, list(files))
+  }
 
   # define number of simulations per job (n_jobs == n_cores)
   n_sims_per_job <- ceiling(3000/ n_cores)
