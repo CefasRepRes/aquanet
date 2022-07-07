@@ -6,7 +6,7 @@ runSimulations <- function(out_createContactProbabilityMatrix,
                            out_list_createRiverDistanceProbabilityMatrix,
                            out_createDistanceMatrix,
                            farm_vector,
-                           associatedSiteControlType,
+                           type_catchment_controls,
                            n_cores,
                            filepath_results,
                            seedNo,
@@ -61,7 +61,7 @@ runSimulations <- function(out_createContactProbabilityMatrix,
       farm_vector = farm_vector,
       n_states = n_states,
       n_initial_infections = n_initial_infections,
-      type_catchment_controls = associatedSiteControlType,
+      type_catchment_controls = type_catchment_controls,
       filepath_results = filepath_results
     )
 
