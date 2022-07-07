@@ -46,10 +46,10 @@ runSimulations <- function(n_cores,
 
   # run simulation in parallel
   allruns <-
-    foreach::foreach(batchNo = 1:n_cores, .combine = c) %dorng% aquanet::simulationCode(
+    foreach::foreach(batch_num = 1:n_cores, .combine = c) %dorng% aquanet::simulationCode(
       runs = n_sims_per_job,
       tmax = tmax,
-      batch_num = batchNo,
+      batch_num = batch_num,
       run_time_params = run_time_params,
       non_peak_season_length = non_peak_season_length,
       out_createContactProbabilityMatrix = out_createContactProbabilityMatrix,
