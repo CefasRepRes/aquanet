@@ -1,5 +1,5 @@
 runSimulations <- function(n_cores,
-                           seedNo,
+                           seed_num,
                            clear_results,
                            tmax,
                            run_time_params,
@@ -13,8 +13,7 @@ runSimulations <- function(n_cores,
                            n_states,
                            n_initial_infections,
                            type_catchment_controls,
-                           filepath_results,
-                           simulationCode) {
+                           filepath_results) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -43,7 +42,7 @@ runSimulations <- function(n_cores,
   print(c(n_cores, n_sims_per_job, n_overall_interactions))
 
   # set seed
-  set.seed(seedNo)
+  set.seed(seed_num)
 
   # run simulation in parallel
   allruns <-
