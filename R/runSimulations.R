@@ -8,7 +8,7 @@ runSimulations <- function(graph.contactp.objects,
                            farm_vector,
                            associatedSiteControlType,
                            n_cores,
-                           locationSaveResults,
+                           filepath_results,
                            seedNo,
                            n_initial_infections,
                            tmax,
@@ -18,7 +18,7 @@ runSimulations <- function(graph.contactp.objects,
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
-  files <- list.files(path = locationSaveResults,
+  files <- list.files(path = filepath_results,
                       pattern = "\\.RData$",
                       recursive = TRUE,
                       full.names = TRUE)
@@ -62,7 +62,7 @@ runSimulations <- function(graph.contactp.objects,
       n_states = n_states,
       n_initial_infections = n_initial_infections,
       type_catchment_controls = associatedSiteControlType,
-      filepath_results = locationSaveResults
+      filepath_results = filepath_results
     )
 
   # shut down set of copies of R running in parallel communicating over sockets
