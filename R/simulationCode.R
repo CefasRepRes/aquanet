@@ -53,23 +53,23 @@
 #' @param non_peak_season_length (class string) the amount of time in days that the non peak
 #' transmission season lasts for (e.g. "90", "180").
 #'
-#' @param createContactProbabilityMatrix_out (class list) of length 3 containing (1) number of sites
+#' @param out_createContactProbabilityMatrix (class list) of length 3 containing (1) number of sites
 #'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
-#' @param createWithinCatchmentEdges_out (class list) of length 3 containing (1) lgCMatrix (logical
+#' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
 #' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
 #' and (3) matrix of source site and receiving site within catchment edges.
 #'
-#' @param createCatchmentToSiteMatrix_out (class list) of length 2 containing (1) data frame of site
+#' @param out_createCatchmentToSiteMatrix (class list) of length 2 containing (1) data frame of site
 #'  to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
-#' @param createRiverDistanceProbabilityMatrix_out_list (class list) of length 2 containing (1)
+#' @param out_list_createRiverDistanceProbabilityMatrix (class list) of length 2 containing (1)
 #' distances between sites on a river network (via river connectivity) connections of 0 distances
 #' are removed (data frame) and (2) sparse matrix containing probability of transmission between
 #' sites connected via the river network by river water (dgTMatrix).
 #'
-#' @param createDistanceMatrix_out (class list) of length 3 containing (1) a matrix of site to site
+#' @param out_createDistanceMatrix (class list) of length 3 containing (1) a matrix of site to site
 #' distances (class matrix array), (2) a matrix of distance-based transmission probabilities
 #' (dgTMatrix, Matrix package), and (3) input data frame of site catchment locality
 #' (SpatialPointsDataFrame, sp package).
@@ -103,11 +103,11 @@ simulationCode <- function(runs,
                            batch_num,
                            run_time_params,
                            non_peak_season_length,
-                           createContactProbabilityMatrix_out,
-                           createWithinCatchmentEdges_out,
-                           createCatchmentToSiteMatrix_out,
-                           createRiverDistanceProbabilityMatrix_out_list,
-                           createDistanceMatrix_out,
+                           out_createContactProbabilityMatrix,
+                           out_createWithinCatchmentEdges,
+                           out_createCatchmentToSiteMatrix,
+                           out_list_createRiverDistanceProbabilityMatrix,
+                           out_createDistanceMatrix,
                            farm_vector,
                            n_states,
                            n_initial_infections,
@@ -117,15 +117,15 @@ simulationCode <- function(runs,
   ## extract information from input parameters ----
 
   # extract number of sites and matrix of live fish movements contact probabilities
-  n_sites <- createContactProbabilityMatrix_out[[1]]
-  matrix_movements_prob <- createContactProbabilityMatrix_out[[3]]
+  n_sites <- out_createContactProbabilityMatrix[[1]]
+  matrix_movements_prob <- out_createContactProbabilityMatrix[[3]]
 
   # extract number of catchments and matrix of catchment to site relationships
-  spmatrix_sites_catchment <- createCatchmentToSiteMatrix_out[[2]]
+  spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[[2]]
   n_catchments <- spmatrix_sites_catchment@Dim[2]
 
   # extract matrix of contacts between sites within the same catchment
-  lgmatrix_catch_catch <- createWithinCatchmentEdges_out[[1]]
+  lgmatrix_catch_catch <- out_createWithinCatchmentEdges[[1]]
 
 
   ## create variables to populate ----
@@ -268,9 +268,9 @@ simulationCode <- function(runs,
                                             culling_vector = culling_vector,
                                             site_indices = site_index,
                                             catchment_movements = list_catchment_movements,
-                                            movements_prob = createContactProbabilityMatrix_out,
-                                            river_prob = createRiverDistanceProbabilityMatrix_out_list,
-                                            site_distances_prob = createDistanceMatrix_out,
+                                            movements_prob = out_createContactProbabilityMatrix,
+                                            river_prob = out_list_createRiverDistanceProbabilityMatrix,
+                                            site_distances_prob = out_createDistanceMatrix,
                                             run_time_params = run_time_params,
                                             non_peak_season = non_peak_season)
 
