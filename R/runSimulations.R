@@ -1,20 +1,20 @@
-runSimulations <- function(out_createContactProbabilityMatrix,
-                           simulationCode,
+runSimulations <- function(n_cores,
+                           seedNo,
+                           clear_results,
+                           tmax,
                            run_time_params,
+                           non_peak_season_length,
+                           out_createContactProbabilityMatrix,
                            out_createWithinCatchmentEdges,
                            out_createCatchmentToSiteMatrix,
                            out_list_createRiverDistanceProbabilityMatrix,
                            out_createDistanceMatrix,
                            farm_vector,
-                           type_catchment_controls,
-                           n_cores,
-                           filepath_results,
-                           seedNo,
-                           n_initial_infections,
-                           tmax,
                            n_states,
-                           non_peak_season_length,
-                           clear_results) {
+                           n_initial_infections,
+                           type_catchment_controls,
+                           filepath_results,
+                           simulationCode) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
