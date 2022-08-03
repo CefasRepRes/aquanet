@@ -20,7 +20,6 @@ mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments
   metadata <- data.frame(siteID = igraph::V(graph)$siteID,
                          personID = igraph::V(graph)$PersonID,
                          modelID = 1:length(igraph::V(graph)$siteID),
-                         siteName = igraph::V(graph)$siteName,
                          catchmentID = igraph::V(graph)$catchmentID,
                          type = igraph::V(graph)$type)
 
