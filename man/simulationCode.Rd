@@ -13,7 +13,7 @@ simulationCode(
   out_createContactProbabilityMatrix,
   out_createWithinCatchmentEdges,
   out_createCatchmentToSiteMatrix,
-  out_list_createRiverDistanceProbabilityMatrix,
+  out_createRiverDistanceProbabilityMatrix,
   out_createDistanceMatrix,
   farm_vector,
   n_states,
@@ -47,7 +47,7 @@ and (3) matrix of source site and receiving site within catchment edges.}
 \item{out_createCatchmentToSiteMatrix}{(class list) of length 2 containing (1) data frame of site
 to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.}
 
-\item{out_list_createRiverDistanceProbabilityMatrix}{(class list) of length 2 containing (1)
+\item{out_createRiverDistanceProbabilityMatrix}{(class list) of length 2 containing (1)
 distances between sites on a river network (via river connectivity) connections of 0 distances
 are removed (data frame) and (2) sparse matrix containing probability of transmission between
 sites connected via the river network by river water (dgTMatrix).}

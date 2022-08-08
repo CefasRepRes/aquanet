@@ -40,7 +40,7 @@
 #' @param out_createCatchmentToSiteMatrix (class list) of length 2 containing (1) data frame of site
 #'  to catchment information and (2) dgCMatrix sparse matrix containing site to catchment summary.
 #'
-#' @param out_list_createRiverDistanceProbabilityMatrix (class list) of length 2 containing (1)
+#' @param out_createRiverDistanceProbabilityMatrix (class list) of length 2 containing (1)
 #' distances between sites on a river network (via river connectivity) connections of 0 distances
 #' are removed (data frame) and (2) sparse matrix containing probability of transmission between
 #' sites connected via the river network by river water (dgTMatrix).
@@ -84,7 +84,7 @@ runSimulations <- function(n_cores,
                            out_createContactProbabilityMatrix,
                            out_createWithinCatchmentEdges,
                            out_createCatchmentToSiteMatrix,
-                           out_list_createRiverDistanceProbabilityMatrix,
+                           out_createRiverDistanceProbabilityMatrix,
                            out_createDistanceMatrix,
                            farm_vector,
                            n_states,
@@ -132,7 +132,7 @@ runSimulations <- function(n_cores,
       out_createContactProbabilityMatrix = out_createContactProbabilityMatrix,
       out_createWithinCatchmentEdges = out_createWithinCatchmentEdges,
       out_createCatchmentToSiteMatrix = out_createCatchmentToSiteMatrix,
-      out_list_createRiverDistanceProbabilityMatrix = out_list_createRiverDistanceProbabilityMatrix,
+      out_createRiverDistanceProbabilityMatrix = out_createRiverDistanceProbabilityMatrix,
       out_createDistanceMatrix = out_createDistanceMatrix,
       farm_vector = farm_vector,
       n_states = n_states,
