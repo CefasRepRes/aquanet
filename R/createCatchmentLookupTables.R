@@ -27,7 +27,7 @@
 createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_epsg) {
   # create data frame of catchment ID and site ID
   df_sites <- data.frame("TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
-                                                                     name = "catchmentID",
+                                                                     name = "CatchmentID",
                                                                      index = igraph::V(graph)),
                          "siteID" = igraph::get.vertex.attribute(graph = graph,
                                                                  name = "siteID",

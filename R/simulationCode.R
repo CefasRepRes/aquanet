@@ -438,8 +438,9 @@ simulationCode <- function(runs,
   #                         filepath_results = filepath_results)
 
   # save table containing number of sites in each state at each time point
+  # TODO update this so the filepath isn't hard-coded once aquanet-mod pr is merged
   save(summaryStates.table,
-       file = paste(filepath_results, "/Summary/batchNo-", batch_num, ".RData", sep = ""),
+       file = paste(filepath_results, "/batch_results/batchNo-", batch_num, ".RData", sep = ""),
        compress = FALSE)
 
   return(batch_num)
