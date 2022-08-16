@@ -145,7 +145,7 @@ simulationCode <- function(runs,
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
   # TODO: do these need "empty.vector" columns?
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                   nrow = n_sites + n_states,
+                                                                   nrow = 3 + n_sites + n_states, # 3 batch_num, k, sim_num
                                                                    ncol = commit_int + 1)),
                                      c("empty.vector", as.character(iteration_vector)))
 
@@ -343,16 +343,20 @@ simulationCode <- function(runs,
 
       # populate allStates.table with state (number) per site in rows n_states + 1 onwards
       data.table::set(x = allStates.table,
-                      i = (n_states + 1):(n_states + n_sites), # rows 43 - end TODO FIX
+                      #i = (n_states + 1):(n_states + n_sites), # rows 43 - end TODO FIX
                       j = as.character(n_steps_since_commit + 1), # next column
-                      value = as.integer(sites_states_vector))
+                      value = as.integer(c(batch_num,
+                                           k,
+                                           sim_num,
+                                           sites_states_totals,
+                                           sites_states_vector)))
 
-      # populate allStates.table with batch number, simulation number, k and n sites in each state
-      # TODO: fix this - see comment below!
-      data.table::set(x = allStates.table,
-                      i = (1:(n_states + 3)), # NOTE: this overwrites previous data as specifies rows 1-45! TODO FIX
-                      j = as.character(n_steps_since_commit + 1), # next column
-                      value = as.integer(c(batch_num, k, sim_num, sites_states_totals)))
+      # # populate allStates.table with batch number, simulation number, k and n sites in each state
+      # # TODO: fix this - see comment below!
+      # data.table::set(x = allStates.table,
+      #                 i = (1:(n_states + 3)), # NOTE: this overwrites previous data as specifies rows 1-45! TODO FIX
+      #                 #j = as.character(n_steps_since_commit + 1), # next column
+      #                 value = as.integer(c(batch_num, k, sim_num, sites_states_totals)))
 
       # populate allStates.table.t with current time and previous time
       data.table::set(x = allStates.table.t,
@@ -379,7 +383,7 @@ simulationCode <- function(runs,
                                filepath_results = filepath_results)
 
         # clear the tables after commit
-        allStates.table[ , as.character(iteration_vector) := rep(0, n_sites + n_states)]
+        allStates.table[ , as.character(iteration_vector) := rep(0, 3 + n_sites + n_states)]
         allStates.table.t[ , as.character(iteration_vector) := rep(0, 2)]
       }
 
