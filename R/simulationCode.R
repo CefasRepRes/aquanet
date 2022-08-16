@@ -151,7 +151,7 @@ simulationCode <- function(runs,
 
   allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
                                                                      nrow = 2,
-                                                                     ncol = commit_int)),
+                                                                     ncol = commit_int + 1)),
                                        c("empty.vector", as.character(iteration_vector)))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
