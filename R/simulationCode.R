@@ -344,7 +344,7 @@ simulationCode <- function(runs,
       # populate allStates.table with state (number) per site in rows n_states + 1 onwards
       data.table::set(x = allStates.table,
                       #i = (n_states + 1):(n_states + n_sites), # rows 43 - end TODO FIX
-                      j = as.character(n_steps_since_commit + 1), # next column
+                      j = as.character(n_steps_since_commit), # next column
                       value = as.integer(c(batch_num,
                                            k,
                                            sim_num,
@@ -360,7 +360,7 @@ simulationCode <- function(runs,
 
       # populate allStates.table.t with current time and previous time
       data.table::set(x = allStates.table.t,
-                      j = as.character(n_steps_since_commit + 1), # next column
+                      j = as.character(n_steps_since_commit), # next column
                       value = c(tdiff, t - tdiff))
 
       # if the number of steps since last commit equals commit_int - 1
