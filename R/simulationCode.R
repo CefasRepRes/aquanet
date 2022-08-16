@@ -352,7 +352,7 @@ simulationCode <- function(runs,
       data.table::set(x = allStates.table,
                       i = (1:(n_states + 3)), # NOTE: this overwrites previous data as specifies rows 1-45! TODO FIX
                       j = as.character(n_steps_since_commit + 1), # next column
-                      value = as.integer(c(batch_num, k, sim_num), sites_states_totals))
+                      value = as.integer(c(batch_num, k, sim_num, sites_states_totals)))
 
       # populate allStates.table.t with current time and previous time
       data.table::set(x = allStates.table.t,
