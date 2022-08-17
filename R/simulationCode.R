@@ -321,7 +321,7 @@ simulationCode <- function(runs,
         # append another commit_int number of columns of 0 to populate in the next steps
         summaryStates.table[ ,
                              as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) :=
-                               rep(0, n_states + 8)]
+                               rep(0, n_states + 7)]
       }
 
       # if there are no infectious sites in the network stop the loop
