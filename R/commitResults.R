@@ -84,8 +84,8 @@ commitResults <- function(df_states,
                      state = as.integer(matrix_states@x),
                      timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
                      simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
-                     tdiff = as.integer(df_states[4, ])[matrix_states@j + 1],
-                     t = as.integer(df_states[5, ])[matrix_states@j + 1])
+                     tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
+                     t = as.numeric(df_states[5, ])[matrix_states@j + 1])
 
 
   # save simulation site states and simulation times
