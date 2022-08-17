@@ -58,27 +58,6 @@ commitResults <- function(df_states,
   matrix_states <- as(object = as.matrix(df_states[((3 + n_states + 1):(3 + n_states + n_sites)), ]),
                       Class = "dgTMatrix")
 
-  # create data frame of simulation site states at each iteration
-  sim_states <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
-                           state = as.integer(matrix_states@x),
-                           timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
-                           simNo = as.integer(df_states[3, ])[matrix_states@j + 1])
-
-  # create data frame of simulation times
-  sim_times <- data.frame(timeID = as.integer(iteration_vector + ((save_num - 1) * commit_int)),
-                          simNo = as.integer(df_states[3, ])[iteration_vector + 1],
-                          tdiff = as.numeric(df_time[1, ])[iteration_vector],
-                          t = as.numeric(df_time[2, ])[iteration_vector])
-
-  # merge the data frames
-  sim_states_times <- merge(x = sim_states,
-                            y = sim_times,
-                            by = c("timeID", "simNo"),
-                            all.x = TRUE)
-
-  # sort the data frame by timeID
-  sim_states_times <- sim_states_times[order(sim_states_times$timeID), ]
-
   # create data frame of simulation site states and times at each iteration
   sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
                      state = as.integer(matrix_states@x),
