@@ -54,7 +54,8 @@
 #' (listContacts.exclude)
 #' 5. (class numeric) number selecting catchment level controls to apply (0 = allows movements
 #' within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
-#' allows no movements by any of the sites within an infected catchment) (associatedSiteControlType)
+#' allows no movements by any of the sites within an infected catchment, "None" means there are no
+#' catchment level controls) (associatedSiteControlType)
 #' 6. (class logical) logical vector of length number of sites stating if sites are under secondary
 #'  levels of control (secondary.controlled.sites)
 #' 7. (class numeric) the total number of catchments under controls (no.controlled.catchments)
@@ -168,12 +169,14 @@ updateRates <- function(control_matrix,
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts)
 
-  # exclude within catchment movements
+  # exclude within catchment movements unless there are no catchment movement restrictions
+  site_control_type <- catchment_movements[[5]]
+  if(site_control_type != "None"){
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = catchment_movements,
                                                                             matrix_movements_prob = movements_prob[[3]])
-
+  }
 
   ### calculate LFM infection rate ----
 

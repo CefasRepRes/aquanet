@@ -50,7 +50,8 @@ catchments were under controls in the previous time step (controlled.catchments.
 (listContacts.exclude)
 \item (class numeric) number selecting catchment level controls to apply (0 = allows movements
 within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
-allows no movements by any of the sites within an infected catchment) (associatedSiteControlType)
+allows no movements by any of the sites within an infected catchment, "None" means there are no
+catchment level controls) (associatedSiteControlType)
 \item (class logical) logical vector of length number of sites stating if sites are under secondary
 levels of control (secondary.controlled.sites)
 \item (class numeric) the total number of catchments under controls (no.controlled.catchments)
