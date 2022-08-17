@@ -66,7 +66,7 @@ commitResults <- function(df_states,
 
   # create data frame of simulation times
   sim_times <- data.frame(timeID = as.integer(iteration_vector + ((save_num - 1) * commit_int)),
-                          simNo = as.integer(df_states[3, ])[iteration_vector + 1],
+                          simNo = as.integer(df_states[3, ])[iteration_vector],
                           tdiff = as.numeric(df_time[1, ])[iteration_vector],
                           t = as.numeric(df_time[2, ])[iteration_vector])
 
