@@ -345,13 +345,13 @@ simulationCode <- function(runs,
       data.table::set(x = allStates.table,
                       #i = (n_states + 1):(n_states + n_sites), # rows 43 - end TODO FIX
                       j = as.character(n_steps_since_commit), # next column
-                      value = as.integer(c(batch_num,
-                                           k,
-                                           sim_num,
-                                           tdiff,
-                                           (t - tdiff),
-                                           sites_states_totals,
-                                           sites_states_vector)))
+                      value = c(batch_num,
+                                k,
+                                sim_num,
+                                tdiff,
+                                (t - tdiff),
+                                sites_states_totals,
+                                sites_states_vector))
 
       # # populate allStates.table with batch number, simulation number, k and n sites in each state
       # # TODO: fix this - see comment below!
