@@ -150,7 +150,7 @@ simulationCode <- function(runs,
                                      as.character(iteration_vector))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                       nrow = n_states + 8,
+                                                                       nrow = n_states + 7,
                                                                        ncol = commit_int)),
                                          as.character(iteration_vector))
 
@@ -315,9 +315,6 @@ simulationCode <- function(runs,
       summaryStates.table[ , as.character(n_operations) := c(batch_num, k, tdiff, sim_num, trans_type,
                                                              n_catchments_controlled, sum(sites_states_cumulative),
                                                              sites_states_totals)]
-
-      set(x, i, j, value)
-      DT[, c(j) := value]
 
       # if the simulation is one step prior to reaching a commit interval
       if (n_operations %% commit_int == (commit_int - 1)) {
