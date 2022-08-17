@@ -146,8 +146,8 @@ simulationCode <- function(runs,
   # TODO: do these need "empty.vector" columns?
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                    nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
-                                                                   ncol = commit_int + 1)),
-                                     c("empty.vector", as.character(iteration_vector)))
+                                                                   ncol = commit_int)),
+                                     as.character(iteration_vector))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                        nrow = n_states + 8,
