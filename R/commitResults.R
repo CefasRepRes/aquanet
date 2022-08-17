@@ -70,10 +70,20 @@ commitResults <- function(df_states,
                           tdiff = as.numeric(df_time[1, ])[iteration_vector],
                           t = as.numeric(df_time[2, ])[iteration_vector])
 
+  # merge the data frames
+  sim_states_times <- merge(x = sim_states,
+                            y = sim_times,
+                            by = c("timeID", "simNo"),
+                            all.x = TRUE)
+
+  # sort the data frame by timeID
+  sim_states_times <- sim_states_times[order(sim_states_times$timeID), ]
+
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
   save(sim_states,
        sim_times,
+       sim_states_times,
        file = paste(filepath_results,
                     "/full_results/batchNo-", batch_num,
                     "_simNo-", simulation_num,
