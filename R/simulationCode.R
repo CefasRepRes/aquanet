@@ -145,7 +145,7 @@ simulationCode <- function(runs,
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
   # TODO: do these need "empty.vector" columns?
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                   nrow = 3 + n_sites + n_states, # 3 batch_num, k, sim_num
+                                                                   nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
                                                                    ncol = commit_int + 1)),
                                      c("empty.vector", as.character(iteration_vector)))
 
@@ -348,6 +348,8 @@ simulationCode <- function(runs,
                       value = as.integer(c(batch_num,
                                            k,
                                            sim_num,
+                                           tdiff,
+                                           (t - tdiff),
                                            sites_states_totals,
                                            sites_states_vector)))
 
@@ -383,7 +385,7 @@ simulationCode <- function(runs,
                                filepath_results = filepath_results)
 
         # clear the tables after commit
-        allStates.table[ , as.character(iteration_vector) := rep(0, 3 + n_sites + n_states)]
+        allStates.table[ , as.character(iteration_vector) := rep(0, 5 + n_sites + n_states)]
         allStates.table.t[ , as.character(iteration_vector) := rep(0, 2)]
       }
 

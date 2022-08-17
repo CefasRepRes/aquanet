@@ -79,11 +79,21 @@ commitResults <- function(df_states,
   # sort the data frame by timeID
   sim_states_times <- sim_states_times[order(sim_states_times$timeID), ]
 
+  # create data frame of simulation site states and times at each iteration
+  sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+                     state = as.integer(matrix_states@x),
+                     timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
+                     simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
+                     tdiff = as.integer(df_states[4, ])[matrix_states@j + 1],
+                     t = as.integer(df_states[5, ])[matrix_states@j + 1])
+
+
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
   save(sim_states,
        sim_times,
        sim_states_times,
+       sims,
        file = paste(filepath_results,
                     "/full_results/batchNo-", batch_num,
                     "_simNo-", simulation_num,
