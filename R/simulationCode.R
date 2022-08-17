@@ -340,15 +340,19 @@ simulationCode <- function(runs,
       n_steps_since_commit <- n_steps %% commit_int
 
       # populate allStates.table with simulation information, time and states
-      data.table::set(x = allStates.table,
-                      j = as.character(n_steps_since_commit), # next column
-                      value = c(batch_num,
-                                k,
-                                sim_num,
-                                tdiff,
-                                (t - tdiff),
-                                sites_states_totals,
-                                sites_states_vector))
+      # data.table::set(x = allStates.table,
+      #                 j = as.character(n_steps_since_commit), # next column
+      #                 value = c(batch_num,
+      #                           k,
+      #                           sim_num,
+      #                           tdiff,
+      #                           (t - tdiff),
+      #                           sites_states_totals,
+      #                           sites_states_vector))
+
+      allStates.table[ , as.character(n_steps_since_commit) :=
+                         c(batch_num, k, sim_num, tdiff, (t - tdiff),
+                           sites_states_totals, sites_states_vector)]
 
       # if the number of steps since last commit equals commit_int - 1
       if (n_steps_since_commit == (commit_int - 1)) {
