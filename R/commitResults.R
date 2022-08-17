@@ -65,10 +65,7 @@ commitResults <- function(df_states,
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
-  save(sim_states,
-       sim_times,
-       sim_states_times,
-       sims,
+  save(sims,
        file = paste(filepath_results,
                     "/full_results/batchNo-", batch_num,
                     "_simNo-", simulation_num,
