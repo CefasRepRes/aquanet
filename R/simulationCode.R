@@ -301,17 +301,23 @@ simulationCode <- function(runs,
       n_operations <- n_operations + 1
 
       # in column n_operations of summaryStates.table append 50 values from time step
-      data.table::set(x = summaryStates.table,
-                      j = as.character(n_operations),
-                      value = c(batch_num,
-                                k,
-                                t,
-                                tdiff,
-                                sim_num,
-                                trans_type,
-                                n_catchments_controlled,
-                                sum(sites_states_cumulative),
-                                sites_states_totals))
+      # data.table::set(x = summaryStates.table,
+      #                 j = as.character(n_operations),
+      #                 value = c(batch_num,
+      #                           k,
+      #                           t,
+      #                           tdiff,
+      #                           sim_num,
+      #                           trans_type,
+      #                           n_catchments_controlled,
+      #                           sum(sites_states_cumulative),
+      #                           sites_states_totals))
+      summaryStates.table[ , as.character(n_operations) := c(batch_num, k, tdiff, sim_num, trans_type,
+                                                             n_catchments_controlled, sum(sites_states_cumulative),
+                                                             sites_states_totals)]
+
+      set(x, i, j, value)
+      DT[, c(j) := value]
 
       # if the simulation is one step prior to reaching a commit interval
       if (n_operations %% commit_int == (commit_int - 1)) {
