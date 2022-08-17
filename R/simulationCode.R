@@ -145,14 +145,9 @@ simulationCode <- function(runs,
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
   # TODO: do these need "empty.vector" columns?
   allStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                   nrow = 3 + n_sites + n_states, # 3 batch_num, k, sim_num
-                                                                   ncol = commit_int + 1)),
-                                     c("empty.vector", as.character(iteration_vector)))
-
-  allStates.table.t <- stats::setNames(data.table::data.table(matrix(0,
-                                                                     nrow = 2,
-                                                                     ncol = commit_int)),
-                                       as.character(iteration_vector))
+                                                                   nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
+                                                                   ncol = commit_int)),
+                                     as.character(iteration_vector))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
                                                                        nrow = n_states + 8,
@@ -341,27 +336,16 @@ simulationCode <- function(runs,
       # determine the number of steps since the last commit
       n_steps_since_commit <- n_steps %% commit_int
 
-      # populate allStates.table with state (number) per site in rows n_states + 1 onwards
+      # populate allStates.table with simulation information, time and states
       data.table::set(x = allStates.table,
-                      #i = (n_states + 1):(n_states + n_sites), # rows 43 - end TODO FIX
                       j = as.character(n_steps_since_commit), # next column
-                      value = as.integer(c(batch_num,
-                                           k,
-                                           sim_num,
-                                           sites_states_totals,
-                                           sites_states_vector)))
-
-      # # populate allStates.table with batch number, simulation number, k and n sites in each state
-      # # TODO: fix this - see comment below!
-      # data.table::set(x = allStates.table,
-      #                 i = (1:(n_states + 3)), # NOTE: this overwrites previous data as specifies rows 1-45! TODO FIX
-      #                 #j = as.character(n_steps_since_commit + 1), # next column
-      #                 value = as.integer(c(batch_num, k, sim_num, sites_states_totals)))
-
-      # populate allStates.table.t with current time and previous time
-      data.table::set(x = allStates.table.t,
-                      j = as.character(n_steps_since_commit), # next column
-                      value = c(tdiff, t - tdiff))
+                      value = c(batch_num,
+                                k,
+                                sim_num,
+                                tdiff,
+                                (t - tdiff),
+                                sites_states_totals,
+                                sites_states_vector))
 
       # if the number of steps since last commit equals commit_int - 1
       if (n_steps_since_commit == (commit_int - 1)) {
@@ -369,9 +353,8 @@ simulationCode <- function(runs,
         # determine number of saves (1 per commit_int)
         n_saves <- n_steps %/% commit_int
 
-        # save the results of allStates.table and allStates.table.t
+        # save the results of allStates.table
         aquanet::commitResults(df_states = allStates.table,
-                               df_time = allStates.table.t,
                                n_states = n_states,
                                n_sites = n_sites,
                                site_indices = site_index,
@@ -383,8 +366,7 @@ simulationCode <- function(runs,
                                filepath_results = filepath_results)
 
         # clear the tables after commit
-        allStates.table[ , as.character(iteration_vector) := rep(0, 3 + n_sites + n_states)]
-        allStates.table.t[ , as.character(iteration_vector) := rep(0, 2)]
+        allStates.table[ , as.character(iteration_vector) := rep(0, 5 + n_sites + n_states)]
       }
 
       # pick the next transmission event and modify a site's state accordingly
@@ -428,14 +410,12 @@ simulationCode <- function(runs,
 
   # where loop terminates between commit intervals: remove empty end of data frame
   allStates.table[ , as.character((n_steps_since_commit + 1):commit_int) := NULL]
-  allStates.table.t[ , as.character((n_steps_since_commit + 1):commit_int) := NULL]
 
   # increment number of saves
   n_saves <- n_saves + 1
 
   # commit remaining results
   aquanet::commitResults(df_states = allStates.table,
-                          df_time = allStates.table.t,
                           n_states = n_states,
                           n_sites = n_sites,
                           site_indices = site_index,
