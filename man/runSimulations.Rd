@@ -21,7 +21,8 @@ runSimulations(
   n_states,
   n_initial_infections,
   type_catchment_controls,
-  filepath_results
+  filepath_results,
+  contact_tracing
 )
 }
 \arguments{
@@ -76,9 +77,12 @@ model.}
 \item{type_catchment_controls}{(class numeric) tnumber selecting catchment level controls to
 apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 infected catchments, and 2 = allows no movements by any of the sites within an infected
-catchment).}
+catchment, "None" means there are no catchment level controls).}
 
 \item{filepath_results}{(class string) path to results directory for model run.}
+
+\item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
+tracing is taking place.}
 }
 \value{
 (class list) of length 2 containing (1) the number of cores used for the run and (2) the

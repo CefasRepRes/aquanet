@@ -98,6 +98,9 @@
 #' sites' to track the sites that are infected either by Live Fish Movements of via river network
 #' connectivity'. Note: this matrix is used for forward contact tracing.
 #'
+#' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
+#' tracing is taking place.
+#'
 #'
 #' @return (class list) of length 8 containing:
 #' 1. (class numeric) `state_vector` numeric binary vector of length number of sites containing
@@ -139,7 +142,8 @@ doEvent <- function(state_vector,
                     catchment_time_vector,
                     catchments_with_post_fallow_only,
                     source_inf_vector,
-                    source_inf_matrix) {
+                    source_inf_matrix,
+                    contact_tracing) {
 
   ## create variables to populate ----
 
@@ -274,7 +278,7 @@ doEvent <- function(state_vector,
       control_matrix[site, c(1, 3)] <- 0
     }
 
-
+if(contact_tracing == TRUE){
     # define source of infection
     source_inf <- source_inf_vector[site]
 
@@ -310,7 +314,7 @@ doEvent <- function(state_vector,
       }
     }
   }
-
+}
 
   ## C --> F transition ----
   # IF the transition rate is rate at which controlled sites become fallow:

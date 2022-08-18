@@ -89,6 +89,9 @@
 #'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
+#' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
+#' tracing is taking place.
+#'
 #' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
 #' `filepath_results`.
 #'
@@ -112,6 +115,7 @@ simulationCode <- function(runs,
                            n_states,
                            n_initial_infections,
                            type_catchment_controls,
+                           contact_tracing,
                            filepath_results) {
 
   ## extract information from input parameters ----
@@ -272,7 +276,8 @@ simulationCode <- function(runs,
                                             river_prob = out_createRiverDistanceProbabilityMatrix,
                                             site_distances_prob = out_createDistanceMatrix,
                                             run_time_params = run_time_params,
-                                            non_peak_season = non_peak_season)
+                                            non_peak_season = non_peak_season,
+                                            contact_tracing = contact_tracing)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[[1]]
@@ -401,7 +406,8 @@ simulationCode <- function(runs,
                                       catchment_time_vector = catchment_time_vector,
                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
                                       source_inf_vector = source_inf_vector,
-                                      source_inf_matrix = source_inf_matrix)
+                                      source_inf_matrix = source_inf_matrix,
+                                      contact_tracing = contact_tracing)
 
       # reassign variables with updates outputs for next iteration of while loop
       state_vector <- doEvent_out[[1]]

@@ -18,7 +18,8 @@ doEvent(
   catchment_time_vector,
   catchments_with_post_fallow_only,
   source_inf_vector,
-  source_inf_matrix
+  source_inf_matrix,
+  contact_tracing
 )
 }
 \arguments{
@@ -77,6 +78,9 @@ river network connectivity.}
 \item{source_inf_matrix}{(class matrix) matrix of dimensions 'number of sites' x 'number of
 sites' to track the sites that are infected either by Live Fish Movements of via river network
 connectivity'. Note: this matrix is used for forward contact tracing.}
+
+\item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
+tracing is taking place.}
 }
 \value{
 (class list) of length 8 containing:

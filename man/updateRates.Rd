@@ -15,7 +15,8 @@ updateRates(
   river_prob,
   site_distances_prob,
   run_time_params,
-  non_peak_season
+  non_peak_season,
+  contact_tracing
 )
 }
 \arguments{
@@ -74,6 +75,9 @@ frame contains probabilities from the scenarios of interest for listing transiti
 
 \item{non_peak_season}{(class logical) logical indicating whether the current timestep in the
 model is within non peak season where transmission (of e.g. a pathogen) is lower.}
+
+\item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
+tracing is taking place.}
 }
 \value{
 (class list) of length 3 containing:

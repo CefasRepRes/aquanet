@@ -78,6 +78,9 @@
 #' @param non_peak_season (class logical) logical indicating whether the current timestep in the
 #' model is within non peak season where transmission (of e.g. a pathogen) is lower.
 #'
+#' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
+#' tracing is taking place.
+#'
 #'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
@@ -107,7 +110,8 @@ updateRates <- function(control_matrix,
                         river_prob,
                         site_distances_prob,
                         run_time_params,
-                        non_peak_season) {
+                        non_peak_season,
+                        contact_tracing) {
 
   ### define movement restrictions ----
 
@@ -147,8 +151,11 @@ updateRates <- function(control_matrix,
   # create vector of sites that are infected and in the fallow or post-fallow state
   sites_fallow <- state_vector * (control_matrix[ , 4] + control_matrix[ , 5])
 
+  # if contact tracing is happening
   # create vector of sites which have been contact traced (are in infected catchment)
+  if(contact_tracing == TRUE){
   sites_contact_traced <- control_matrix[ , 7]
+  }
 
   # create vector of sites that could be controlled (infection present and not detected)
   sites_I_undetected <- control_matrix[ , 1]
@@ -211,10 +218,13 @@ updateRates <- function(control_matrix,
                                                         site_indices = site_indices)
 
   # Rate 5: rate at which contact traced sites will be tested
+  # If contact tracing == TRUE
+  if(contact_tracing == TRUE){
   rate_sites_ct_tested <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_contact_traced,
                                                        trans_type = "Contact_Detection",
                                                        site_indices = site_indices)
+  }
 
   # Rate 6: rate of detection in infected but undetected sites
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
@@ -239,7 +249,9 @@ updateRates <- function(control_matrix,
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_fishery_latency, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_cleared, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_disinfected, list_base = trans_rates)
+  if(contact_tracing == TRUE){
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested, list_base = trans_rates)
+  }
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow, list_base = trans_rates)
 

@@ -61,7 +61,10 @@
 #' @param type_catchment_controls (class numeric) tnumber selecting catchment level controls to
 #' apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
-#' catchment).
+#' catchment, "None" means there are no catchment level controls).
+#'
+#' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
+#' tracing is taking place.
 #'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
@@ -90,7 +93,8 @@ runSimulations <- function(n_cores,
                            n_states,
                            n_initial_infections,
                            type_catchment_controls,
-                           filepath_results) {
+                           filepath_results,
+                           contact_tracing) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -138,6 +142,7 @@ runSimulations <- function(n_cores,
       n_states = n_states,
       n_initial_infections = n_initial_infections,
       type_catchment_controls = type_catchment_controls,
+      contact_tracing = contact_tracing,
       filepath_results = filepath_results
     )
 
