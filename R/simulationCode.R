@@ -150,7 +150,7 @@ simulationCode <- function(runs,
                                      as.character(iteration_vector))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                       nrow = n_states + 8,
+                                                                       nrow = n_states + 7,
                                                                        ncol = commit_int)),
                                          as.character(iteration_vector))
 
@@ -301,24 +301,27 @@ simulationCode <- function(runs,
       n_operations <- n_operations + 1
 
       # in column n_operations of summaryStates.table append 50 values from time step
-      data.table::set(x = summaryStates.table,
-                      j = as.character(n_operations),
-                      value = c(batch_num,
-                                k,
-                                t,
-                                tdiff,
-                                sim_num,
-                                trans_type,
-                                n_catchments_controlled,
-                                sum(sites_states_cumulative),
-                                sites_states_totals))
+      # data.table::set(x = summaryStates.table,
+      #                 j = as.character(n_operations),
+      #                 value = c(batch_num,
+      #                           k,
+      #                           t,
+      #                           tdiff,
+      #                           sim_num,
+      #                           trans_type,
+      #                           n_catchments_controlled,
+      #                           sum(sites_states_cumulative),
+      #                           sites_states_totals))
+      summaryStates.table[ , as.character(n_operations) := c(batch_num, k, tdiff, sim_num, trans_type,
+                                                             n_catchments_controlled, sum(sites_states_cumulative),
+                                                             sites_states_totals)]
 
       # if the simulation is one step prior to reaching a commit interval
       if (n_operations %% commit_int == (commit_int - 1)) {
         # append another commit_int number of columns of 0 to populate in the next steps
         summaryStates.table[ ,
                              as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) :=
-                               rep(0, n_states + 8)]
+                               rep(0, n_states + 7)]
       }
 
       # if there are no infectious sites in the network stop the loop
@@ -337,15 +340,19 @@ simulationCode <- function(runs,
       n_steps_since_commit <- n_steps %% commit_int
 
       # populate allStates.table with simulation information, time and states
-      data.table::set(x = allStates.table,
-                      j = as.character(n_steps_since_commit), # next column
-                      value = c(batch_num,
-                                k,
-                                sim_num,
-                                tdiff,
-                                (t - tdiff),
-                                sites_states_totals,
-                                sites_states_vector))
+      # data.table::set(x = allStates.table,
+      #                 j = as.character(n_steps_since_commit), # next column
+      #                 value = c(batch_num,
+      #                           k,
+      #                           sim_num,
+      #                           tdiff,
+      #                           (t - tdiff),
+      #                           sites_states_totals,
+      #                           sites_states_vector))
+
+      allStates.table[ , as.character(n_steps_since_commit) :=
+                         c(batch_num, k, sim_num, tdiff, (t - tdiff),
+                           sites_states_totals, sites_states_vector)]
 
       # if the number of steps since last commit equals commit_int - 1
       if (n_steps_since_commit == (commit_int - 1)) {
