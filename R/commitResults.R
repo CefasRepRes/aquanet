@@ -11,9 +11,6 @@
 #'  = number of sites (`n_sites`) + number of states (`n_states`), and number of columns = commit
 #'  interval (`commit_int`) + 1.
 #'
-#' @param df_time (class data.table data.frame) data frame of zeros with dimensions number of rows
-#' = 2, and number of columns = commit interval (`commit_int`) + 1.
-#'
 #' @param n_states (class numeric) number of different combinations of states possible within the
 #' model.
 #'
@@ -43,7 +40,6 @@
 #' @export
 #'
 commitResults <- function(df_states,
-                          df_time,
                           n_states,
                           n_sites,
                           site_indices,
@@ -58,22 +54,18 @@ commitResults <- function(df_states,
   matrix_states <- as(object = as.matrix(df_states[((3 + n_states + 1):(3 + n_states + n_sites)), ]),
                       Class = "dgTMatrix")
 
-  # create data frame of simulation site states at each iteration
-  sim_states <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
-                           state = as.integer(matrix_states@x),
-                           timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
-                           simNo = as.integer(df_states[3, ])[matrix_states@j + 1])
+  # create data frame of simulation site states and times at each iteration
+  sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+                     state = as.integer(matrix_states@x),
+                     timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
+                     simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
+                     tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
+                     t = as.numeric(df_states[5, ])[matrix_states@j + 1])
 
-  # create data frame of simulation times
-  sim_times <- data.frame(timeID = as.integer(iteration_vector + ((save_num - 1) * commit_int)),
-                          simNo = as.integer(df_states[3, ])[iteration_vector + 1],
-                          tdiff = as.numeric(df_time[1, ])[iteration_vector],
-                          t = as.numeric(df_time[2, ])[iteration_vector])
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
-  save(sim_states,
-       sim_times,
+  save(sims,
        file = paste(filepath_results,
                     "/full_results/batchNo-", batch_num,
                     "_simNo-", simulation_num,
