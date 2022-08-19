@@ -150,7 +150,7 @@ simulationCode <- function(runs,
                                      as.character(iteration_vector))
 
   summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                       nrow = n_states + 7,
+                                                                       nrow = n_states + 8,
                                                                        ncol = commit_int)),
                                          as.character(iteration_vector))
 
@@ -312,8 +312,14 @@ simulationCode <- function(runs,
       #                           n_catchments_controlled,
       #                           sum(sites_states_cumulative),
       #                           sites_states_totals))
-      summaryStates.table[ , as.character(n_operations) := c(batch_num, k, tdiff, sim_num, trans_type,
-                                                             n_catchments_controlled, sum(sites_states_cumulative),
+      summaryStates.table[ , as.character(n_operations) := c(batch_num,
+                                                             k,
+                                                             t,
+                                                             tdiff,
+                                                             sim_num,
+                                                             trans_type,
+                                                             n_catchments_controlled,
+                                                             sum(sites_states_cumulative),
                                                              sites_states_totals)]
 
       # if the simulation is one step prior to reaching a commit interval
@@ -321,7 +327,7 @@ simulationCode <- function(runs,
         # append another commit_int number of columns of 0 to populate in the next steps
         summaryStates.table[ ,
                              as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) :=
-                               rep(0, n_states + 7)]
+                               rep(0, n_states + 8)]
       }
 
       # if there are no infectious sites in the network stop the loop
