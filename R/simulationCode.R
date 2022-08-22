@@ -57,6 +57,11 @@
 #'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
+#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1) number of sites
+#'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
+#' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
+#' This object is created following the removal of the top most connected sites in the network.
+#'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
 #' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
 #' and (3) matrix of source site and receiving site within catchment edges.
@@ -92,8 +97,12 @@
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing is taking place.
 #'
+#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the remova
+#' of the most connected sites in the network is taking place.
+#'
 #' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
 #' `filepath_results`.
+#'
 #'
 #' @export
 #'
@@ -107,6 +116,7 @@ simulationCode <- function(runs,
                            run_time_params,
                            non_peak_season_length,
                            out_createContactProbabilityMatrix,
+                           out_createContactProbabilityMatrixTopSitesRemoved,
                            out_createWithinCatchmentEdges,
                            out_createCatchmentToSiteMatrix,
                            out_createRiverDistanceProbabilityMatrix,
@@ -115,8 +125,9 @@ simulationCode <- function(runs,
                            n_states,
                            n_initial_infections,
                            type_catchment_controls,
+                           filepath_results,
                            contact_tracing,
-                           filepath_results) {
+                           remove_top_sites) {
 
   ## extract information from input parameters ----
 
@@ -268,11 +279,14 @@ simulationCode <- function(runs,
                                             site_indices = site_index,
                                             catchment_movements = list_catchment_movements,
                                             movements_prob = out_createContactProbabilityMatrix,
+                                            movements_prob_top_sites_removed = out_createContactProbabilityMatrixTopSitesRemoved,
                                             river_prob = out_createRiverDistanceProbabilityMatrix,
                                             site_distances_prob = out_createDistanceMatrix,
                                             run_time_params = run_time_params,
                                             non_peak_season = non_peak_season,
-                                            contact_tracing = contact_tracing)
+                                            contact_tracing = contact_tracing,
+                                            remove_top_sites = remove_top_sites,
+                                            sites_states_cumulative = sites_states_cumulative)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[[1]]

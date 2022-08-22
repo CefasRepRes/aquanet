@@ -12,11 +12,14 @@ updateRates(
   site_indices,
   catchment_movements,
   movements_prob,
+  movements_prob_top_sites_removed,
   river_prob,
   site_distances_prob,
   run_time_params,
   non_peak_season,
-  contact_tracing
+  contact_tracing,
+  remove_top_sites,
+  sites_states_cumulative
 )
 }
 \arguments{
@@ -62,6 +65,10 @@ levels of control (secondary.controlled.sites)
 probabilities between sites generated using the \code{aquanet::createContactProbabilityMatrix()}
 function.}
 
+\item{movements_prob_top_sites_removed}{(class dgTMatrix, Matrix package) a matrix of live fish movement
+probabilities between sites, but with the top most connected sites in the network removed.
+Generated using the \code{aquanet::createContactProbabilityMatrixTopSitesRemoved()}function.}
+
 \item{river_prob}{(class dgTMatrix, Matrix package) a matrix of river connectivity distance-based
 transmission probabilities generated using the \code{aquanet::createRiverDistanceProbabilityMatrix()}
 function.}
@@ -78,6 +85,12 @@ model is within non peak season where transmission (of e.g. a pathogen) is lower
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
 tracing is taking place.}
+
+\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the removal
+of the most connected sites in the network is taking place.}
+
+\item{sites_states_cumulative}{(class numeric) numeric binary vector indicating whether a site is
+infected (1) or susceptible (0).}
 }
 \value{
 (class list) of length 3 containing:

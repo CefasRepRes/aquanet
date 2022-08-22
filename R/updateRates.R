@@ -64,6 +64,10 @@
 #' probabilities between sites generated using the `aquanet::createContactProbabilityMatrix()`
 #' function.
 #'
+#' @param movements_prob_top_sites_removed (class dgTMatrix, Matrix package) a matrix of live fish movement
+#' probabilities between sites, but with the top most connected sites in the network removed.
+#' Generated using the `aquanet::createContactProbabilityMatrixTopSitesRemoved()`function.
+#'
 #' @param river_prob (class dgTMatrix, Matrix package) a matrix of river connectivity distance-based
 #'  transmission probabilities generated using the `aquanet::createRiverDistanceProbabilityMatrix()`
 #'  function.
@@ -80,6 +84,15 @@
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing is taking place.
+#'
+#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the removal
+#' of the most connected sites in the network is taking place.
+#'
+#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the removal
+#' of the most connected sites in the network is taking place.
+#'
+#' @param sites_states_cumulative (class numeric) numeric binary vector indicating whether a site is
+#' infected (1) or susceptible (0).
 #'
 #'
 #' @return (class list) of length 3 containing:
@@ -107,11 +120,26 @@ updateRates <- function(control_matrix,
                         site_indices,
                         catchment_movements,
                         movements_prob,
+                        movements_prob_top_sites_removed,
                         river_prob,
                         site_distances_prob,
                         run_time_params,
                         non_peak_season,
-                        contact_tracing) {
+                        contact_tracing,
+                        remove_top_sites,
+                        sites_states_cumulative) {
+
+  ### Select contact matrix ---
+
+  if(remove_top_sites == TRUE){
+    if(sum(sites_states_cumulative) > 1){
+      movement_probability <- movements_prob_top_sites_removed[[3]]
+    } else {
+      movement_probability <- movements_prob[[3]]
+    }
+  } else {
+    movement_probability <- movements_prob[[3]]
+  }
 
   ### define movement restrictions ----
 
@@ -170,7 +198,7 @@ updateRates <- function(control_matrix,
   ### identify LFM contacts carrying risk ----
 
   # retain contact probabilities where origin site is infected with unrestricted transport off site
-  matrix_risk_contacts <- movements_prob[[3]] * (state_vector * !transport_prevented_off)
+  matrix_risk_contacts <- movement_probability * (state_vector * !transport_prevented_off)
 
   # retain contact probabilities where receiving sites have no restricted transport on site
   matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
@@ -181,7 +209,7 @@ updateRates <- function(control_matrix,
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = catchment_movements,
-                                                                            matrix_movements_prob = movements_prob[[3]])
+                                                                            matrix_movements_prob = movement_probability)
 
   ### calculate LFM infection rate ----
 
