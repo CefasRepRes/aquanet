@@ -19,7 +19,8 @@ updateRates(
   non_peak_season,
   contact_tracing,
   remove_top_sites,
-  sites_states_cumulative
+  sites_states_cumulative,
+  n_infections_remove_top_sites
 )
 }
 \arguments{
@@ -91,6 +92,10 @@ of the most connected sites in the network is taking place.}
 
 \item{sites_states_cumulative}{(class numeric) numeric binary vector indicating whether a site is
 infected (1) or susceptible (0).}
+
+\item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
+number of infected sites exceeds this number, switch to using the top sites removed contact
+probability matrix.}
 }
 \value{
 (class list) of length 3 containing:

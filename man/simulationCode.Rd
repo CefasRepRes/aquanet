@@ -22,7 +22,8 @@ simulationCode(
   type_catchment_controls,
   filepath_results,
   contact_tracing,
-  remove_top_sites
+  remove_top_sites,
+  n_infections_remove_top_sites
 )
 }
 \arguments{
@@ -85,6 +86,10 @@ tracing is taking place.}
 
 \item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the remova
 of the most connected sites in the network is taking place.}
+
+\item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
+number of infected sites exceeds this number, switch to using the top sites removed contact
+probability matrix.}
 }
 \value{
 (class numeric) batch number \code{batch_num} and summaryStates.table saved to

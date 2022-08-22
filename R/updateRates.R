@@ -94,6 +94,10 @@
 #' @param sites_states_cumulative (class numeric) numeric binary vector indicating whether a site is
 #' infected (1) or susceptible (0).
 #'
+#' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
+#' number of infected sites exceeds this number, switch to using the top sites removed contact
+#' probability matrix.
+#'
 #'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
@@ -127,12 +131,13 @@ updateRates <- function(control_matrix,
                         non_peak_season,
                         contact_tracing,
                         remove_top_sites,
-                        sites_states_cumulative) {
+                        sites_states_cumulative,
+                        n_infections_remove_top_sites) {
 
   ### Select contact matrix ---
 
   if(remove_top_sites == TRUE){
-    if(sum(sites_states_cumulative) > 1){
+    if(sum(sites_states_cumulative) > n_infections_remove_top_sites){
       movement_probability <- movements_prob_top_sites_removed[[3]]
     } else {
       movement_probability <- movements_prob[[3]]

@@ -74,6 +74,10 @@
 #' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the remova
 #' of the most connected sites in the network is taking place.
 #'
+#' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
+#' number of infected sites exceeds this number, switch to using the top sites removed contact
+#' probability matrix.
+#'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
 #' @return (class list) of length 2 containing (1) the number of cores used for the run and (2) the
@@ -104,7 +108,8 @@ runSimulations <- function(n_cores,
                            type_catchment_controls,
                            filepath_results,
                            contact_tracing,
-                           remove_top_sites) {
+                           remove_top_sites,
+                           n_infections_remove_top_sites) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -155,10 +160,11 @@ runSimulations <- function(n_cores,
       type_catchment_controls = type_catchment_controls,
       contact_tracing = contact_tracing,
       filepath_results = filepath_results,
-      remove_top_sites = remove_top_sites
+      remove_top_sites = remove_top_sites,
+      n_infections_remove_top_sites = n_infections_remove_top_sites
     )
 
-  # shut down set of copies of R running in parallel communicating over sockets
+  n_infections_remove_top_sites# shut down set of copies of R running in parallel communicating over sockets
   parallel::stopCluster(cl = cluster)
 
   return(list(n_cores, allruns))
