@@ -26,5 +26,6 @@ Returns a data frame with the following information for each timestep:
 \item \code{rate_type} the transition type
 \item \code{no_controlled_catchments} the number of catchments under controls in that timestep
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation
+Plus the number of sites in each state (1:39) plus redundancy (40:42)
 }
 }

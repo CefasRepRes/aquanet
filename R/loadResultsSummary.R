@@ -11,6 +11,7 @@
 #' 6. `rate_type` the transition type
 #' 7. `no_controlled_catchments` the number of catchments under controls in that timestep
 #' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation
+#' Plus the number of sites in each state (1:39) plus redundancy (40:42)
 #'
 #' @param scenario_name (class string) the name of the scenario being loaded. Assigned
 #' in RunModelCommandLine.R
