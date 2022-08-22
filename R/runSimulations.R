@@ -78,6 +78,9 @@
 #' number of infected sites exceeds this number, switch to using the top sites removed contact
 #' probability matrix.
 #'
+#' @param disease_controls (class logical) vector of length 1 indicating whether or not
+#' any disease control measurs are taking place.
+#'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
 #' @return (class list) of length 2 containing (1) the number of cores used for the run and (2) the
@@ -109,7 +112,8 @@ runSimulations <- function(n_cores,
                            filepath_results,
                            contact_tracing,
                            remove_top_sites,
-                           n_infections_remove_top_sites) {
+                           n_infections_remove_top_sites,
+                           disease_controls) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -161,7 +165,8 @@ runSimulations <- function(n_cores,
       contact_tracing = contact_tracing,
       filepath_results = filepath_results,
       remove_top_sites = remove_top_sites,
-      n_infections_remove_top_sites = n_infections_remove_top_sites
+      n_infections_remove_top_sites = n_infections_remove_top_sites,
+      disease_controls = disease_controls
     )
 
   n_infections_remove_top_sites# shut down set of copies of R running in parallel communicating over sockets

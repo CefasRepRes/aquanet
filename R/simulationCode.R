@@ -104,6 +104,9 @@
 #' number of infected sites exceeds this number, switch to using the top sites removed contact
 #' probability matrix.
 #'
+#' @param disease_controls (class logical) vector of length 1 indicating whether or not
+#' any disease control measurs are taking place.
+#'
 #' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
 #' `filepath_results`.
 #'
@@ -132,7 +135,8 @@ simulationCode <- function(runs,
                            filepath_results,
                            contact_tracing,
                            remove_top_sites,
-                           n_infections_remove_top_sites) {
+                           n_infections_remove_top_sites,
+                           disease_controls) {
 
   ## extract information from input parameters ----
 
@@ -239,13 +243,13 @@ simulationCode <- function(runs,
 
 
     ## add fisheries that can be culled to culling vector of farms ----
-
+    if(disease_controls == TRUE){
     # if a site is a fishery get random probability it can be culled
     culling_vector <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
 
     # if site has culling probability below 0.5 it can be culled (includes farms)
     culling_vector <- ifelse(culling_vector < 0.5, 1, 0)
-
+    }
 
     ## randomly select initial site to seed infection (Note: always a farm) ----
 
@@ -292,7 +296,8 @@ simulationCode <- function(runs,
                                             contact_tracing = contact_tracing,
                                             remove_top_sites = remove_top_sites,
                                             sites_states_cumulative = sites_states_cumulative,
-                                            n_infections_remove_top_sites = n_infections_remove_top_sites)
+                                            n_infections_remove_top_sites = n_infections_remove_top_sites,
+                                            disease_controls = disease_controls)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[[1]]

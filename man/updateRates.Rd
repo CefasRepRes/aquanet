@@ -20,7 +20,8 @@ updateRates(
   contact_tracing,
   remove_top_sites,
   sites_states_cumulative,
-  n_infections_remove_top_sites
+  n_infections_remove_top_sites,
+  disease_controls
 )
 }
 \arguments{
@@ -96,6 +97,9 @@ infected (1) or susceptible (0).}
 \item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
 number of infected sites exceeds this number, switch to using the top sites removed contact
 probability matrix.}
+
+\item{disease_controls}{(class logical) vector of length 1 indicating whether or not
+any disease control measurs are taking place.}
 }
 \value{
 (class list) of length 3 containing:

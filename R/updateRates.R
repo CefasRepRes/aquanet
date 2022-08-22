@@ -98,6 +98,8 @@
 #' number of infected sites exceeds this number, switch to using the top sites removed contact
 #' probability matrix.
 #'
+#' @param disease_controls (class logical) vector of length 1 indicating whether or not
+#' any disease control measurs are taking place.
 #'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
@@ -132,7 +134,8 @@ updateRates <- function(control_matrix,
                         contact_tracing,
                         remove_top_sites,
                         sites_states_cumulative,
-                        n_infections_remove_top_sites) {
+                        n_infections_remove_top_sites,
+                        disease_controls) {
 
   ### Select contact matrix ---
 
@@ -191,10 +194,12 @@ updateRates <- function(control_matrix,
   }
 
   # create vector of sites that could be controlled (infection present and not detected)
+  if(disease_controls == TRUE){
   sites_I_undetected <- control_matrix[ , 1]
 
   # create vector of sites that can become fallow as they can be culled
   farms_I_controlled <- sites_movement_restricted * culling_vector
+  }
 
   # create vector of clinically infected sites
   clinical_vector <- state_vector * !control_matrix[ , 6]
@@ -260,16 +265,20 @@ updateRates <- function(control_matrix,
   }
 
   # Rate 6: rate of detection in infected but undetected sites
+  if(disease_controls == TRUE){
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                      state_vector = sites_I_undetected,
                                                      trans_type = "Detection_Reporting_Disease",
                                                      site_indices = site_indices)
+  }
 
   # Rate 7: rate at which sites become fallow
+  if(disease_controls == TRUE){
   rate_farm_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                    state_vector = farms_I_controlled,
                                                    trans_type = "Time_Required_Cull_Site",
                                                    site_indices = site_indices)
+  }
 
 
   ### combine transition rates ----
@@ -285,8 +294,10 @@ updateRates <- function(control_matrix,
   if(contact_tracing == TRUE){
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested, list_base = trans_rates)
   }
+  if(disease_controls == TRUE){
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_fallow, list_base = trans_rates)
+  }
 
 
   ## if inside active transmission period get rates of transmission for mechanisms other than LFM: -----
