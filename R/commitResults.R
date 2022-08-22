@@ -1,20 +1,76 @@
-commitResults = function(allStates.table, allStates.table.t, numberFullSaves) {
-  allStates.matrix = as(object = as.matrix(allStates.table[((no.variables + 1):(no.variables + contactp.length)),]), Class = "dgTMatrix")
+#' commitResults
+#'
+#' Output information on sites that become infected or subject to control measures at each time step
+#'  within each simulation of the model. Additionally, output information on size of each time step
+#' within the model simulations. Results are saved as an .RData file within the Full_Details
+#' directory.
+#'
+#' TODO: change Full_Details path to match Sarah's folder structure
+#'
+#' @param df_states (class data.table data.frame) data frame of zeros with dimensions number of rows
+#'  = number of sites (`n_sites`) + number of states (`n_states`), and number of columns = commit
+#'  interval (`commit_int`) + 1.
+#'
+#' @param n_states (class numeric) number of different combinations of states possible within the
+#' model.
+#'
+#' @param n_sites (class numeric) number of sites within the contact network (model run).
+#'
+#' @param site_indices (class integer) vector of 0-based site indices of length number of sites
+#' (`n_sites`).
+#'
+#' @param commit_int (class numeric) number of intervals at which results should be committed/saved.
+#'
+#' @param iteration_vector (class integer) integer vector of length `commit_int` containing values
+#' 1:commit interval (`commit_int`).
+#'
+#' @param batch_num (class numeric) batch number for model run.
+#'
+#' @param simulation_num (class numeric) simulation number for model run.
+#'
+#' @param save_num (class numeric) number of full saves for model run.
+#'
+#' @param filepath_results (class string) path to results directory for model run.
+#'
+#' @return Saved .RData file containing two data frames located within the `filepath_results`
+#' Full_Details results directory. Data frame 1: `sim_states` contains site ID and infection and
+#' control status for every time step within a simulation.  Data frame 2: `sim_times` contains the
+#' time step ID, simulation number and details of time step size.
+#'
+#' @export
+#'
+commitResults <- function(df_states,
+                          n_states,
+                          n_sites,
+                          site_indices,
+                          commit_int,
+                          iteration_vector,
+                          batch_num,
+                          simulation_num,
+                          save_num,
+                          filepath_results) {
 
-  simStates.longTable = data.frame(as.integer(site.index[(allStates.matrix@i + 1)] + 1),
-                                   as.integer(allStates.matrix@x),
-                                   as.integer(allStates.matrix@j + ((numberFullSaves - 1) * commitInterval)),
-                                   as.integer(allStates.table[3,])[allStates.matrix@j + 1])
+  # create empty dgTMatrix to record site state at each step within the specified commit interval
+  matrix_states <- as(object = as.matrix(df_states[((3 + n_states + 1):(3 + n_states + n_sites)), ]),
+                      Class = "dgTMatrix")
 
-  colnames(simStates.longTable) = c('siteID','state','timeID','simNo')
-
-  simTimes.longTable = data.frame(as.integer(iterationID.vector + ((numberFullSaves - 1) * commitInterval)),
-                                  as.integer(allStates.table[3,])[iterationID.vector],
-                                  as.numeric(allStates.table.t[1,])[iterationID.vector],
-                                  as.numeric(allStates.table.t[2,])[iterationID.vector])
-
-  colnames(simTimes.longTable) = c('timeID','simNo','tdiff','t')
+  # create data frame of simulation site states and times at each iteration
+  sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+                     state = as.integer(matrix_states@x),
+                     timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
+                     simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
+                     tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
+                     t = as.numeric(df_states[5, ])[matrix_states@j + 1])
 
 
-  save(simStates.longTable, simTimes.longTable, file = paste(locationSaveResults,"/batch_results/states-batchNo-",batchNo,"_simNo-",simNo,".RData",sep=""),compress=FALSE)
+  # save simulation site states and simulation times
+  # TODO switch file path back to Sarah's new system post-testing
+  save(sims,
+       file = paste(filepath_results,
+                    "/full_results/batchNo-", batch_num,
+                    "_simNo-", simulation_num,
+                    "_NoCommits-", save_num,
+                    ".RData",
+                    sep=""),
+       compress=FALSE)
 }

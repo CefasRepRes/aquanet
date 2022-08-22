@@ -12,10 +12,16 @@ updateRates(
   site_indices,
   catchment_movements,
   movements_prob,
+  movements_prob_top_sites_removed,
   river_prob,
   site_distances_prob,
   run_time_params,
-  non_peak_season
+  non_peak_season,
+  contact_tracing,
+  remove_top_sites,
+  sites_states_cumulative,
+  n_infections_remove_top_sites,
+  disease_controls
 )
 }
 \arguments{
@@ -50,7 +56,8 @@ catchments were under controls in the previous time step (controlled.catchments.
 (listContacts.exclude)
 \item (class numeric) number selecting catchment level controls to apply (0 = allows movements
 within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
-allows no movements by any of the sites within an infected catchment) (associatedSiteControlType)
+allows no movements by any of the sites within an infected catchment, "None" means there are no
+catchment level controls) (associatedSiteControlType)
 \item (class logical) logical vector of length number of sites stating if sites are under secondary
 levels of control (secondary.controlled.sites)
 \item (class numeric) the total number of catchments under controls (no.controlled.catchments)
@@ -59,6 +66,10 @@ levels of control (secondary.controlled.sites)
 \item{movements_prob}{(class dgTMatrix, Matrix package) a matrix of live fish movement
 probabilities between sites generated using the \code{aquanet::createContactProbabilityMatrix()}
 function.}
+
+\item{movements_prob_top_sites_removed}{(class dgTMatrix, Matrix package) a matrix of live fish movement
+probabilities between sites, but with the top most connected sites in the network removed.
+Generated using the \code{aquanet::createContactProbabilityMatrixTopSitesRemoved()}function.}
 
 \item{river_prob}{(class dgTMatrix, Matrix package) a matrix of river connectivity distance-based
 transmission probabilities generated using the \code{aquanet::createRiverDistanceProbabilityMatrix()}
@@ -73,6 +84,22 @@ frame contains probabilities from the scenarios of interest for listing transiti
 
 \item{non_peak_season}{(class logical) logical indicating whether the current timestep in the
 model is within non peak season where transmission (of e.g. a pathogen) is lower.}
+
+\item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
+tracing is taking place.}
+
+\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the removal
+of the most connected sites in the network is taking place.}
+
+\item{sites_states_cumulative}{(class numeric) numeric binary vector indicating whether a site is
+infected (1) or susceptible (0).}
+
+\item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
+number of infected sites exceeds this number, switch to using the top sites removed contact
+probability matrix.}
+
+\item{disease_controls}{(class logical) vector of length 1 indicating whether or not
+any disease control measurs are taking place.}
 }
 \value{
 (class list) of length 3 containing:

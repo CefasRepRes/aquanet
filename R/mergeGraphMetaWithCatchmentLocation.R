@@ -20,8 +20,7 @@ mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments
   metadata <- data.frame(siteID = igraph::V(graph)$siteID,
                          personID = igraph::V(graph)$PersonID,
                          modelID = 1:length(igraph::V(graph)$siteID),
-                         siteName = igraph::V(graph)$siteName,
-                         catchmentID = igraph::V(graph)$catchmentID,
+                         catchmentID = igraph::V(graph)$CatchmentID,
                          type = igraph::V(graph)$type)
 
   # read in data frame of site location and catchment information
@@ -29,9 +28,9 @@ mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments
 
   # merge model metadata and site catchment information
   metadata.sites_catchments <- merge(x = metadata,
-                                           y = sites_catchments,
-                                           by = "siteID",
-                                           all.x = TRUE)
+                                     y = sites_catchments,
+                                     by = "siteID",
+                                     all.x = TRUE)
 
   # order data frame by modelID column
   metadata.sites_catchments <- metadata.sites_catchments[order(metadata.sites_catchments$modelID), ]
