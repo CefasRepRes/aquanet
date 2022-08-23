@@ -170,7 +170,8 @@ runSimulations <- function(n_cores,
       filepath_results = filepath_results,
       remove_top_sites = remove_top_sites,
       n_infections_remove_top_sites = n_infections_remove_top_sites,
-      disease_controls = disease_controls
+      disease_controls = disease_controls,
+      proportion_cullable = proportion_cullable
     )
 
   # shut down set of copies of R running in parallel communicating over sockets
