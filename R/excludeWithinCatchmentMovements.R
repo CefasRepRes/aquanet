@@ -50,7 +50,8 @@
 #' (listContacts.exclude)
 #' 5. (class numeric) number selecting catchment level controls to apply (0 = allows movements
 #' within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
-#' allows no movements by any of the sites within an infected catchment) (associatedSiteControlType)
+#' allows no movements by any of the sites within an infected catchment, "None" means there are no
+#' catchment level controls) (associatedSiteControlType)
 #' 6. (class logical) logical vector of length number of sites stating if sites are under secondary
 #'  levels of control (secondary.controlled.sites)
 #' 7. (class numeric) the total number of catchments under controls (no.controlled.catchments)
@@ -79,8 +80,11 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   matrix_contacts_exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
 
-  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether movements are restricted
-  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites
+  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether 
+  # movements are restricted if there are no catchment controls, ignore this step
+  ifelse(site_control_type != "None",
+  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites,
+  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites * 0)
 
   # determine number of catchments under control
   n_catchments_controlled <- sum(catchments_controlled > 0)

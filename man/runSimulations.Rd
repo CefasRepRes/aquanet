@@ -13,6 +13,7 @@ runSimulations(
   run_time_params,
   non_peak_season_length,
   out_createContactProbabilityMatrix,
+  out_createContactProbabilityMatrixTopSitesRemoved,
   out_createWithinCatchmentEdges,
   out_createCatchmentToSiteMatrix,
   out_createRiverDistanceProbabilityMatrix,
@@ -21,7 +22,11 @@ runSimulations(
   n_states,
   n_initial_infections,
   type_catchment_controls,
-  filepath_results
+  filepath_results,
+  contact_tracing,
+  remove_top_sites,
+  n_infections_remove_top_sites,
+  disease_controls
 )
 }
 \arguments{
@@ -47,6 +52,11 @@ transmission season lasts for (e.g. "90", "180").}
 \item{out_createContactProbabilityMatrix}{(class list) of length 3 containing (1) number of sites
 in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).}
+
+\item{out_createContactProbabilityMatrixTopSitesRemoved}{(class list) of length 3 containing (1) number of sites
+in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
+package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
+This object is created following the removal of the top most connected sites in the network.}
 
 \item{out_createWithinCatchmentEdges}{(class list) of length 3 containing (1) lgCMatrix (logical
 matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
@@ -76,9 +86,22 @@ model.}
 \item{type_catchment_controls}{(class numeric) tnumber selecting catchment level controls to
 apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 infected catchments, and 2 = allows no movements by any of the sites within an infected
-catchment).}
+catchment, "None" means there are no catchment level controls).}
 
 \item{filepath_results}{(class string) path to results directory for model run.}
+
+\item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
+tracing is taking place.}
+
+\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the remova
+of the most connected sites in the network is taking place.}
+
+\item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
+number of infected sites exceeds this number, switch to using the top sites removed contact
+probability matrix.}
+
+\item{disease_controls}{(class logical) vector of length 1 indicating whether or not
+any disease control measurs are taking place.}
 }
 \value{
 (class list) of length 2 containing (1) the number of cores used for the run and (2) the

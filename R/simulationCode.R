@@ -57,6 +57,12 @@
 #'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
+#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1)
+#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix 
+#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix, 
+#' Matrix package). This object is created following the removal of the top most connected sites 
+#' in the network.
+#'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
 #' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
 #' and (3) matrix of source site and receiving site within catchment edges.
@@ -89,8 +95,22 @@
 #'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
+#' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
+#' tracing is taking place.
+#'
+#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the remova
+#' of the most connected sites in the network is taking place.
+#'
+#' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
+#' number of infected sites exceeds this number, switch to using the top sites removed contact
+#' probability matrix.
+#'
+#' @param disease_controls (class logical) vector of length 1 indicating whether or not
+#' any disease control measurs are taking place.
+#'
 #' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
 #' `filepath_results`.
+#'
 #'
 #' @export
 #'
@@ -104,6 +124,7 @@ simulationCode <- function(runs,
                            run_time_params,
                            non_peak_season_length,
                            out_createContactProbabilityMatrix,
+                           out_createContactProbabilityMatrixTopSitesRemoved,
                            out_createWithinCatchmentEdges,
                            out_createCatchmentToSiteMatrix,
                            out_createRiverDistanceProbabilityMatrix,
@@ -112,7 +133,11 @@ simulationCode <- function(runs,
                            n_states,
                            n_initial_infections,
                            type_catchment_controls,
-                           filepath_results) {
+                           filepath_results,
+                           contact_tracing,
+                           remove_top_sites,
+                           n_infections_remove_top_sites,
+                           disease_controls) {
 
   ## extract information from input parameters ----
 
@@ -219,13 +244,13 @@ simulationCode <- function(runs,
 
 
     ## add fisheries that can be culled to culling vector of farms ----
-
+    if(disease_controls == TRUE) {
     # if a site is a fishery get random probability it can be culled
     culling_vector <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
 
     # if site has culling probability below 0.5 it can be culled (includes farms)
     culling_vector <- ifelse(culling_vector < 0.5, 1, 0)
-
+    }
 
     ## randomly select initial site to seed infection (Note: always a farm) ----
 
@@ -264,10 +289,16 @@ simulationCode <- function(runs,
                                             site_indices = site_index,
                                             catchment_movements = list_catchment_movements,
                                             movements_prob = out_createContactProbabilityMatrix,
+                                            movements_prob_top_sites_removed = out_createContactProbabilityMatrixTopSitesRemoved,
                                             river_prob = out_createRiverDistanceProbabilityMatrix,
                                             site_distances_prob = out_createDistanceMatrix,
                                             run_time_params = run_time_params,
-                                            non_peak_season = non_peak_season)
+                                            non_peak_season = non_peak_season,
+                                            contact_tracing = contact_tracing,
+                                            remove_top_sites = remove_top_sites,
+                                            sites_states_cumulative = sites_states_cumulative,
+                                            n_infections_remove_top_sites = n_infections_remove_top_sites,
+                                            disease_controls = disease_controls)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[[1]]
@@ -379,7 +410,8 @@ simulationCode <- function(runs,
                                       catchment_time_vector = catchment_time_vector,
                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
                                       source_inf_vector = source_inf_vector,
-                                      source_inf_matrix = source_inf_matrix)
+                                      source_inf_matrix = source_inf_matrix,
+                                      contact_tracing = contact_tracing)
 
       # reassign variables with updates outputs for next iteration of while loop
       state_vector <- doEvent_out[[1]]
