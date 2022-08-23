@@ -11,6 +11,9 @@
 #'  = number of sites (`n_sites`) + number of states (`n_states`), and number of columns = commit
 #'  interval (`commit_int`) + 1.
 #'
+#' @param df_site_names (class data.frame) data frame with columns siteID and modelID where number
+#' of rows = number of sites (`n_sites`).
+#'
 #' @param n_states (class numeric) number of different combinations of states possible within the
 #' model.
 #'
@@ -40,6 +43,7 @@
 #' @export
 #'
 commitResults <- function(df_states,
+                          df_site_names,
                           n_states,
                           n_sites,
                           site_indices,
@@ -55,13 +59,17 @@ commitResults <- function(df_states,
                       Class = "dgTMatrix")
 
   # create data frame of simulation site states and times at each iteration
-  sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+  sims <- data.frame(modelID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
                      state = as.integer(matrix_states@x),
                      timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
                      simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
                      tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
                      t = as.numeric(df_states[5, ])[matrix_states@j + 1])
 
+  # merge simulation data with true siteID and order by timeID
+  sims <- merge(df_site_names, sims, by = "modelID", all.y = TRUE)
+  sims <- sims[order(sims$timeID), ]
+  rownames(sims) <- NULL # reset row names in case downstream elements rely on this
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
