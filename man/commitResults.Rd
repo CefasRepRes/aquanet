@@ -6,6 +6,7 @@
 \usage{
 commitResults(
   df_states,
+  df_site_names,
   n_states,
   n_sites,
   site_indices,
@@ -21,6 +22,9 @@ commitResults(
 \item{df_states}{(class data.table data.frame) data frame of zeros with dimensions number of rows
 = number of sites (\code{n_sites}) + number of states (\code{n_states}), and number of columns = commit
 interval (\code{commit_int}) + 1.}
+
+\item{df_site_names}{(class data.frame) data frame with columns siteID and modelID where number
+of rows = number of sites (\code{n_sites}).}
 
 \item{n_states}{(class numeric) number of different combinations of states possible within the
 model.}
