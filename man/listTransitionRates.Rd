@@ -4,7 +4,13 @@
 \alias{listTransitionRates}
 \title{listTransitionRates}
 \usage{
-listTransitionRates(run_time_params, state_vector, trans_type, site_indices)
+listTransitionRates(
+  run_time_params,
+  state_vector,
+  trans_name,
+  site_indices,
+  trans_type
+)
 }
 \arguments{
 \item{run_time_params}{(class data frame) of model run time parameters imported from original
@@ -15,11 +21,13 @@ frame contains probabilities from the scenarios of interest for listing transiti
 information about the state of each site in relation to a condition (E.g. is the site
 1 = infected or 0 = susceptible state).}
 
-\item{trans_type}{(class string) string in quotation marks "" stating transition type. Note: this
+\item{trans_name}{(class string) string in quotation marks "" stating transition type. Note: this
 should correspond to a column name in the input parameter file and is case sensitive. An example
 input may be "Site_Recovers".}
 
 \item{site_indices}{(class numeric) vector of 0-based site indices of length 'number of sites'.}
+
+\item{trans_type}{(class numeric) single numeric value indicating the type of transition occurring.}
 }
 \value{
 (class list) of length 5 containing:
@@ -35,8 +43,8 @@ input may be "Site_Recovers".}
 Generate a list of transition rate objects using an input vector of sites stating their status
 (\code{state_vector}) (for example infection status 1/0, fallow status, latency status) to extract
 sites (from \code{site_indices}) where the state in state_vector is 1. For these sites, generate a
-vector of the transition rate: \code{1 / run_time_params[[trans_type]]}. The column number of
-\code{trans_type} within the \code{run_time_params} depicts the rate type for the site - this is output in
+vector of the transition rate: \code{1 / run_time_params[[trans_name]]}. The column number of
+\code{trans_name} within the \code{run_time_params} depicts the rate type for the site - this is output in
 a list alongside the transition rate, transitioning site, rate, source site (NAs), and number of
 sites.
 }
