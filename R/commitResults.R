@@ -11,6 +11,9 @@
 #'  = number of sites (`n_sites`) + number of states (`n_states`), and number of columns = commit
 #'  interval (`commit_int`) + 1.
 #'
+#' @param df_site_names (class data.frame) data frame with columns siteID and modelID where number
+#' of rows = number of sites (`n_sites`).
+#'
 #' @param n_states (class numeric) number of different combinations of states possible within the
 #' model.
 #'
@@ -40,6 +43,7 @@
 #' @export
 #'
 commitResults <- function(df_states,
+                          df_site_names,
                           n_states,
                           n_sites,
                           site_indices,
