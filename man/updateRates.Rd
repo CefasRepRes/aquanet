@@ -99,7 +99,7 @@ number of infected sites exceeds this number, switch to using the top sites remo
 probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
-any disease control measurs are taking place.}
+any disease control measures are taking place.}
 }
 \value{
 (class list) of length 3 containing:
