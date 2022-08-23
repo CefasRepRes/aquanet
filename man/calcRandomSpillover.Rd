@@ -9,8 +9,9 @@ calcRandomSpillover(
   spread_restricted_off,
   spread_restricted_on,
   site_indices,
-  trans_type,
-  run_time_params
+  trans_name,
+  run_time_params,
+  trans_type
 )
 }
 \arguments{
@@ -29,18 +30,20 @@ states whether movements on to this site are currently restricted (TRUE) or unre
 
 \item{site_indices}{(class numeric) vector of 0-based site indices of length 'number of sites'.}
 
-\item{trans_type}{(class string) string in quotation marks "" stating transition type. Note: this
+\item{trans_name}{(class string) string in quotation marks "" stating transition type. Note: this
 should correspond to a column name in the input parameter file and is case sensitive. An example
 input may be "Fomite_Transmission_Independent_Prob".}
 
 \item{run_time_params}{(class data frame) of model run time parameters imported from original
 parameter file which is subsequently split into model set up and model run time parameters. Data
 frame contains probabilities from the scenarios of interest for listing transition rates.}
+
+\item{trans_type}{(class numeric) single numeric value indicating the type of transition occurring.}
 }
 \value{
 (class list) of either length 4 or 5 containing:
 \enumerate{
-\item (class numeric) numeric vector of transition types (\code{trans_num}) with length 'number of sites
+\item (class numeric) numeric vector of transition types (\code{trans_type}) with length 'number of sites
 that are infected with no restrictions on movement off site'.
 \item (class integer) integer vector of 0-based indices of site subject to transition i.e.
 susceptible (positions/coordinate x of site randomly sampled from susceptible sites with no
@@ -48,7 +51,7 @@ restrictions to prevent spread on site) with length 'number of sites that are in
 restrictions on movement off site'.
 \item (class numeric) numeric vector of transition rate/transmission probability (the probability
 of risk contact at sites connected to susceptible sites) calculated by
-\code{1 / run_time_params[[trans_type]]} with length 'number of sites that are infected with no
+\code{1 / run_time_params[[trans_name]]} with length 'number of sites that are infected with no
 resrictions on movement off site'.
 \item (class logical) logical vector containing NA's to depict unknown infection source with length
 'number of sites that are infected with no movement off site'.
@@ -63,9 +66,9 @@ clinically infected and have no restrictions on movements off site.
 }
 \details{
 Create list of vectors with length equivalent to the number of sites with spreading potential and
-containing: (1) transition type vector depicted by the column number of \code{trans_type} within the
+containing: (1) transition type vector depicted by the column number of \code{trans_name} within the
 \code{run_time_params}, (2) randomly selected transitioning/susceptible site vector, (3) transition
-rate/probability vector calculated using \code{1 / run_time_params[[trans_type]]}, and (4) source site
+rate/probability vector calculated using \code{1 / run_time_params[[trans_name]]}, and (4) source site
 vector of NAs. This list is populated with NULL if there are no susceptible sites. If there are
 1 or more susceptible sites, the fifth element of this list is the number of infected sites.
 
