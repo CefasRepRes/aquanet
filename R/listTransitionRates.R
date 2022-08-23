@@ -25,6 +25,8 @@
 #'
 #' @param site_indices (class numeric) vector of 0-based site indices of length 'number of sites'.
 #'
+#' @param trans_num (class numeric) single numeric value indicating the type of transition occurring.
+#'
 #'
 #' @return (class list) of length 5 containing:
 #' 1. (class numeric) numeric vector of transition types (`rate_type`).
@@ -35,9 +37,7 @@
 #'
 #' @export
 #'
-listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices) {
-  # get column number for trans_type in run_time_params
-  trans_num <- which(colnames(run_time_params) == trans_type)
+listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices, trans_num) {
 
   # get probability from input parameter file
   prob <- run_time_params[[trans_type]]
