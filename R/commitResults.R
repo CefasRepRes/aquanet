@@ -69,6 +69,7 @@ commitResults <- function(df_states,
   # merge simulation data with true siteID and order by timeID
   sims <- merge(df_site_names, sims, by = "modelID", all.y = TRUE)
   sims <- sims[order(sims$timeID), ]
+  rownames(sims) <- NULL # reset row names in case downstream elements rely on this
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
