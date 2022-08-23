@@ -57,10 +57,11 @@
 #'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
-#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1) number of sites
-#'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
-#' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
-#' This object is created following the removal of the top most connected sites in the network.
+#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1)
+#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix 
+#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix, 
+#' Matrix package). This object is created following the removal of the top most connected sites 
+#' in the network.
 #'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
 #' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
@@ -243,7 +244,7 @@ simulationCode <- function(runs,
 
 
     ## add fisheries that can be culled to culling vector of farms ----
-    if(disease_controls == TRUE){
+    if(disease_controls == TRUE) {
     # if a site is a fishery get random probability it can be culled
     culling_vector <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
 
