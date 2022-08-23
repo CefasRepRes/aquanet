@@ -33,10 +33,11 @@
 #'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
-#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1) number of sites
-#'  in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
-#' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
-#' This object is created following the removal of the top most connected sites in the network.
+#' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1)
+#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix 
+#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix, 
+#' Matrix package). This object is created following the removal of the top most connected sites 
+#' in the network.
 #'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
 #' matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
@@ -68,6 +69,8 @@
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
 #' catchment, "None" means there are no catchment level controls).
 #'
+#' @param filepath_results (class string) path to results directory for model run.
+#'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing is taking place.
 #'
@@ -80,8 +83,6 @@
 #'
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not
 #' any disease control measurs are taking place.
-#'
-#' @param filepath_results (class string) path to results directory for model run.
 #'
 #' @return (class list) of length 2 containing (1) the number of cores used for the run and (2) the
 #' output of the foreach loop running the `aquanet::simulationCode()` function.
@@ -169,7 +170,7 @@ runSimulations <- function(n_cores,
       disease_controls = disease_controls
     )
 
-  n_infections_remove_top_sites# shut down set of copies of R running in parallel communicating over sockets
+  # shut down set of copies of R running in parallel communicating over sockets
   parallel::stopCluster(cl = cluster)
 
   return(list(n_cores, allruns))
