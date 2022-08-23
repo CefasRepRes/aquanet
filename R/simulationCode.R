@@ -58,9 +58,9 @@
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
 #' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1)
-#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix 
-#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix, 
-#' Matrix package). This object is created following the removal of the top most connected sites 
+#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix
+#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix,
+#' Matrix package). This object is created following the removal of the top most connected sites
 #' in the network.
 #'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
