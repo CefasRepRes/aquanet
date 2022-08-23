@@ -3,8 +3,8 @@
 #' Generate a list of transition rate objects using an input vector of sites stating their status
 #' (`state_vector`) (for example infection status 1/0, fallow status, latency status) to extract
 #' sites (from `site_indices`) where the state in state_vector is 1. For these sites, generate a
-#' vector of the transition rate: `1 / run_time_params[[trans_type]]`. The column number of
-#' `trans_type` within the `run_time_params` depicts the rate type for the site - this is output in
+#' vector of the transition rate: `1 / run_time_params[[trans_name]]`. The column number of
+#' `trans_name` within the `run_time_params` depicts the rate type for the site - this is output in
 #' a list alongside the transition rate, transitioning site, rate, source site (NAs), and number of
 #' sites.
 #'
@@ -19,13 +19,13 @@
 #' information about the state of each site in relation to a condition (E.g. is the site
 #' 1 = infected or 0 = susceptible state).
 #'
-#' @param trans_type (class string) string in quotation marks "" stating transition type. Note: this
+#' @param trans_name (class string) string in quotation marks "" stating transition type. Note: this
 #'  should correspond to a column name in the input parameter file and is case sensitive. An example
 #'  input may be "Site_Recovers".
 #'
 #' @param site_indices (class numeric) vector of 0-based site indices of length 'number of sites'.
 #'
-#' @param trans_num (class numeric) single numeric value indicating the type of transition occurring.
+#' @param trans_type (class numeric) single numeric value indicating the type of transition occurring.
 #'
 #'
 #' @return (class list) of length 5 containing:
@@ -37,10 +37,10 @@
 #'
 #' @export
 #'
-listTransitionRates <- function(run_time_params, state_vector, trans_type, site_indices, trans_num) {
+listTransitionRates <- function(run_time_params, state_vector, trans_name, site_indices, trans_type) {
 
   # get probability from input parameter file
-  prob <- run_time_params[[trans_type]]
+  prob <- run_time_params[[trans_name]]
 
   # create logical vector of sites in state_vector state 1
   state_logical <- state_vector == 1
@@ -51,7 +51,7 @@ listTransitionRates <- function(run_time_params, state_vector, trans_type, site_
 
   # create vector of transition rates, transition rate type, and infection source
   rate <- rep(1 / prob, times = n_rates)
-  rate_type <- rep(trans_num, times = n_rates)
+  rate_type <- rep(trans_type, times = n_rates)
   source_site <- rep(NA, times = n_rates)
 
   return(list(rate_type, position, rate, source_site, n_rates))
