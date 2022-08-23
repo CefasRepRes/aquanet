@@ -66,9 +66,9 @@ commitResults <- function(df_states,
                      tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
                      t = as.numeric(df_states[5, ])[matrix_states@j + 1])
 
-  # merge simulation data with true siteID and order by timeID
-  sims <- merge(df_site_names, sims, by = "modelID", all.y = TRUE)
-  sims <- sims[order(sims$timeID), ]
+  # merge simulation data with true siteID and reorder cols
+  sims <- merge(sims, df_site_names, by = "modelID", all.x = TRUE)
+  sims <- sims[ , c("modelID", "siteID", "state", "timeID", "simNo", "tdiff", "t")]
 
   # save simulation site states and simulation times
   # TODO switch file path back to Sarah's new system post-testing
