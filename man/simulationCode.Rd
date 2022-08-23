@@ -24,7 +24,8 @@ simulationCode(
   contact_tracing,
   remove_top_sites,
   n_infections_remove_top_sites,
-  disease_controls
+  disease_controls,
+  proportion_cullable
 )
 }
 \arguments{
@@ -95,6 +96,8 @@ probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
 any disease control measurs are taking place.}
+
+\item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
 }
 \value{
 (class numeric) batch number \code{batch_num} and summaryStates.table saved to

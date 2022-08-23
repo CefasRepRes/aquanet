@@ -26,7 +26,8 @@ runSimulations(
   contact_tracing,
   remove_top_sites,
   n_infections_remove_top_sites,
-  disease_controls
+  disease_controls,
+  proportion_cullable
 )
 }
 \arguments{
@@ -103,6 +104,8 @@ probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
 any disease control measurs are taking place.}
+
+\item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
 }
 \value{
 (class list) of length 2 containing (1) the number of cores used for the run and (2) the

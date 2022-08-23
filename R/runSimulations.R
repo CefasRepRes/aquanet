@@ -34,9 +34,9 @@
 #' package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
 #'
 #' @param out_createContactProbabilityMatrixTopSitesRemoved (class list) of length 3 containing (1)
-#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix 
-#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix, 
-#' Matrix package). This object is created following the removal of the top most connected sites 
+#' number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix
+#' (dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix,
+#' Matrix package). This object is created following the removal of the top most connected sites
 #' in the network.
 #'
 #' @param out_createWithinCatchmentEdges (class list) of length 3 containing (1) lgCMatrix (logical
@@ -84,6 +84,8 @@
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not
 #' any disease control measurs are taking place.
 #'
+#' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
+#'
 #' @return (class list) of length 2 containing (1) the number of cores used for the run and (2) the
 #' output of the foreach loop running the `aquanet::simulationCode()` function.
 #'
@@ -114,7 +116,8 @@ runSimulations <- function(n_cores,
                            contact_tracing,
                            remove_top_sites,
                            n_infections_remove_top_sites,
-                           disease_controls) {
+                           disease_controls,
+                           proportion_cullable) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory

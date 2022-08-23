@@ -108,6 +108,8 @@
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not
 #' any disease control measurs are taking place.
 #'
+#' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
+#'
 #' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
 #' `filepath_results`.
 #'
@@ -137,7 +139,8 @@ simulationCode <- function(runs,
                            contact_tracing,
                            remove_top_sites,
                            n_infections_remove_top_sites,
-                           disease_controls) {
+                           disease_controls,
+                           proportion_cullable) {
 
   ## extract information from input parameters ----
 
@@ -248,8 +251,8 @@ simulationCode <- function(runs,
     # if a site is a fishery get random probability it can be culled
     culling_vector <- ifelse(farm_vector == 1, 0, stats::runif(length(farm_vector)))
 
-    # if site has culling probability below 0.5 it can be culled (includes farms)
-    culling_vector <- ifelse(culling_vector < 0.5, 1, 0)
+    # if site has culling probability below proportion cullable it can be culled (includes farms)
+    culling_vector <- ifelse(culling_vector <= proportion_cullable, 1, 0)
     }
 
     ## randomly select initial site to seed infection (Note: always a farm) ----
