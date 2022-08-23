@@ -59,7 +59,7 @@ commitResults <- function(df_states,
                       Class = "dgTMatrix")
 
   # create data frame of simulation site states and times at each iteration
-  sims <- data.frame(siteID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
+  sims <- data.frame(modelID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
                      state = as.integer(matrix_states@x),
                      timeID = as.integer(matrix_states@j + ((save_num - 1) * commit_int)),
                      simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
