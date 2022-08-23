@@ -185,13 +185,13 @@ updateRates <- function(control_matrix,
 
   # create vector of clinically infected sites
   clinical_vector <- state_vector * !control_matrix[ , 6]
-  
+
   # NOTE only used if contact_tracing == TRUE
   # create vector of sites which have been contact traced (are in infected catchment)
   sites_contact_traced <- control_matrix[ , 7]
 
   # NOTE only used if disease controls == TRUE
-  # create vector of sites that could be controlled (infection present and not detected)  
+  # create vector of sites that could be controlled (infection present and not detected)
   sites_I_undetected <- control_matrix[ , 1]
 
   # NOTE only used if disease controls == TRUE
@@ -228,19 +228,22 @@ updateRates <- function(control_matrix,
   rate_farm_recovery <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                      state_vector = farms_I,
                                                      trans_type = "Site_Recovers",
-                                                     site_indices = site_indices)
+                                                     site_indices = site_indices,
+                                                     trans_num = 3)
 
   # Rate 3: fishery transitions from infected to subclinical infection
   rate_fishery_latency <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = fisheries_I,
                                                        trans_type = "Infection_Becomes_Subclinical",
-                                                       site_indices = site_indices)
+                                                       site_indices = site_indices,
+                                                       trans_num = 2)
 
   # Rate 4: transition from subclinical infection (farms and fisheries)
   rate_site_cleared <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                     state_vector = sites_L,
                                                     trans_type = "Clearing_Of_Latency_From_Infected_Sites",
-                                                    site_indices = site_indices)
+                                                    site_indices = site_indices,
+                                                    trans_num = 5)
 
 
   ### combine transition rates ----
@@ -255,54 +258,58 @@ updateRates <- function(control_matrix,
 
 
   ## if contact tracing is enabled ----
-  
+
   if(contact_tracing == TRUE) {
-  
+
   ## calculate transition rates ----
-  
+
   # Rate 5: rate at which contact traced sites will be tested
   rate_sites_ct_tested <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_contact_traced,
                                                        trans_type = "Contact_Detection",
-                                                       site_indices = site_indices)
-  
+                                                       site_indices = site_indices,
+                                                       trans_num = 12)
+
   ## combine transition rates ----
-  
+
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_sites_ct_tested, list_base = trans_rates)
-  
+
   }
-  
+
 
   ## if disease controls are applied -----
-  
+
   if(disease_controls == TRUE) {
-  
+
   ## calculate transition rates ----
-  
+
   # Rate 6: rate at which fallow sites are disinfected
   rate_site_disinfected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                         state_vector = sites_fallow,
                                                         trans_type = "Reinfection_After_Restocking_Const",
-                                                        site_indices = site_indices)
-                                                        
-  # Rate 7: rate of detection in infected but undetected sites 
+                                                        site_indices = site_indices,
+                                                        trans_num = 1)
+
+  # Rate 7: rate of detection in infected but undetected sites
   rate_site_detected <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                      state_vector = sites_I_undetected,
                                                      trans_type = "Detection_Reporting_Disease",
-                                                     site_indices = site_indices)
+                                                     site_indices = site_indices,
+                                                     trans_num = 6)
 
   # Rate 8: rate at which sites become fallow
   rate_site_fallow <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                    state_vector = sites_I_controlled,
                                                    trans_type = "Time_Required_Cull_Site",
-                                                   site_indices = site_indices)
-  
+                                                   site_indices = site_indices,
+                                                   trans_num = 9)
+
   ## combine transition rates ----
-  
+
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_disinfected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_detected, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_fallow, list_base = trans_rates)
-  
+
   }
 
 
@@ -316,7 +323,8 @@ updateRates <- function(control_matrix,
     sites_L_recrudesce <- aquanet::listTransitionRates(run_time_params = run_time_params,
                                                        state_vector = sites_L,
                                                        trans_type = "Second_Outbreak_Due_To_Subclinical_Infection",
-                                                       site_indices = site_indices)
+                                                       site_indices = site_indices,
+                                                       trans_num = 4)
 
     # Rate 10: probability of a contact occurring downstream of an outbreak via the river network
     contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = river_prob[[2]],
