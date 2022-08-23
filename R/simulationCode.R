@@ -148,6 +148,10 @@ simulationCode <- function(runs,
   n_sites <- out_createContactProbabilityMatrix[[1]]
   matrix_movements_prob <- out_createContactProbabilityMatrix[[3]]
 
+  # extract siteID alongside modelID
+  site_names <- data.frame(modelID = 1:length(dimnames(matrix_movements_prob)[[1]]),
+                           siteID = dimnames(matrix_movements_prob)[[1]])
+
   # extract number of catchments and matrix of catchment to site relationships
   spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[[2]]
   n_catchments <- spmatrix_sites_catchment@Dim[2]
@@ -385,6 +389,7 @@ simulationCode <- function(runs,
 
         # save the results of allStates.table
         aquanet::commitResults(df_states = allStates.table,
+                               df_site_names = site_names,
                                n_states = n_states,
                                n_sites = n_sites,
                                site_indices = site_index,
@@ -447,6 +452,7 @@ simulationCode <- function(runs,
 
   # commit remaining results
   aquanet::commitResults(df_states = allStates.table,
+                         df_site_names = site_names,
                           n_states = n_states,
                           n_sites = n_sites,
                           site_indices = site_index,
