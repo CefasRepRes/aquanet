@@ -80,8 +80,8 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   matrix_contacts_exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
 
-  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether movements are restricted
-  # if there are no catchment controls, ignore this step
+  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether 
+  # movements are restricted if there are no catchment controls, ignore this step
   ifelse(site_control_type != "None",
   catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites,
   catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites * 0)
