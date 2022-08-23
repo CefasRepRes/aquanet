@@ -4,4 +4,10 @@ utils::globalVariables(c(".",
                          "max_inf",
                          "max_t",
                          "sim_no",
-                         "summaryStates.table"))
+                         "summaryStates.table",
+                         "modelID",
+                         "simNo",
+                         "sims",
+                         "siteID",
+                         "tdiff",
+                         "state"))
