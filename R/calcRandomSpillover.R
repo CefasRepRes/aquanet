@@ -40,8 +40,10 @@
 #' parameter file which is subsequently split into model set up and model run time parameters. Data
 #' frame contains probabilities from the scenarios of interest for listing transition rates.
 #'
+#' @param trans_type (class numeric) single numeric value indicating the type of transition occurring.
+#'
 #' @return (class list) of either length 4 or 5 containing:
-#' 1. (class numeric) numeric vector of transition types (`trans_num`) with length 'number of sites
+#' 1. (class numeric) numeric vector of transition types (`trans_type`) with length 'number of sites
 #' that are infected with no restrictions on movement off site'.
 #'
 #' 2. (class integer) integer vector of 0-based indices of site subject to transition i.e.
@@ -66,7 +68,8 @@ calcRandomSpillover <- function(clinical_state_vector,
                                 spread_restricted_on,
                                 site_indices,
                                 trans_name,
-                                run_time_params) {
+                                run_time_params,
+                                trans_type) {
   # create vector of susceptible site IDs with no restricted spread on site
   sites_susceptible <- site_indices[!clinical_state_vector & !spread_restricted_on]
   n_sites_S <- length(sites_susceptible)
@@ -83,11 +86,8 @@ calcRandomSpillover <- function(clinical_state_vector,
     # take a sample of one susceptible site
     site <- sample.int(n_sites_S, size = 1, replace = TRUE)
 
-    # determine which column number the trans_name string refers to
-    trans_num <- which(colnames(run_time_params) == trans_name)
-
     # create populated output list
-    list_infection_rates <- list(rep.int(trans_num, times = n_sites_I),
+    list_infection_rates <- list(rep.int(trans_type, times = n_sites_I),
                                  rep.int(sites_susceptible[site], times = n_sites_I),
                                  rep.int(prob, times = n_sites_I),
                                  rep.int(NA, times = n_sites_I),

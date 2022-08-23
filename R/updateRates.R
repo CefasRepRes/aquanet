@@ -361,7 +361,8 @@ updateRates <- function(control_matrix,
                                                           spread_restricted_on = spread_prevented_on,
                                                           site_indices = site_indices,
                                                           trans_name = "Fomite_Transmission_Independant_Prob",
-                                                          run_time_params = run_time_params)
+                                                          run_time_params = run_time_params,
+                                                          trans_type = 11)
 
       trans_rates <- aquanet::combineTransitionRates(list_append = sites_random_change, list_base = trans_rates)
 
