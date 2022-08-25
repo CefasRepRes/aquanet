@@ -35,6 +35,13 @@ catchments contain only post-fallow sites ready for restocking with no fallow si
 }
 }
 \description{
+This function identifies catchments that are ready to restock as all sites within them are in a
+post-fallow state (see details).
+}
+\details{
+TODO: control matrix not altered here - remove output?
+TODO: is catchments_with_fallow_some output used?
+
 Function takes control matrix stating which sites are in a fallow state and which are in a post-
 fallow state (ready for restocking). This information is combined with the siteID-to-catchment
 matrix to calculate the number of sites in a fallow or post-fallow state within each catchment.
