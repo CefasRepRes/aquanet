@@ -1,21 +1,27 @@
 #' createCatchmentToSiteMatrix
 #'
+#' This function produces a sparse matrix detailling which catchments each site is situated in (see
+#' details).
+#'
 #' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
 #' catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data
-#' (.shp). This produced list output 1 which which maps site to catchment. To produce list output 2,
+#' (.shp). This produces list output 1 which which maps site to catchment. To produce list output 2,
 #' convert the catchment (columns) to site (rows) information to a sparse matrix. Note: ensure that
 #'  the order of sites matches that included within the contact matrix.
 #'
 #' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
-#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
 #' Section 30 movements.
+#'
 #' @param filename_catchment_layer (class string) String containing the file path and file name for
 #' .shp file containing catchment information.
+#'
 #' @param crs_epsg (class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
 #'  to use for projecting the data.
 #'
-#' @return (class list) of length 2 containing (1) data frame of site to catchment information and
-#' (2) dgCMatrix sparse matrix containing site to catchment summary.
+#' @return (class list) of length 2 containing:
+#' 1. (class data frame) data frame of site to catchment information.
+#' 2. (class dgCMatrix) sparse matrix containing site to catchment summary.
 #'
 #' @export
 #'
