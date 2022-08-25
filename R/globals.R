@@ -12,4 +12,7 @@ utils::globalVariables(c(".",
                          "tdiff",
                          "state",
                          "recordID",
-                         "site_id"))
+                         "site_id",
+                         "..type",
+                         "site_type",
+                         "stage"))

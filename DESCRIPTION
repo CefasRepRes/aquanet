@@ -36,4 +36,5 @@ Imports:
     sp,
     units,
     here,
-    stats
+    stats,
+    tidyr
