@@ -35,9 +35,9 @@ stateCosts <- function(data, state, site_types){
                      21, 27,
                      31, 37)
   } else if(state == "catchment_control"){
-    state_codes <- c(21, 24,
-                     25, 26,
-                     27)
+    state_codes <- c(20, 21,
+                     24, 25,
+                     26, 27)
   }
   # Filter data by state
   state_summary <- data[state %in% state_codes]
