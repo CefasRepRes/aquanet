@@ -25,7 +25,7 @@ to use for projecting the data.}
 }
 }
 \description{
-This function produces a sparse matrix detailling which catchments each site is situated in (see
+This function produces a sparse matrix detailing which catchments each site is situated in (see
 details).
 }
 \details{

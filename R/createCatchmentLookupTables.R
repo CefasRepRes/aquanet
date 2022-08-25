@@ -1,6 +1,6 @@
 #' createCatchmentToSiteMatrix
 #'
-#' This function produces a sparse matrix detailling which catchments each site is situated in (see
+#' This function produces a sparse matrix detailing which catchments each site is situated in (see
 #' details).
 #'
 #' Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
@@ -32,13 +32,13 @@
 #' @importFrom methods as
 createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_epsg) {
   # create data frame of catchment ID and site ID
-  df_sites <- data.frame("TRUNK_CODE" = igraph::get.vertex.attribute(graph = graph,
+  df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex.attribute(graph = graph,
                                                                      name = "CatchmentID",
                                                                      index = igraph::V(graph)),
-                         "siteID" = igraph::get.vertex.attribute(graph = graph,
+                         siteID = igraph::get.vertex.attribute(graph = graph,
                                                                  name = "siteID",
                                                                  index = igraph::V(graph)),
-                         "Order" = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
+                         Order = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
 
   # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
   catchment_layer <- sf::read_sf(dsn = filename_catchment_layer,
@@ -79,22 +79,26 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
   spmatrix_sites_catchment <- methods::as(object = spmatrix_sites_catchment, Class = "dgCMatrix")
 
   # return a list containing (1) data frame of catchment and (2) site data and site to catchment matrix
-  return(list(df_catchment_sites, spmatrix_sites_catchment))
+  return(list(df_catchment_sites,
+              spmatrix_sites_catchment))
 }
 
 #' createWithinCatchmentEdgesMatrix
 #'
+#' This function produces a logical matrix detailing within catchment connections (see details).
+#'
 #' Extract connectivity matrix (graph) information at "withinCatchment" level to produce a logical
 #' matrix of within catchment connections, a matrix of within catchment edges and a matrix of within
-#'  catchment edges by source (column 1) and receiving (column2) site ID.
+#'  catchment edges by source (column 1) and receiving (column 2) site ID.
 #'
 #' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
-#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
 #' Section 30 movements.
 #'
-#' @return (class list) of length 3 containing (1) lgCMatrix (logical matrix) detailing within
-#' catchment connections, (2) edge matrix of vertex IDs within catchments, and (3) matrix of
-#' source site and receiving site within catchment edges.
+#' @return (class list) of length 3 containing:
+#' 1. (class lgCMatrix) logical matrix detailing within catchment connections.
+#' 2. (class matrix) edge matrix of vertex IDs within catchments.
+#' 3. (class matrix) matrix of source site and receiving site within catchment edges.
 #'
 #' @export
 #'
@@ -102,9 +106,9 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 createWithinCatchmentEdgesMatrix <- function(graph) {
   # create logical matrix to specify which edges represent movements within a catchment
   lgmatrix_catch_catch <- igraph::get.adjacency(graph = graph,
-                                                 attr = "withinCatchment",
-                                                 names = TRUE,
-                                                 sparse = TRUE)
+                                                attr = "withinCatchment",
+                                                names = TRUE,
+                                                sparse = TRUE)
 
   # get the position of each within catchment movement as edge table
   matrix_edges_within_catch <- igraph::get.edges(graph = graph,
@@ -117,5 +121,7 @@ createWithinCatchmentEdgesMatrix <- function(graph) {
 
   # return list containing logical matrix of catchment:catchment connections,
   # numeric matrix of within catchment edges, and siteID-siteID within catchment edges
-  return(list(lgmatrix_catch_catch, matrix_edges_within_catch, matrix_edges_within_catch_siteID))
+  return(list(lgmatrix_catch_catch,
+              matrix_edges_within_catch,
+              matrix_edges_within_catch_siteID))
 }
