@@ -2,10 +2,8 @@
 #'
 #' Output information on sites that become infected or subject to control measures at each time step
 #'  within each simulation of the model. Additionally, output information on size of each time step
-#' within the model simulations. Results are saved as an .RData file within the Full_Details
+#' within the model simulations. Results are saved as an .RData file within the full_results
 #' directory.
-#'
-#' TODO: change Full_Details path to match Sarah's folder structure
 #'
 #' @param df_states (class data.table data.frame) data frame of zeros with dimensions number of rows
 #'  = number of sites (`n_sites`) + number of states (`n_states`), and number of columns = commit
@@ -15,9 +13,9 @@
 #' of rows = number of sites (`n_sites`).
 #'
 #' @param n_states (class numeric) number of different combinations of states possible within the
-#' model.
+#' model (note, include some redundancy here).
 #'
-#' @param n_sites (class numeric) number of sites within the contact network (model run).
+#' @param n_sites (class numeric) number of sites within the contact network.
 #'
 #' @param site_indices (class integer) vector of 0-based site indices of length number of sites
 #' (`n_sites`).
@@ -35,10 +33,10 @@
 #'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
-#' @return Saved .RData file containing two data frames located within the `filepath_results`
-#' Full_Details results directory. Data frame 1: `sim_states` contains site ID and infection and
-#' control status for every time step within a simulation.  Data frame 2: `sim_times` contains the
-#' time step ID, simulation number and details of time step size.
+#' @return Saved .RData file containing data frame located within the `filepath_results`
+#' full_results directory. Output data frame `sims` contains model ID, site ID, infection and
+#' control status for every time step within a simulation, time step ID, simulation number and
+#' details of time step size.
 #'
 #' @export
 #'
@@ -72,7 +70,6 @@ commitResults <- function(df_states,
   rownames(sims) <- NULL # reset row names in case downstream elements rely on this
 
   # save simulation site states and simulation times
-  # TODO switch file path back to Sarah's new system post-testing
   save(sims,
        file = paste(filepath_results,
                     "/full_results/batchNo-", batch_num,
