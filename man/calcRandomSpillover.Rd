@@ -18,15 +18,15 @@ calcRandomSpillover(
 \item{clinical_state_vector}{(class numeric) numeric binary vector of length number of sites
 containing information on whether each site is in an 1 = clinically infected or 0 =
 non-clinically infected state (the latter includes both susceptible and latently infected sites).
-Note: vector created within the \code{update_rate} function.}
+Note: vector created within the \code{aquanet::updateRates} function.}
 
 \item{spread_restricted_off}{(class logical) logical vector of length number of sites that
 states whether movements off this site are currently restricted (TRUE) or unrestricted (FALSE).
-(Note: created in the \code{update_rate} function of aquanet-mod).}
+(Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{spread_restricted_on}{(class logical) logical vector of length number of sites that
-states whether movements on to this site are currently restricted (TRUE) or unrestricted (FALSE).
-(Note: created in the \code{update_rate} function of aquanet-mod).}
+states whether spread on to this site (e.g. via RB or SDM) are currently restricted (TRUE) or
+unrestricted (FALSE). (Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{site_indices}{(class numeric) vector of 0-based site indices of length 'number of sites'.}
 
@@ -38,7 +38,8 @@ input may be "Fomite_Transmission_Independent_Prob".}
 parameter file which is subsequently split into model set up and model run time parameters. Data
 frame contains probabilities from the scenarios of interest for listing transition rates.}
 
-\item{trans_type}{(class numeric) single numeric value indicating the type of transition occurring.}
+\item{trans_type}{(class numeric) single numeric value indicating the type of transition
+occurring.}
 }
 \value{
 (class list) of either length 4 or 5 containing:
@@ -59,21 +60,27 @@ resrictions on movement off site'.
 }
 }
 \description{
-Generate a list of transition rate objects using an input vector of clinically infected sites
-(\code{clinical_state_vector}) to extract sites that are susecptible to infection that do not have
-restricted movements on site. Additionally, identify sites with spreading potential that are
-clinically infected and have no restrictions on movements off site.
+This function produces transition rates for disease transmission via DIM route of AquaNet-Mod
+(see details).
 }
 \details{
-Create list of vectors with length equivalent to the number of sites with spreading potential and
-containing: (1) transition type vector depicted by the column number of \code{trans_name} within the
-\code{run_time_params}, (2) randomly selected transitioning/susceptible site vector, (3) transition
-rate/probability vector calculated using \code{1 / run_time_params[[trans_name]]}, and (4) source site
-vector of NAs. This list is populated with NULL if there are no susceptible sites. If there are
-1 or more susceptible sites, the fifth element of this list is the number of infected sites.
+Using an input vector of clinically infected sites (\code{clinical_state_vector}) to extract sites
+that are susceptible to infection that do not have restricted movements on site. Additionally,
+identify sites with spreading potential that are clinically infected and have no restrictions
+on movements off site.
 
-Note: in aquanet-mod, this function is called multiple times exclusively within the \code{update_rate}
-function.
+One of the susceptible sites that has no restricted spread on site is chosen as a site that could
+be infected and transition rates are recorded 'number of infected sites that has no restricted
+spread off site' times.
 
-TODO: update function names if changed
+Transition rates are stored within a list of vectors with length equivalent to the number of
+sites with spreading potential and containing: (1) transition type vector depicted by the column
+number of \code{trans_name} within the \code{run_time_params}, (2) randomly selected
+transitioning/susceptible site vector, (3) transition rate/probability vector calculated using
+\code{1 / run_time_params[[trans_name]]}, and (4) source site vector of NAs. This list is populated
+with NULL if there are no susceptible sites. If there are 1 or more susceptible sites, the
+fifth element of this list is the number of infected sites.
+
+Note: in aquanet-mod, this function is called multiple times exclusively within the
+\code{aquanet::updateRates} function.
 }

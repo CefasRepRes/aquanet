@@ -3,14 +3,14 @@
 #' This function produces transition rates for disease transmission via DIM route of AquaNet-Mod
 #' (see details).
 #'
-#' Generate a list of transition rate objects using an input vector of clinically infected sites
-#' (`clinical_state_vector`) to extract sites that are susceptible to infection that do not have
-#' restricted movements on site. Additionally, identify sites with spreading potential that are
-#' clinically infected and have no restrictions on movements off site.
+#' Using an input vector of clinically infected sites (`clinical_state_vector`) to extract sites
+#' that are susceptible to infection that do not have restricted movements on site. Additionally,
+#' identify sites with spreading potential that are clinically infected and have no restrictions
+#' on movements off site.
 #'
 #' One of the susceptible sites that has no restricted spread on site is chosen as a site that could
 #'  be infected and transition rates are recorded 'number of infected sites that has no restricted
-#'  spread off site' times.
+#' spread off site' times.
 #'
 #' Transition rates are stored within a list of vectors with length equivalent to the number of
 #' sites with spreading potential and containing: (1) transition type vector depicted by the column
