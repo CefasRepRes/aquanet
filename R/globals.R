@@ -10,4 +10,6 @@ utils::globalVariables(c(".",
                          "sims",
                          "siteID",
                          "tdiff",
-                         "state"))
+                         "state",
+                         "recordID",
+                         "site_id"))
