@@ -62,10 +62,10 @@ calcRiverTransmission <- function(matrix_river_distances_prob,
                                   spread_restricted_on,
                                   trans_type) {
 
-  # multiply probability matrix by clinical sites where offsite movements are not restricted
+  # multiply probability matrix by clinical sites where spread off site is not prevented
   matrix_river_distances_prob <- matrix_river_distances_prob * (clinical_state_vector * !spread_restricted_off)
 
-  # transpose and multiply probability matrix by sites where onsite movements are not restricted
+  # transpose and multiply probability matrix by sites where spread on site is not restricted
   matrix_river_distances_prob <- t(matrix_river_distances_prob) * !spread_restricted_on
 
   # re-transpose probability matrix
