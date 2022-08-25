@@ -54,7 +54,7 @@ stateCosts <- function(data, state, site_types){
         stop("You have entered an incorrect state type. Please choose from fallow, no_manage, contact_trace or catchment_controls")
       type <- site_types[[i]] # Set site type
       daily_site_cost <- state_daily_cost[site_type == type]
-      state_summary_by_sim <- state_summary[sim_no == k]
+      state_summary_by_sim <- state_summary[sim_no == sims[k]]
       # Calculate the cost over the duration of the simulation
       # duration_cost = site type (1) * duration of time in the state * daily cost
       duration_cost <- (state_summary_by_sim[, ..type] * state_summary_by_sim[, "t_total"]) * daily_site_cost$farm_cost_per_day
