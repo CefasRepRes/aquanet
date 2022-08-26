@@ -1,5 +1,8 @@
 #' listTransitionRates
 #'
+#' This function lists transition rates for all site state transition probabilities except for
+#' disease transmission via LFM route of AquaNet-Mod (see details).
+#'
 #' Generate a list of transition rate objects using an input vector of sites stating their status
 #' (`state_vector`) (for example infection status 1/0, fallow status, latency status) to extract
 #' sites (from `site_indices`) where the state in state_vector is 1. For these sites, generate a
@@ -8,15 +11,15 @@
 #' a list alongside the transition rate, transitioning site, rate, source site (NAs), and number of
 #' sites.
 #'
-#' Note: in aquanet-mod, this function is called multiple times exclusively within the `update_rate`
-#' function.
+#' Note: in AquaNet-Mod, this function is called multiple times exclusively within the
+#' `aquanet::updateRates` function.
 #'
 #' @param run_time_params (class data frame) of model run time parameters imported from original
 #' parameter file which is subsequently split into model set up and model run time parameters. Data
 #' frame contains probabilities from the scenarios of interest for listing transition rates.
 #'
 #' @param state_vector (class numeric) numeric binary vector of length number of sites containing
-#' information about the state of each site in relation to a condition (E.g. is the site
+#' information about the state of each site in relation to a condition (e.g. is the site
 #' 1 = infected or 0 = susceptible state).
 #'
 #' @param trans_name (class string) string in quotation marks "" stating transition type. Note: this
@@ -27,7 +30,6 @@
 #'
 #' @param trans_type (class numeric) single numeric value indicating the type of transition occurring.
 #'
-#'
 #' @return (class list) of length 5 containing:
 #' 1. (class numeric) numeric vector of transition types (`rate_type`).
 #' 2. (class integer) integer vector of sites subject to transition (`position`).
@@ -37,7 +39,11 @@
 #'
 #' @export
 #'
-listTransitionRates <- function(run_time_params, state_vector, trans_name, site_indices, trans_type) {
+listTransitionRates <- function(run_time_params,
+                                state_vector,
+                                trans_name,
+                                site_indices,
+                                trans_type) {
 
   # get probability from input parameter file
   prob <- run_time_params[[trans_name]]
@@ -54,5 +60,9 @@ listTransitionRates <- function(run_time_params, state_vector, trans_name, site_
   rate_type <- rep(trans_type, times = n_rates)
   source_site <- rep(NA, times = n_rates)
 
-  return(list(rate_type, position, rate, source_site, n_rates))
+  return(list(rate_type,
+              position,
+              rate,
+              source_site,
+              n_rates))
 }
