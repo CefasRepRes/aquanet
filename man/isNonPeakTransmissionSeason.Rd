@@ -19,10 +19,13 @@ the non peak season occurs in the fourth season of the year.}
 season in the current simulation time \code{t}.
 }
 \description{
-Function check that the \code{period} value entered is equal to either "180", "90" or "0". Depending
-on the value of \code{period} supplied the equation to determine seasonality is then selected.
+This function determines whether the current simulation time is within the non-peak transmission
+season where allowed disease transmission routes are different (see details).
 }
 \details{
+Function checks that the \code{period} value entered is equal to either "180", "90" or "0". Depending
+on the value of \code{period} supplied the equation to determine seasonality is then selected.
+
 For example if \verb{period = "180} the non peak transmission season lasts for 180 days, meaning there
 are 2 seasons within the 360 day simulation year and the second season within the year is the
 non peak transmission season.

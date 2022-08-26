@@ -1,6 +1,9 @@
 #' isNonPeakTransmissionSeason
 #'
-#' Function check that the `period` value entered is equal to either "180", "90" or "0". Depending
+#' This function determines whether the current simulation time is within the non-peak transmission
+#' season where allowed disease transmission routes are different (see details).
+#'
+#' Function checks that the `period` value entered is equal to either "180", "90" or "0". Depending
 #' on the value of `period` supplied the equation to determine seasonality is then selected.
 #'
 #' For example if `period = "180` the non peak transmission season lasts for 180 days, meaning there
@@ -24,7 +27,8 @@
 #' season in the current simulation time `t`.
 #'
 #' @export
-isNonPeakTransmissionSeason <- function(t, period = c("180", "90", "0")) {
+isNonPeakTransmissionSeason <- function(t,
+                                        period = c("180", "90", "0")) {
 
   # check period matches accepted values
   period <- match.arg(arg = period)
