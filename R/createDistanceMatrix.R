@@ -14,7 +14,7 @@
 #' matrices produced have the same reorder distance matrix, so that it is in the same site order
 #' as the contact matrix (graph).
 #'
-#' @param graph  (class igraph) graph of connections/movements between sites produced with iGraph
+#' @param graph (class igraph) graph of connections/movements between sites produced with iGraph
 #' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
 #' Section 30 movements.
 #'
