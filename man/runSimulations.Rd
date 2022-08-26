@@ -93,17 +93,17 @@ catchment, "None" means there are no catchment level controls).}
 \item{filepath_results}{(class string) path to results directory for model run.}
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
-tracing should taking place.}
+tracing should take place.}
 
 \item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the removal
-of the most connected sites in the network should taking place.}
+of the most connected sites in the network should take place.}
 
 \item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
 number of infected sites exceeds this number, switch to using the top sites removed contact
 probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
-any disease control measures should taking place.}
+any disease control measures should take place.}
 
 \item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
 }

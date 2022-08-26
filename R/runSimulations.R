@@ -75,17 +75,17 @@
 #' @param filepath_results (class string) path to results directory for model run.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
-#' tracing should taking place.
+#' tracing should take place.
 #'
 #' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the removal
-#' of the most connected sites in the network should taking place.
+#' of the most connected sites in the network should take place.
 #'
 #' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
 #' number of infected sites exceeds this number, switch to using the top sites removed contact
 #' probability matrix.
 #'
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not
-#' any disease control measures should taking place.
+#' any disease control measures should take place.
 #'
 #' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
 #'
