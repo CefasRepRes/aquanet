@@ -454,12 +454,12 @@ doEvent <- function(state_vector,
     time_vector[sites_restocked] <- 0
   }
 
-  return(list(state_vector,
-              control_matrix,
-              time_vector,
-              catchment_time_vector,
-              catchments_with_post_fallow_only,
-              source_inf_vector,
-              trans_type,
-              source_inf_matrix))
+  return(list(state_vector = state_vector,
+              control_matrix = control_matrix,
+              time_vector = time_vector,
+              catchment_time_vector = catchment_time_vector,
+              catchments_with_post_fallow_only = catchments_with_post_fallow_only,
+              source_inf_vector = source_inf_vector,
+              trans_type = trans_type,
+              source_inf_matrix = source_inf_matrix))
 }

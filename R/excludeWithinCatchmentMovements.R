@@ -145,5 +145,6 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
 
   # return list containing (1) sparse matrix of risk contacts (excluding within catchment movements
   # depending on site control measures) and (2) catchment_movements list with updated controlled catchments
-  return(list(spmatrix_risk_contacts, catchment_movements))
+  return(list(spmatrix_risk_contacts = spmatrix_risk_contacts,
+              catchment_movements = catchment_movements))
 }

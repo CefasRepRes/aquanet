@@ -80,7 +80,7 @@ createDistanceMatrix <- function(graph,
 
   # return list containing (1) site to site distances, (2) probability of transmission by distance,
   # and (3) data frame of site catchment information.
-  return(list(matrix_distances_order,
-              matrix_distances_probability,
-              site_catchments))
+  return(list(matrix_distances_order = matrix_distances_order,
+              matrix_distances_probability = matrix_distances_probability,
+              site_catchments = site_catchments))
 }

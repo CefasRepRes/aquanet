@@ -366,8 +366,8 @@ updateRates <- function(control_matrix,
     }
   }
 
-  return(list(trans_rates,
-              risk_contacts_catch_corrected[[2]],
-              sites_all_movement_restricted))
+  return(list(trans_rates = trans_rates,
+              matrix_risk_contacts = risk_contacts_catch_corrected[[2]],
+              sites_all_movement_restricted = sites_all_movement_restricted))
 
 }

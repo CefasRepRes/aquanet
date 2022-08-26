@@ -109,6 +109,6 @@ createRiverDistanceProbabilityMatrix <- function(filepath_river_distances,
                              river_distances_rm0_edges$Dest.Matrix.Pos)] <- river_distances_rm0$calcProb
 
   # return list containing (1) river distances and (2) river transmission probability matrix
-  return(list(river_distances_rm0,
-              matrix_river_distances_prob))
+  return(list(river_distances_rm0 = river_distances_rm0,
+              matrix_river_distances_prob = matrix_river_distances_prob))
 }

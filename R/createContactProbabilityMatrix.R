@@ -45,9 +45,9 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 
   # return list containing number of sites in contact matrix, adjacency matrix of movements between
   # sites, and probability matrix of movements between sites
-  return(list(n_sites,
-              matrix_movements,
-              matrix_movements_prob))
+  return(list(n_sites = n_sites,
+              matrix_movements = matrix_movements,
+              matrix_movements_prob = matrix_movements_prob))
 }
 
 #' createContactProbabilityMatrixTopSitesRemoved
@@ -112,7 +112,7 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period
   matrix_movements_prob[out_sites_quantile, ] <- 0
   matrix_movements_prob[in_sites_quantile, ] <- 0
 
-  return(list(n_sites,
-              matrix_movements,
-              matrix_movements_prob))
+  return(list(n_sites = n_sites,
+              matrix_movements = matrix_movements,
+              matrix_movements_prob = matrix_movements_prob))
 }

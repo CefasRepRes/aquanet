@@ -61,8 +61,8 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   # return results
   # TODO: control matrix not altered here - remove output?
   # TODO: is catchments_with_fallow_some output used?
-  return(list(control_matrix,
-              catchments_with_fallow_some,
-              catchments_with_post_fallow_only))
+  return(list(control_matrix = control_matrix,
+              catchments_with_fallow_some = catchments_with_fallow_some,
+              catchments_with_post_fallow_only = catchments_with_post_fallow_only))
 
 }

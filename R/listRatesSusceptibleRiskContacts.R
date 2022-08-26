@@ -86,9 +86,9 @@ listRatesSusceptibleRiskContacts <- function(spmatrix_risk_contacts,
   n_contacts <- length(contacts[["rate"]])
   contacts_rate_type <- rep.int(trans_type, times = n_contacts)
 
-  return(list(contacts_rate_type,
-              contacts[["position"]],
-              contacts[["rate"]],
-              contacts[["source"]],
-              n_contacts))
+  return(list(rate_type = contacts_rate_type,
+              position = contacts[["position"]],
+              rate = contacts[["rate"]],
+              source = contacts[["source"]],
+              n_contacts = n_contacts))
 }

@@ -79,8 +79,8 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
   spmatrix_sites_catchment <- methods::as(object = spmatrix_sites_catchment, Class = "dgCMatrix")
 
   # return a list containing (1) data frame of catchment and (2) site data and site to catchment matrix
-  return(list(df_catchment_sites,
-              spmatrix_sites_catchment))
+  return(list(df_catchment_sites = df_catchment_sites,
+              spmatrix_catchment_sites = spmatrix_sites_catchment))
 }
 
 #' createWithinCatchmentEdgesMatrix
@@ -121,7 +121,7 @@ createWithinCatchmentEdgesMatrix <- function(graph) {
 
   # return list containing logical matrix of catchment:catchment connections,
   # numeric matrix of within catchment edges, and siteID-siteID within catchment edges
-  return(list(lgmatrix_catch_catch,
-              matrix_edges_within_catch,
-              matrix_edges_within_catch_siteID))
+  return(list(lgmatrix_catch_catch = lgmatrix_catch_catch,
+              matrix_edges_within_catch = matrix_edges_within_catch,
+              matrix_edges_within_catch_siteID = matrix_edges_within_catch_siteID))
 }
