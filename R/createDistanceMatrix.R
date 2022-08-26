@@ -1,34 +1,43 @@
 #' createDistanceMatrix
 #'
-#' Using the connectivity matrix and site to catchment information .csv create a matrix of distances
-#'  between these sites calculated using the sp package and British National Grid Referencing
-#'  system. Additionally, filter these distances to remove self loops and distances greater than
-#'  sdm_max_dist m (assume greater than sdm_max_dist m constitutes negligible transmission risk).
-#'  Convert distances to a probability of transmission with the following equation
-#'  `sdm_rate_gamma * exp(-(distance)^2 * sdm_scalar_lambda)`. Convert probabilities that are less
-#'  than 0 or equal to sdm_rate_gamma to 0. Return a list containing site-site distance matrix,
-#'  site-site distance-based transmission probability matrix and site-catchment data frame. Note:
-#'  matrices produces have the same reorder distance matrix, so that it is in the same site order
-#'  as the contact matrix (graph).
+#' This function creates a sparse matrix for distance-related transmission probabilities between
+#' sites for disease transmission via SDM route of AquaNet-Mod (see details).
 #'
-#' @param graph  (class igraph) Graph of connections/movements between sites produced with iGraph
-#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' Using the connectivity igraph and site to catchment information .csv create a matrix of distances
+#'  between these sites calculated using the sf package and user input coordinate reference system.
+#' Additionally, filter these distances to remove self loops and distances greater than
+#' sdm_max_dist m (assume greater than sdm_max_dist m constitutes negligible transmission risk).
+#' Convert distances to a probability of transmission with the following equation
+#'  `sdm_rate_gamma * exp(-(distance)^2 * sdm_scalar_lambda)`. Convert probabilities that are less
+#' than 0 or equal to sdm_rate_gamma to 0. Return a list containing site-site distance matrix,
+#' site-site distance-based transmission probability matrix and site-catchment data frame. Note:
+#' matrices produced have the same reorder distance matrix, so that it is in the same site order
+#' as the contact matrix (graph).
+#'
+#' @param graph  (class igraph) graph of connections/movements between sites produced with iGraph
+#' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
 #' Section 30 movements.
-#' @param filename_site_catchments  (class string) String containing the file path and file name for
+#'
+#' @param filename_site_catchments  (class string) string containing the file path and file name for
 #'  .csv containing information about site location (easting and northing) and which catchment each
-#'  site resides in
+#'  site resides in.
+#'
 #' @param crs_epsg (class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
 #'  to use for projecting the data.
+#'
 #' @param sdm_rate_gamma (class numeric) daily short distance mechanical (SDM) transmission rate
 #' over 0 km.
+#'
 #' @param sdm_max_dist (class numeric) maximum distance (in metres) over which short distance
 #' mechanical (SDM) transmission can occur.
+#'
 #' @param sdm_scalar_lambda (class numeric) local scalar of short distance mechanical (SDM)
 #' transmission.
 #'
-#' @return  (class list) of length 3 containing (1) a matrix of site to site distances (class matrix
-#'  array), (2) a matrix of distance-based transmission probabilities (dgTMatrix, Matrix package),
-#'  and (3) input data frame of site catchment locality (SpatialPointsDataFrame, sp package).
+#' @return  (class list) of length 3 containing:
+#' 1. (class matrix array) a matrix of site to site distances.
+#' 2. (dgTMatrix, Matrix package) a matrix of distance-based transmission probabilities.
+#' 3. (class data frame, sf package) input data frame of site catchment locality.
 #'
 #' @export
 #'
@@ -43,7 +52,6 @@ createDistanceMatrix <- function(graph,
                                  sdm_max_dist,
                                  sdm_rate_gamma,
                                  sdm_scalar_lambda) {
-  # define the British National Grid Referencing System, using Proj4 notation
 
   # import the list of site locations, and assign the correct spatial projection system
   site_catchments <- read.csv(filename_site_catchments, header = TRUE)
@@ -72,5 +80,7 @@ createDistanceMatrix <- function(graph,
 
   # return list containing (1) site to site distances, (2) probability of transmission by distance,
   # and (3) data frame of site catchment information.
-  return(list(matrix_distances_order, matrix_distances_probability, site_catchments))
+  return(list(matrix_distances_order,
+              matrix_distances_probability,
+              site_catchments))
 }
