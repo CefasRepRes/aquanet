@@ -23,15 +23,14 @@ doEvent(
 )
 }
 \arguments{
-\item{state_vector}{(class numeric) numeric binary vector of length number of sites containing
-information about the state of each site in relation to a condition (E.g. is the site
-1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
-1 = infected or 0 = susceptible state. (Note: created within the \code{simulationCode} function for
-loop).}
+\item{state_vector}{(class numeric) numeric binary vector of length 'number of sites' containing
+information about the state of each site in relation to a condition. This state vector should
+specify whether a site is in an 1 = infected or 0 = susceptible state. (Note: created within the
+\code{aquanet::simulationCode} function for loop).}
 
 \item{control_matrix}{(class matrix) matrix containing 7 columns depicting different control
-states and rows (of length number of sites) depicting whether each sites is 1 = in the specified
-control state or 0 = not in the specified control state.}
+states and rows depicting whether each sites is 1 = in the specified control state or 0 = not in
+the specified control state.}
 
 \item{transition_rates}{(class list) of length 4 containing:
 \enumerate{
@@ -41,16 +40,16 @@ control state or 0 = not in the specified control state.}
 \item (class numeric) vector of source sites (of disease in case of transmission).
 }}
 
-\item{tdiff}{(class numeric) size of current time step generated in \code{simulationCode()} by picking
-a random number from exponential distribution weighted by sum of transition rates.}
+\item{tdiff}{(class numeric) size of current time step generated in \code{aquanet::simulationCode()}
+by picking a random number from exponential distribution weighted by sum of transition rates.}
 
 \item{move_restricted_sites}{(class logical) logical vector of length number of sites that
 states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
-(Note: created in the \code{update_rate} function of aquanet-mod and also input to
-\code{excludeWithinCatchmentMovements} function).}
+(Note: created in the \code{aquanet::updateRates} function of aquanet-mod and also input to
+\code{aquanet::excludeWithinCatchmentMovements} function).}
 
-\item{non_peak_season}{(class logical) logical indicating whether the current timestep in the
-model is within non peak season where transmission (of e.g. a pathogen) is lower.}
+\item{non_peak_season}{(class logical) logical indicating whether the current time step in the
+model is within non peak season where disease transmission is lower.}
 
 \item{run_time_params}{(class data frame) of model run time parameters imported from original
 parameter file which is subsequently split into model set up and model run time parameters. Data
@@ -85,21 +84,21 @@ tracing is taking place.}
 \value{
 (class list) of length 8 containing:
 \enumerate{
-\item (class numeric) \code{state_vector} numeric binary vector of length number of sites containing
+\item (class numeric) \code{state_vector} numeric binary vector of length 'number of sites' containing
 information about the state of each site in relation to a condition (E.g. is the site
 1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
-1 = infected or 0 = susceptible state. (Note: created within the \code{simulationCode} function for
-loop).
+1 = infected or 0 = susceptible state. (Note: created within the \code{aquanet::simulationCode}
+function for loop).
 \item (class matrix) \code{control_matrix} updated matrix containing 7 columns depicting different
-control states and rows (of length number of sites) depicting whether each sites is 1 = in the
-specified control state or 0 = not in the specified control state.
+control states and rows depicting whether each sites is 1 = in the specified control state or
+0 = not in the specified control state.
 \item (class numeric) \code{time_vector} updated vector of length 'number of sites' to record the amount
 of simulation time that a site has remained in a susceptible/recovered or fallow state.
 \item (class numeric) \code{catchment_time_vector} updated vector of length \code{n_catchments} to record the
 amount of simulation time since every site in a catchment has been ready to be restocked.
-\item (class logical) \code{catchments_with_post_fallow_only} vector of length number of catchments
-(\code{n_catchments}) depicting whether catchments contain only post-fallow sites ready for restocking
-with no fallow sites.
+\item (class logical) \code{catchments_with_post_fallow_only} vector of length (\code{n_catchments})
+depicting whether catchments contain only post-fallow sites ready for restocking with no fallow
+sites.
 \item (class matrix) \code{source_inf_vector} updated matrix of dimensions 'number of sites' x 'number of
 sites' to track the sites that are infected either by Live Fish Movements of via river network
 connectivity'. Note: this matrix is used for forward contact tracing.
@@ -111,16 +110,21 @@ connectivity'. Note: this matrix is used for forward contact tracing.
 }
 }
 \description{
-First, create variable a logical vector to store information on whether all sites in a catchment
-have been in a post-fallow state for at least 4 days and are therefore ready to restock.
+This function implements a selected transition event (includes disease spread, control and
+recovery events), updating both the infection status and control states of each site as a result
+of the transition event and the amount of time each site or group of sites are in specific state
+(see details).
 }
 \details{
+First, create variable a logical vector to store information on whether all sites in a catchment
+have been in a post-fallow state for at least 4 days and are therefore ready to restock.
+
 Next, extract required information from function inputs: sites that are fallow,  sites subject to
 transition identified in \verb{transition rates[[2]]}, total number of possible site transitions, a
 corrected probability of each transition occurring (number of transitions), and the number of
 transition probabilities.
 
-Identify sites that are under surveillance with no visible infection and for these sites and update
+Identify sites that are under surveillance with no visible infection and for these sites update
 the \code{time_vector} by adding the time that has passed since the last step in the simulation
 \code{tdiff}. This keeps record of the amount of time these sites are under surveillance.
 
@@ -149,9 +153,4 @@ state. Check catchment level restocking to identify catchments containing only p
 and reset the \code{catchment_time_vector} to 0 for these. If these catchments have been in a ready
 to restock state for greater than or equal to 4 days then move the sites within these catchments
 to a no disease control state and reset the \code{time_vector} for these sites.
-
-TODO: update function names
-TODO: should 4 days be hard coded?
-TODO: should update control 2 have !state_vector included in sites (i.e. not reinfected)
-TODO: fix time_vector reset for controls and param definition
 }
