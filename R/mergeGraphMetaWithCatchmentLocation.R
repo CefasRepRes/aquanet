@@ -1,8 +1,12 @@
 #' mergeGraphMetaWithCatchmentLocation
 #'
-#' @param graph (class igraph) Graph of connections/movements between sites produced with iGraph
-#' (using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+#' This function extracts metadata (siteID, PersonID, modelID, catchmentID, type) from the
+#' connectivity graph and appends it to the site catchment locality information.
+#'
+#' @param graph (class igraph) graph of connections/movements between sites produced with iGraph
+#' in '03_CreateContactNetwork.R' of AquaNet-Mod. This includes both live fish movements and
 #' Section 30 movements.
+#'
 #' @param filename_sites_catchments (class string) String containing the file path and file name for
 #'  .csv containing information about site location (easting and northing) and which catchment each
 #'  site resides in.
@@ -14,7 +18,8 @@
 #'
 #' @importFrom utils read.csv
 #' @importFrom igraph V
-mergeGraphMetaWithCatchmentLocation <- function(graph, filename_sites_catchments) {
+mergeGraphMetaWithCatchmentLocation <- function(graph,
+                                                filename_sites_catchments) {
 
   # extract model and site metadata from igraph output to dataframe
   metadata <- data.frame(siteID = igraph::V(graph)$siteID,

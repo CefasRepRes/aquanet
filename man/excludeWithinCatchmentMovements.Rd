@@ -12,56 +12,61 @@ excludeWithinCatchmentMovements(
 )
 }
 \arguments{
-\item{move_restricted_sites}{(class logical) logical vector of length number of sites that
+\item{move_restricted_sites}{(class logical) logical vector of length 'number of sites' that
 states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
-(Note: created in the \code{update_rate} function of aquanet-mod).}
+(Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{spmatrix_risk_contacts}{(class dgCMatrix, Matrix package) sparse matrix containing live
 fish movements contact probability adapted to identify only contacts between sites that present a
-risk of spread (of e.g. a pathogen). Source sites that are infected but cannot transport fish
-off site due to movement restrictions have their contact probabilities converted to 0 as they
-cannot form 'at risk' contacts. Additionally. sites that are uninfected with or without movement
-restrictions have a probability of 0. Receiving sites that cannot transport fish on site due to
-movement restrictions also have their contact probabilities converted to 0 as they cannot form
-'at risk' contacts. At risk contacts occur between sites that are infected with no restrictions
-on movement off site and receiving sites with no restrictions on site.
-(Note: defined within \code{update_rate} function of aquanet-mod).}
+risk of disease spread. Source sites that are infected but cannot transport fish off site due
+to movement restrictions have their contact probabilities converted to 0 as they cannot form
+'at risk' contacts. Additionally. sites that are uninfected with or without movement restrictions
+have a probability of 0. Receiving sites that cannot transport fish on site due to movement
+restrictions also have their contact probabilities converted to 0 as they cannot form 'at risk'
+contacts. At risk contacts occur between sites that are infected with no restrictions on movement
+off site and receiving sites with no restrictions on site. (Note: defined within
+\code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{catchment_movements}{(class list) of length 7, containing objects related to catchment-
 level movements:
 \enumerate{
 \item (class dgCMatrix, Matrix package) sparse matrix containing details of site to catchment
-relationships. (graph.catchment2site.matrix2)
+relationships.
 \item (class lgCMatrix, Matrix package) logical matrix contacting details of sites within the same
-catchment (graph.withinCatchmentEdges.matrix)
+catchment.
 \item (class dgeMatrix, Matrix package) matrix of length number of catchments showing which
-catchments were under controls in the previous time step (controlled.catchments.previous)
-\item (class dgTMatrix, Matrix package) sparse matrix containing contacts to exclude
-(listContacts.exclude)
+catchments were under controls in the previous time step.
+\item (class dgTMatrix, Matrix package) sparse matrix containing contacts to exclude.
 \item (class numeric) number selecting catchment level controls to apply (0 = allows movements
 within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
 allows no movements by any of the sites within an infected catchment, "None" means there are no
-catchment level controls) (associatedSiteControlType)
+catchment level controls).
 \item (class logical) logical vector of length number of sites stating if sites are under secondary
-levels of control (secondary.controlled.sites)
-\item (class numeric) the total number of catchments under controls (no.controlled.catchments)
+levels of control.
+\item (class numeric) the total number of catchments under controls.
 }}
 
 \item{matrix_movements_prob}{(class dgTMatrix, Matrix package) sparse matrix containing the
-probability of live fish movements between sites.
-(Note: output of \code{createContactProbabilityMatrix} function of aquanet-mod).}
+probability of live fish movements between sites. (Note: output of
+\code{createContactProbabilityMatrix} function of aquanet-mod).}
 }
 \value{
-(class list) of length 2 containing (1) (dgCMatrix, Matrix package) sparse matrix
-(2) (class list) of length 7 containing updated catchment_movements input. Updated elements
+(class list) of length 2 containing:
+\enumerate{
+\item (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
+\item (class list) of length 7 containing: updated catchment_movements input. Updated elements
 include 3, 4, 6, and 7 (element 6 only changes if different catchments are under control compared
 to previous time step).
 }
+}
 \description{
-Identify the catchments that are under movement controls based on the list of sites with movement
-restrictions \code{move_restricted_sites} and determine total number of catchments under controls.
+This function removes contacts between sites within the same catchment from the transmission
+probabilities via LFM route of AquaNet-Mod (see details).
 }
 \details{
+Identify the catchments that are under movement controls based on the list of sites with movement
+restrictions \code{move_restricted_sites} and determine total number of catchments under controls.
+
 If the catchments under control are the same as the previous time step then subtract the
 previously defined matrix of risk contacts \code{matrix_contacts_exclude} in
 \code{catchment_movements[[4]]} containing risk contacts that should be excluded due to movement
@@ -79,6 +84,4 @@ contacts \code{spmatrix_risk_contacts}. Then reassign objects 3, 4 and 7 within 
 \code{catchment_movements} list to update: (3) the matrix of controlled catchments, (4) the matrix of
 contacts that are excluded based on the catchment controls in place and (7) the total number of
 controlled catchments.
-
-TODO: update update_rate function name when documented
 }

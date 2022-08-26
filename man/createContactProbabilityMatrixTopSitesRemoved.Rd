@@ -24,11 +24,18 @@ inward (receiving) movements above this percentile will be removed from the cont
 matrix.}
 }
 \value{
-(class list) of length 3 containing (1) number of sites in movements matrix (integer),
-(2) movements matrix (dgCMatrix, Matrix package), and (3) probability of movements matrix with
-top sites zeroed (dgCMatrix, Matrix package).
+(class list) of length 3 containing:
+\enumerate{
+\item (class integer) number of sites in movements matrix.
+\item (class dgCMatrix, Matrix package) movements matrix.
+\item (class dgCMatrix, Matrix package) probability of movements matrix with top sites zeroed.
+}
 }
 \description{
+This function creates a sparse matrix of contact probabilities between sites (with top connected
+sites removed) for disease transmission via the LFM route of AquaNet-Mod (see details).
+}
+\details{
 Use the connectivity matrix (\code{graph}) to extract a movement matrix. Calculate the probability of
 movement/contact between sites by dividing the number of movements by dividing by the period of
 time (in days) for which movement information was used (\code{movement_period}). Extract sites with

@@ -1,13 +1,10 @@
 #' combineTransitionRates
 #'
 #' Append the contents of `list_append` list elements to the corresponding list elements in
-#' `list_base` using `c`. Note, that list elements should be in the order specified within the
-#' inputs.
+#' `list_base`. Note, that list elements should be in the order specified within the inputs.
 #'
-#' Note: in aquanet-mod, this function is called multiple times exclusively within the `update_rate`
-#' function.
-#'
-#' TODO: Update function names
+#' Note: in aquanet-mod, this function is called multiple times exclusively within the
+#' `aquanet::updateRates` function.
 #'
 #' @param list_append (class list) of length at least 4 containing the following at list positions
 #' 1, 2, 3, and 4:

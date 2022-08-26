@@ -1,6 +1,6 @@
 #' simulationCode
 #'
-#' This function contains the core code to run a simulation of aquanet-mod.
+#' This function contains the core code to run a simulation of AquaNet-Mod (see details).
 #'
 #' In the first segments of the code, values are extracted from input parameters and empty variables
 #'  to populate with each simulation are created. The latter includes number of steps, operations,
@@ -38,7 +38,6 @@
 #' Update variables given outputs.
 #'
 #' Finally, after the for and while loop, save the summary states table.
-#'
 #'
 #' @param runs (class numeric) number of runs.
 #'
@@ -91,26 +90,26 @@
 #' @param type_catchment_controls (class numeric) tnumber selecting catchment level controls to
 #' apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
-#' catchment).
+#' catchment, "None" means there are no catchment level controls).
 #'
 #' @param filepath_results (class string) path to results directory for model run.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
-#' tracing is taking place.
+#' tracing should take place.
 #'
 #' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the remova
-#' of the most connected sites in the network is taking place.
+#' of the most connected sites in the network should take place.
 #'
 #' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
 #' number of infected sites exceeds this number, switch to using the top sites removed contact
 #' probability matrix.
 #'
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not
-#' any disease control measurs are taking place.
+#' any disease control measures should take place.
 #'
 #' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
 #'
-#' @return (class numeric) batch number `batch_num` and summaryStates.table saved to
+#' @return (class numeric) batch number `batch_num` and output_summary_states saved to
 #' `filepath_results`.
 #'
 #'
@@ -175,16 +174,15 @@ simulationCode <- function(runs,
   site_index <- 0:(n_sites - 1)
 
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
-  # TODO: do these need "empty.vector" columns?
-  allStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                   nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
-                                                                   ncol = commit_int)),
-                                     as.character(iteration_vector))
+  output_all_states <- stats::setNames(data.table::data.table(matrix(0,
+                                                                     nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
+                                                                     ncol = commit_int)),
+                                       as.character(iteration_vector))
 
-  summaryStates.table <- stats::setNames(data.table::data.table(matrix(0,
-                                                                       nrow = n_states + 8,
-                                                                       ncol = commit_int)),
-                                         as.character(iteration_vector))
+  output_summary_states <- stats::setNames(data.table::data.table(matrix(0,
+                                                                         nrow = n_states + 8,
+                                                                         ncol = commit_int)),
+                                           as.character(iteration_vector))
 
 
   ## simulate each model run ----
@@ -212,7 +210,6 @@ simulationCode <- function(runs,
     time_vector <- rep(0, n_sites)
 
     # matrix to record control measures (columns) in place at each site (rows)
-    # TODO: replace column numbers with names & fix other functions with control_matrix input
     control_matrix <- matrix(data = 0, nrow = n_sites, ncol = 7)
 
     # vector (0/1) to record infection status at sites
@@ -338,23 +335,23 @@ simulationCode <- function(runs,
       # increment the number of operations
       n_operations <- n_operations + 1
 
-      # in column n_operations of summaryStates.table append 50 values from time step
-      summaryStates.table[ , as.character(n_operations) := c(batch_num,
-                                                             k,
-                                                             t,
-                                                             tdiff,
-                                                             sim_num,
-                                                             trans_type,
-                                                             n_catchments_controlled,
-                                                             sum(sites_states_cumulative),
-                                                             sites_states_totals)]
+      # in column n_operations of output_summary_states append 50 values from time step
+      output_summary_states[ , as.character(n_operations) := c(batch_num,
+                                                               k,
+                                                               t,
+                                                               tdiff,
+                                                               sim_num,
+                                                               trans_type,
+                                                               n_catchments_controlled,
+                                                               sum(sites_states_cumulative),
+                                                               sites_states_totals)]
 
       # if the simulation is one step prior to reaching a commit interval
       if (n_operations %% commit_int == (commit_int - 1)) {
         # append another commit_int number of columns of 0 to populate in the next steps
-        summaryStates.table[ ,
-                             as.character((ncol(summaryStates.table) + 1):(ncol(summaryStates.table) + 1 + commit_int)) :=
-                               rep(0, n_states + 8)]
+        output_summary_states[ ,
+                               as.character((ncol(output_summary_states) + 1):(ncol(output_summary_states) + 1 + commit_int)) :=
+                                 rep(0, n_states + 8)]
       }
 
       # if there are no infectious sites in the network stop the loop
@@ -372,14 +369,14 @@ simulationCode <- function(runs,
       # determine the number of steps since the last commit
       n_steps_since_commit <- n_steps %% commit_int
 
-      # populate allStates.table with simulation information, time and states
-      allStates.table[ , as.character(n_steps_since_commit) := c(batch_num,
-                                                                 k,
-                                                                 sim_num,
-                                                                 tdiff,
-                                                                 (t - tdiff),
-                                                                 sites_states_totals,
-                                                                 sites_states_vector)]
+      # populate output_all_states with simulation information, time and states
+      output_all_states[ , as.character(n_steps_since_commit) := c(batch_num,
+                                                                   k,
+                                                                   sim_num,
+                                                                   tdiff,
+                                                                   (t - tdiff),
+                                                                   sites_states_totals,
+                                                                   sites_states_vector)]
 
       # if the number of steps since last commit equals commit_int - 1
       if (n_steps_since_commit == (commit_int - 1)) {
@@ -387,8 +384,8 @@ simulationCode <- function(runs,
         # determine number of saves (1 per commit_int)
         n_saves <- n_steps %/% commit_int
 
-        # save the results of allStates.table
-        aquanet::commitResults(df_states = allStates.table,
+        # save the results of output_all_states
+        aquanet::commitResults(df_states = output_all_states,
                                df_site_names = site_names,
                                n_states = n_states,
                                n_sites = n_sites,
@@ -401,7 +398,7 @@ simulationCode <- function(runs,
                                filepath_results = filepath_results)
 
         # clear the tables after commit
-        allStates.table[ , as.character(iteration_vector) := rep(0, 5 + n_sites + n_states)]
+        output_all_states[ , as.character(iteration_vector) := rep(0, 5 + n_sites + n_states)]
       }
 
       # pick the next transmission event and modify a site's state accordingly
@@ -431,7 +428,7 @@ simulationCode <- function(runs,
       trans_type <- doEvent_out[[7]]
       source_inf_matrix <- doEvent_out[[8]]
 
-      # every 100 steps print run information to screen #TODO needed?
+      # every 100 steps print run information to screen
       if (n_steps %% 100 == 1) {
         print(c(k,
                 n_steps,
@@ -445,13 +442,13 @@ simulationCode <- function(runs,
 
 
   # where loop terminates between commit intervals: remove empty end of data frame
-  allStates.table[ , as.character((n_steps_since_commit + 1):commit_int) := NULL]
+  output_all_states[ , as.character((n_steps_since_commit + 1):commit_int) := NULL]
 
   # increment number of saves
   n_saves <- n_saves + 1
 
   # commit remaining results
-  aquanet::commitResults(df_states = allStates.table,
+  aquanet::commitResults(df_states = output_all_states,
                          df_site_names = site_names,
                           n_states = n_states,
                           n_sites = n_sites,
@@ -464,8 +461,7 @@ simulationCode <- function(runs,
                           filepath_results = filepath_results)
 
   # save table containing number of sites in each state at each time point
-  # TODO update this so the filepath isn't hard-coded once aquanet-mod pr is merged
-  save(summaryStates.table,
+  save(output_summary_states,
        file = paste(filepath_results, "/batch_results/batchNo-", batch_num, ".RData", sep = ""),
        compress = FALSE)
 

@@ -16,8 +16,8 @@ states and rows (of length number of sites) depicting whether each sites is 1 = 
 control state or 0 = not in the specified control state.}
 
 \item{spmatrix_sites_catchment}{(class dgCMatrix, Matrix package) sparse matrix containing site
-to catchment summary.
-Note: this is created with the \code{aquanet::createCatchmentToSiteMatrix()} function.}
+to catchment summary. Note: this is created with the \code{aquanet::createCatchmentToSiteMatrix()}
+function.}
 
 \item{n_catchments}{(class integer) number of catchments.}
 }
@@ -25,9 +25,9 @@ Note: this is created with the \code{aquanet::createCatchmentToSiteMatrix()} fun
 (class list) of length 3 containing:
 \enumerate{
 \item (class matrix) input \code{control_matrix} containing 7 columns depicting different control
-states and rows (of length number of sites) depicting whether each sites is 1 = in the specified
-control state or 0 = not in the specified control state. This matrix is unedited and output to
-keep a record of the input data used to generate these catchment restocking data.
+states and rows depicting whether each sites is 1 = in the specified control state or 0 = not in
+the specified control state. This matrix is unedited and output to keep a record of the input
+data used to generate these catchment restocking data.
 \item (class logical) vector of length number of catchments (\code{n_catchments}) depicting whether
 catchments contain fallow sites.
 \item (class logical) vector of length number of catchments (\code{n_catchments}) depicting whether
@@ -35,6 +35,11 @@ catchments contain only post-fallow sites ready for restocking with no fallow si
 }
 }
 \description{
+This function identifies catchments that are ready to restock as all sites within them are in a
+post-fallow state. It also identifies catchments containing sites in a fallow state (see
+details).
+}
+\details{
 Function takes control matrix stating which sites are in a fallow state and which are in a post-
 fallow state (ready for restocking). This information is combined with the siteID-to-catchment
 matrix to calculate the number of sites in a fallow or post-fallow state within each catchment.

@@ -18,7 +18,7 @@ parameter file which is subsequently split into model set up and model run time 
 frame contains probabilities from the scenarios of interest for listing transition rates.}
 
 \item{state_vector}{(class numeric) numeric binary vector of length number of sites containing
-information about the state of each site in relation to a condition (E.g. is the site
+information about the state of each site in relation to a condition (e.g. is the site
 1 = infected or 0 = susceptible state).}
 
 \item{trans_name}{(class string) string in quotation marks "" stating transition type. Note: this
@@ -40,6 +40,10 @@ input may be "Site_Recovers".}
 }
 }
 \description{
+This function lists transition rates for all site state transition probabilities except for
+disease transmission via LFM route of AquaNet-Mod (see details).
+}
+\details{
 Generate a list of transition rate objects using an input vector of sites stating their status
 (\code{state_vector}) (for example infection status 1/0, fallow status, latency status) to extract
 sites (from \code{site_indices}) where the state in state_vector is 1. For these sites, generate a
@@ -47,8 +51,7 @@ vector of the transition rate: \code{1 / run_time_params[[trans_name]]}. The col
 \code{trans_name} within the \code{run_time_params} depicts the rate type for the site - this is output in
 a list alongside the transition rate, transitioning site, rate, source site (NAs), and number of
 sites.
-}
-\details{
-Note: in aquanet-mod, this function is called multiple times exclusively within the \code{update_rate}
-function.
+
+Note: in AquaNet-Mod, this function is called multiple times exclusively within the
+\code{aquanet::updateRates} function.
 }
