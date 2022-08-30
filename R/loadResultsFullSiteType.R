@@ -54,6 +54,7 @@ loadResultsFullSiteType <- function(scenario_name){
                                      simNo,
                                      tdiff,
                                      t)]
+  sites_summary$siteID <- as.numeric(sites_summary$siteID)
   threes <- sites_summary[state %in% c(3, 13, 23, 33)]
   if(nrow(threes) == 0) return(warning("There are no state threes in your outputs. Check your simulation code"))
   # Change siteID to modelID (because that's what it is)

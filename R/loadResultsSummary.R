@@ -54,12 +54,12 @@ loadResultsSummary <- function(scenario_name){
                             base::as.character(list_files[i, c("files")])))
     no_per_state_wide[, as.character((ncol(no_per_state_wide) + 1) :
                                        (ncol(no_per_state_wide) +
-                                          ncol(summaryStates.table)))
-                      := summaryStates.table]
+                                          ncol(output_summary_states)))
+                      := output_summary_states]
     print(i)
   }
-  # Warning message if summaryStates.table doesn't match what is expected (50 rows)
-  if(nrow(summaryStates.table) != (42 + 8)) {
+  # Warning message if output_summary_states doesn't match what is expected (50 rows)
+  if(nrow(output_summary_states) != (42 + 8)) {
     base::warning("The script may have been feed the wrong parameters.")
   }
   # Transpose no_per_state_wide
