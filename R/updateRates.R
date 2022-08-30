@@ -187,14 +187,13 @@ updateRates <- function(control_matrix,
   # create vector of sites which have been contact traced (are in infected catchment)
   sites_contact_traced <- control_matrix[ , 7]
 
-  # NOTE only used if disease controls == TRUE
+  if(disease_controls == TRUE){
   # create vector of sites that could be controlled (infection present and not detected)
   sites_I_undetected <- control_matrix[ , 1]
 
-  # NOTE only used if disease controls == TRUE
   # create vector of sites that can become fallow as they can be culled
   sites_I_controlled <- sites_movement_restricted * culling_vector
-
+  }
 
   ### identify LFM contacts carrying risk ----
 
