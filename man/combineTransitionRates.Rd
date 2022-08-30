@@ -38,12 +38,9 @@ containing the following at list positions 1, 2, 3, and 4:
 }
 \description{
 Append the contents of \code{list_append} list elements to the corresponding list elements in
-\code{list_base} using \code{c}. Note, that list elements should be in the order specified within the
-inputs.
+\code{list_base}. Note, that list elements should be in the order specified within the inputs.
 }
 \details{
-Note: in aquanet-mod, this function is called multiple times exclusively within the \code{update_rate}
-function.
-
-TODO: Update function names
+Note: in aquanet-mod, this function is called multiple times exclusively within the
+\code{aquanet::updateRates} function.
 }

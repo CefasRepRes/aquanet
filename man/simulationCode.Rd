@@ -24,7 +24,8 @@ simulationCode(
   contact_tracing,
   remove_top_sites,
   n_infections_remove_top_sites,
-  disease_controls
+  disease_controls,
+  proportion_cullable
 )
 }
 \arguments{
@@ -45,10 +46,11 @@ transmission season lasts for (e.g. "90", "180").}
 in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
 package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).}
 
-\item{out_createContactProbabilityMatrixTopSitesRemoved}{(class list) of length 3 containing (1) number of sites
-in (live fish) movements matrix (integer), (2) (live fish) movements matrix (dgCMatrix, Matrix
-package), and (3) probability of (live fish) movements matrix (dgTMatrix, Matrix package).
-This object is created following the removal of the top most connected sites in the network.}
+\item{out_createContactProbabilityMatrixTopSitesRemoved}{(class list) of length 3 containing (1)
+number of sites in (live fish) movements matrix (integer), (2) (live fish) movements matrix
+(dgCMatrix, Matrix package), and (3) probability of (live fish) movements matrix (dgTMatrix,
+Matrix package). This object is created following the removal of the top most connected sites
+in the network.}
 
 \item{out_createWithinCatchmentEdges}{(class list) of length 3 containing (1) lgCMatrix (logical
 matrix) detailing within catchment connections, (2) edge matrix of vertex IDs within catchments,
@@ -78,29 +80,31 @@ model.}
 \item{type_catchment_controls}{(class numeric) tnumber selecting catchment level controls to
 apply (0 = allows movements within the same catchments, 1 = allows movements within or between
 infected catchments, and 2 = allows no movements by any of the sites within an infected
-catchment).}
+catchment, "None" means there are no catchment level controls).}
 
 \item{filepath_results}{(class string) path to results directory for model run.}
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
-tracing is taking place.}
+tracing should take place.}
 
 \item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the remova
-of the most connected sites in the network is taking place.}
+of the most connected sites in the network should take place.}
 
 \item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
 number of infected sites exceeds this number, switch to using the top sites removed contact
 probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
-any disease control measurs are taking place.}
+any disease control measures should take place.}
+
+\item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
 }
 \value{
-(class numeric) batch number \code{batch_num} and summaryStates.table saved to
+(class numeric) batch number \code{batch_num} and output_summary_states saved to
 \code{filepath_results}.
 }
 \description{
-This function contains the core code to run a simulation of aquanet-mod.
+This function contains the core code to run a simulation of AquaNet-Mod (see details).
 }
 \details{
 In the first segments of the code, values are extracted from input parameters and empty variables

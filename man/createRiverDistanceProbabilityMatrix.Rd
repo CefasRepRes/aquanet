@@ -12,29 +12,39 @@ createRiverDistanceProbabilityMatrix(
 )
 }
 \arguments{
-\item{filepath_river_distances}{(class string) String containing the file path and file name for
+\item{filepath_river_distances}{(class string) string containing the file path and file name for
 .csv containing information about distances between sites via river network proximity and
 connectivity generated with GIS tool.}
 
-\item{out_createContactProbabilityMatrix}{(class list) of length 3 containing (1) number of sites
-in movements matrix (integer), (2) movements matrix (dgCMatrix, Matrix package), and (3)
-probability of movements matrix with top sites zeroed (dgCMatrix, Matrix package).}
+\item{out_createContactProbabilityMatrix}{(class list) of length 3 containing:
+\enumerate{
+\item (class integer) number of sites in movements matrix (integer).
+\item (class dgCMatrix, Matrix package) movements matrix.
+\item (class dgCMatrix, Matrix package) probability of movements matrix with top sites zeroed.
+}}
 
-\item{max_dist}{(class numeric) Number stating maximum distance (km) that a pathogen can travel in
-water via river network.}
+\item{max_dist}{(class numeric) number stating maximum distance (km) that a pathogen can travel
+in water via river network.}
 
-\item{p1km}{(class numeric) Probabiliy that a site 1 km downstream of infection becomes infected.}
+\item{p1km}{(class numeric) probability that a site 1 km downstream of infection becomes infected.}
 }
 \value{
-(class list) of length 2 containing (1) distances between sites on a river network (via
-river connectivity) connections of 0 distances are removed (data frame) and (2) sparse matrix
-containing probability of transmission between sites connected via the river network by river
-water (dgTMatrix)
+(class list) of length 2 containing:
+\enumerate{
+\item (class data frame) distances between sites on a river network (via river connectivity)
+connections of 0 distances are removed.
+\item (class dgTMatrix, Matrix package) sparse matrix containing probability of transmission
+between sites connected via the river network by river water.
+}
 }
 \description{
+This function creates a spase matrix for river distance-related transmission probabilities
+between sites for disease transmission via RB route of AquaNet-Mod (see details).
+}
+\details{
 Generate a sparse matrix of site to site transmission probabilities via river distances between
 sites connected by rivers (due to close proximity to the river network). River distances between
-sites are loaded from .csv whose filename is specified as input \code{filepath_river_distances}.
+sites are loaded from .csv whose file name is specified as input \code{filepath_river_distances}.
 Origin and destination site IDs are extracted, and the data subsetted to retain only connections
 where both origin and destination site are present in the live fish movements contact matrix
 (generated with igraph). Distances of zero are removed. Distances are converted to transmission
@@ -42,6 +52,6 @@ probabilities using the equation
 \code{p1km * ((max_dist - (river_distance_length/1000))/(max_dist - 1))} and probabilities less than
 zero are corrected. A sparse matrix with site IDs in the same order as the contact matrix is
 generated and populated with the river distance transmission probabilities. The resulting list
-contains (1) the river distance data frame used and (2) a river distance transmission probability
+contains the river distance data frame used and a river distance transmission probability
 sparse matrix.
 }

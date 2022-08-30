@@ -1,5 +1,8 @@
 #' excludeWithinCatchmentMovements
 #'
+#' This function removes contacts between sites within the same catchment from the transmission
+#' probabilities via LFM route of AquaNet-Mod (see details).
+#'
 #' Identify the catchments that are under movement controls based on the list of sites with movement
 #'  restrictions `move_restricted_sites` and determine total number of catchments under controls.
 #'
@@ -21,49 +24,47 @@
 #' contacts that are excluded based on the catchment controls in place and (7) the total number of
 #' controlled catchments.
 #'
-#' TODO: update update_rate function name when documented
-#'
-#' @param move_restricted_sites (class logical) logical vector of length number of sites that
+#' @param move_restricted_sites (class logical) logical vector of length 'number of sites' that
 #' states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
-#' (Note: created in the `update_rate` function of aquanet-mod).
+#' (Note: created in the `aquanet::updateRates` function of aquanet-mod).
 #'
 #' @param spmatrix_risk_contacts (class dgCMatrix, Matrix package) sparse matrix containing live
 #' fish movements contact probability adapted to identify only contacts between sites that present a
-#'  risk of spread (of e.g. a pathogen). Source sites that are infected but cannot transport fish
-#' off site due to movement restrictions have their contact probabilities converted to 0 as they
-#' cannot form 'at risk' contacts. Additionally. sites that are uninfected with or without movement
-#' restrictions have a probability of 0. Receiving sites that cannot transport fish on site due to
-#' movement restrictions also have their contact probabilities converted to 0 as they cannot form
-#' 'at risk' contacts. At risk contacts occur between sites that are infected with no restrictions
-#' on movement off site and receiving sites with no restrictions on site.
-#' (Note: defined within `update_rate` function of aquanet-mod).
+#'  risk of disease spread. Source sites that are infected but cannot transport fish off site due
+#' to movement restrictions have their contact probabilities converted to 0 as they cannot form
+#' 'at risk' contacts. Additionally. sites that are uninfected with or without movement restrictions
+#' have a probability of 0. Receiving sites that cannot transport fish on site due to movement
+#' restrictions also have their contact probabilities converted to 0 as they cannot form 'at risk'
+#' contacts. At risk contacts occur between sites that are infected with no restrictions on movement
+#'  off site and receiving sites with no restrictions on site. (Note: defined within
+#' `aquanet::updateRates` function of aquanet-mod).
 #'
 #' @param catchment_movements (class list) of length 7, containing objects related to catchment-
 #' level movements:
 #' 1. (class dgCMatrix, Matrix package) sparse matrix containing details of site to catchment
-#' relationships. (graph.catchment2site.matrix2)
+#' relationships.
 #' 2. (class lgCMatrix, Matrix package) logical matrix contacting details of sites within the same
-#' catchment (graph.withinCatchmentEdges.matrix)
+#' catchment.
 #' 3. (class dgeMatrix, Matrix package) matrix of length number of catchments showing which
-#' catchments were under controls in the previous time step (controlled.catchments.previous)
-#' 4. (class dgTMatrix, Matrix package) sparse matrix containing contacts to exclude
-#' (listContacts.exclude)
+#' catchments were under controls in the previous time step.
+#' 4. (class dgTMatrix, Matrix package) sparse matrix containing contacts to exclude.
 #' 5. (class numeric) number selecting catchment level controls to apply (0 = allows movements
 #' within the same catchments, 1 = allows movements within or between infected catchments, and 2 =
 #' allows no movements by any of the sites within an infected catchment, "None" means there are no
-#' catchment level controls) (associatedSiteControlType)
+#' catchment level controls).
 #' 6. (class logical) logical vector of length number of sites stating if sites are under secondary
-#'  levels of control (secondary.controlled.sites)
-#' 7. (class numeric) the total number of catchments under controls (no.controlled.catchments)
+#'  levels of control.
+#' 7. (class numeric) the total number of catchments under controls.
 #'
 #' @param matrix_movements_prob (class dgTMatrix, Matrix package) sparse matrix containing the
-#' probability of live fish movements between sites.
-#' (Note: output of `createContactProbabilityMatrix` function of aquanet-mod).
+#' probability of live fish movements between sites. (Note: output of
+#' `createContactProbabilityMatrix` function of aquanet-mod).
 #'
-#' @return (class list) of length 2 containing (1) (dgCMatrix, Matrix package) sparse matrix
-#' (2) (class list) of length 7 containing updated catchment_movements input. Updated elements
+#' @return (class list) of length 2 containing:
+#' 1. (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
+#' 2. (class list) of length 7 containing: updated catchment_movements input. Updated elements
 #' include 3, 4, 6, and 7 (element 6 only changes if different catchments are under control compared
-#'  to previous time step).
+#' to previous time step).
 #'
 #' @export
 #'
@@ -72,7 +73,6 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             spmatrix_risk_contacts,
                                             catchment_movements,
                                             matrix_movements_prob) {
-  # TODO: replace list numbers with named elements
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[[1]]
   lgmatrix_catch_catch <- catchment_movements[[2]]
@@ -80,8 +80,8 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   matrix_contacts_exclude <- catchment_movements[[4]]
   site_control_type <- catchment_movements[[5]]
 
-  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether movements are restricted
-  # if there are no catchment controls, ignore this step
+  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether
+  # movements are restricted if there are no catchment controls, ignore this step
   ifelse(site_control_type != "None",
   catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites,
   catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites * 0)
@@ -118,10 +118,13 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
       sites_controlled_between_catchment_prob <- Matrix::t(sites_controlled_prob) * sites_controlled
       sites_controlled_between_catchment_prob <- Matrix::t(sites_controlled_between_catchment_prob)
 
-      # exclude within catchment movements from the matrix of contacts made to other sites within controlled catchments
-      sites_controlled_between_catchment_prob <- sites_controlled_between_catchment_prob - sites_controlled_in_catchment_prob
+      # exclude within catchment movements from the matrix of contacts made to other sites within
+      # controlled catchments
+      sites_controlled_between_catchment_prob <-
+        sites_controlled_between_catchment_prob - sites_controlled_in_catchment_prob
 
-      # create matrix of all contacts made outside of the infection area (rather than outside of each individual catchment)
+      # create matrix of all contacts made outside of the infection area
+      # (rather than outside of each individual catchment)
       matrix_contacts_exclude <- matrix_contacts_exclude - sites_controlled_between_catchment_prob
 
     # else if the site control type is 2 (allow no movements by any site within an infected catchment)
@@ -142,5 +145,6 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
 
   # return list containing (1) sparse matrix of risk contacts (excluding within catchment movements
   # depending on site control measures) and (2) catchment_movements list with updated controlled catchments
-  return(list(spmatrix_risk_contacts, catchment_movements))
+  return(list(spmatrix_risk_contacts = spmatrix_risk_contacts,
+              catchment_movements = catchment_movements))
 }

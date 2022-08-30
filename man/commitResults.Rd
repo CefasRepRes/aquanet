@@ -6,6 +6,7 @@
 \usage{
 commitResults(
   df_states,
+  df_site_names,
   n_states,
   n_sites,
   site_indices,
@@ -22,10 +23,13 @@ commitResults(
 = number of sites (\code{n_sites}) + number of states (\code{n_states}), and number of columns = commit
 interval (\code{commit_int}) + 1.}
 
-\item{n_states}{(class numeric) number of different combinations of states possible within the
-model.}
+\item{df_site_names}{(class data.frame) data frame with columns siteID and modelID where number
+of rows = number of sites (\code{n_sites}).}
 
-\item{n_sites}{(class numeric) number of sites within the contact network (model run).}
+\item{n_states}{(class numeric) number of different combinations of states possible within the
+model (note, include some redundancy here).}
+
+\item{n_sites}{(class numeric) number of sites within the contact network.}
 
 \item{site_indices}{(class integer) vector of 0-based site indices of length number of sites
 (\code{n_sites}).}
@@ -44,17 +48,14 @@ model.}
 \item{filepath_results}{(class string) path to results directory for model run.}
 }
 \value{
-Saved .RData file containing two data frames located within the \code{filepath_results}
-Full_Details results directory. Data frame 1: \code{sim_states} contains site ID and infection and
-control status for every time step within a simulation.  Data frame 2: \code{sim_times} contains the
-time step ID, simulation number and details of time step size.
+Saved .RData file containing data frame located within the \code{filepath_results}
+full_results directory. Output data frame \code{sims} contains model ID, site ID, infection and
+control status for every time step within a simulation, time step ID, simulation number and
+details of time step size.
 }
 \description{
 Output information on sites that become infected or subject to control measures at each time step
 within each simulation of the model. Additionally, output information on size of each time step
-within the model simulations. Results are saved as an .RData file within the Full_Details
+within the model simulations. Results are saved as an .RData file within the full_results
 directory.
-}
-\details{
-TODO: change Full_Details path to match Sarah's folder structure
 }

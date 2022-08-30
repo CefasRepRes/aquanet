@@ -1,5 +1,10 @@
 #' doEvent
 #'
+#' This function implements a selected transition event (includes disease spread, control and
+#' recovery events), updating both the infection status and control states of each site as a result
+#' of the transition event and the amount of time each site or group of sites are in specific state
+#' (see details).
+#'
 #' First, create variable a logical vector to store information on whether all sites in a catchment
 #' have been in a post-fallow state for at least 4 days and are therefore ready to restock.
 #'
@@ -8,7 +13,7 @@
 #' corrected probability of each transition occurring (number of transitions), and the number of
 #' transition probabilities.
 #'
-#' Identify sites that are under surveillance with no visible infection and for these sites and update
+#' Identify sites that are under surveillance with no visible infection and for these sites update
 #' the `time_vector` by adding the time that has passed since the last step in the simulation
 #' `tdiff`. This keeps record of the amount of time these sites are under surveillance.
 #'
@@ -38,21 +43,14 @@
 #' to restock state for greater than or equal to 4 days then move the sites within these catchments
 #' to a no disease control state and reset the `time_vector` for these sites.
 #'
-#'
-#' TODO: update function names
-#' TODO: should 4 days be hard coded?
-#' TODO: should update control 2 have !state_vector included in sites (i.e. not reinfected)
-#' TODO: fix time_vector reset for controls and param definition
-#'
-#' @param state_vector (class numeric) numeric binary vector of length number of sites containing
-#' information about the state of each site in relation to a condition (E.g. is the site
-#' 1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
-#' 1 = infected or 0 = susceptible state. (Note: created within the `simulationCode` function for
-#' loop).
+#' @param state_vector (class numeric) numeric binary vector of length 'number of sites' containing
+#' information about the state of each site in relation to a condition. This state vector should
+#' specify whether a site is in an 1 = infected or 0 = susceptible state. (Note: created within the
+#' `aquanet::simulationCode` function for loop).
 #'
 #' @param control_matrix (class matrix) matrix containing 7 columns depicting different control
-#' states and rows (of length number of sites) depicting whether each sites is 1 = in the specified
-#' control state or 0 = not in the specified control state.
+#' states and rows depicting whether each sites is 1 = in the specified control state or 0 = not in
+#' the specified control state.
 #'
 #' @param transition_rates (class list) of length 4 containing:
 #' 1. (class numeric) vector of transition types.
@@ -60,16 +58,16 @@
 #' 3. (class integer) vector of transition rates (transmission probability).
 #' 4. (class numeric) vector of source sites (of disease in case of transmission).
 #'
-#' @param tdiff (class numeric) size of current time step generated in `simulationCode()` by picking
-#'  a random number from exponential distribution weighted by sum of transition rates.
+#' @param tdiff (class numeric) size of current time step generated in `aquanet::simulationCode()`
+#' by picking a random number from exponential distribution weighted by sum of transition rates.
 #'
 #' @param move_restricted_sites (class logical) logical vector of length number of sites that
 #' states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
-#' (Note: created in the `update_rate` function of aquanet-mod and also input to
-#' `excludeWithinCatchmentMovements` function).
+#' (Note: created in the `aquanet::updateRates` function of aquanet-mod and also input to
+#' `aquanet::excludeWithinCatchmentMovements` function).
 #'
-#' @param non_peak_season (class logical) logical indicating whether the current timestep in the
-#' model is within non peak season where transmission (of e.g. a pathogen) is lower.
+#' @param non_peak_season (class logical) logical indicating whether the current time step in the
+#' model is within non peak season where disease transmission is lower.
 #'
 #' @param run_time_params (class data frame) of model run time parameters imported from original
 #' parameter file which is subsequently split into model set up and model run time parameters. Data
@@ -103,21 +101,21 @@
 #'
 #'
 #' @return (class list) of length 8 containing:
-#' 1. (class numeric) `state_vector` numeric binary vector of length number of sites containing
+#' 1. (class numeric) `state_vector` numeric binary vector of length 'number of sites' containing
 #' information about the state of each site in relation to a condition (E.g. is the site
 #' 1 = infected or 0 = susceptible state). This state vector should specify whether a site is in an
-#' 1 = infected or 0 = susceptible state. (Note: created within the `simulationCode` function for
-#' loop).
+#' 1 = infected or 0 = susceptible state. (Note: created within the `aquanet::simulationCode`
+#' function for loop).
 #' 2. (class matrix) `control_matrix` updated matrix containing 7 columns depicting different
-#' control states and rows (of length number of sites) depicting whether each sites is 1 = in the
-#' specified control state or 0 = not in the specified control state.
+#' control states and rows depicting whether each sites is 1 = in the specified control state or
+#' 0 = not in the specified control state.
 #' 3. (class numeric) `time_vector` updated vector of length 'number of sites' to record the amount
 #' of simulation time that a site has remained in a susceptible/recovered or fallow state.
 #' 4. (class numeric) `catchment_time_vector` updated vector of length `n_catchments` to record the
 #' amount of simulation time since every site in a catchment has been ready to be restocked.
-#' 5. (class logical) `catchments_with_post_fallow_only` vector of length number of catchments
-#' (`n_catchments`) depicting whether catchments contain only post-fallow sites ready for restocking
-#'  with no fallow sites.
+#' 5. (class logical) `catchments_with_post_fallow_only` vector of length (`n_catchments`)
+#' depicting whether catchments contain only post-fallow sites ready for restocking with no fallow
+#' sites.
 #' 6. (class matrix) `source_inf_vector` updated matrix of dimensions 'number of sites' x 'number of
 #'  sites' to track the sites that are infected either by Live Fish Movements of via river network
 #' connectivity'. Note: this matrix is used for forward contact tracing.
@@ -278,20 +276,20 @@ doEvent <- function(state_vector,
       control_matrix[site, c(1, 3)] <- 0
     }
 
-if(contact_tracing == TRUE){
-    # define source of infection
-    source_inf <- source_inf_vector[site]
+    if(contact_tracing == TRUE) {
+      # define source of infection
+      source_inf <- source_inf_vector[site]
 
-    # IF the source site of infection is known due to infection via LFM/river: reset to 0
-    if (source_inf != 0) {
-      source_inf_vector[site] <- 0
+      # IF the source site of infection is known due to infection via LFM/river: reset to 0
+      if (source_inf != 0) {
+        source_inf_vector[site] <- 0
 
-      # IF the source site of infection has no controls: update site for contact tracing
-      # Note: don't test a site for infection if it has already been subject to controls
-      if (sum(control_matrix[source_inf, 2:5]) == 0) {
-        control_matrix[source_inf, 7] <- 1
+        # IF the source site of infection has no controls: update site for contact tracing
+        # Note: don't test a site for infection if it has already been subject to controls
+        if (sum(control_matrix[source_inf, 2:5]) == 0) {
+          control_matrix[source_inf, 7] <- 1
+        }
       }
-    }
 
     ## forward tracing (who was at risk before controls implemented at this site) ----
     # Note: any sites that have been in contact with the infected site and which transmitted infection via LFM or river
@@ -456,12 +454,12 @@ if(contact_tracing == TRUE){
     time_vector[sites_restocked] <- 0
   }
 
-  return(list(state_vector,
-              control_matrix,
-              time_vector,
-              catchment_time_vector,
-              catchments_with_post_fallow_only,
-              source_inf_vector,
-              trans_type,
-              source_inf_matrix))
+  return(list(state_vector = state_vector,
+              control_matrix = control_matrix,
+              time_vector = time_vector,
+              catchment_time_vector = catchment_time_vector,
+              catchments_with_post_fallow_only = catchments_with_post_fallow_only,
+              source_inf_vector = source_inf_vector,
+              trans_type = trans_type,
+              source_inf_matrix = source_inf_matrix))
 }
