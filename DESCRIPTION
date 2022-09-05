@@ -37,4 +37,5 @@ Imports:
     units,
     here,
     stats,
-    tidyr
+    tidyr,
+    dplyr
