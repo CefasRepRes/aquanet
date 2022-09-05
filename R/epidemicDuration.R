@@ -15,18 +15,20 @@
 #'
 #' @return (class data.table) summary of epidemic duration (measured in days):
 #' 1. `mean_duration` the mean epidemic duration for the scenario
-#' 2. `min_duration` minimum epidemic duration
-#' 3. `max_duration` maximum epidemic duration
-#' 4. `median_duration` medium epidemic duration
-#' 5. `q05_duration` the 5% quartile for epidemic duration
-#' 6. `q95_duration` the 95% quartile for epidemic duration
-#' 7. `percent_time_out` the percentage of simulations for which the epidemic did not
+#' 2. `sd_duration` the standard deviation of the epidemic duration for the scenario
+#' 3. `min_duration` minimum epidemic duration
+#' 4. `max_duration` maximum epidemic duration
+#' 5. `median_duration` medium epidemic duration
+#' 6. `q05_duration` the 5% quartile for epidemic duration
+#' 7. `q95_duration` the 95% quartile for epidemic duration
+#' 8. `percent_time_out` the percentage of simulations for which the epidemic did not
 #' last longer than 5 years (1800 model days)
-#' 8. `no_iter` numer of iterations/simulations run
+#' 9. `no_iter` numer of iterations/simulations run
 #'
 #' @export
 #'
 #' @importFrom stats median
+#' @importFrom stats sd
 #'
 epidemicDuration <- function(results){
   # Convert results into data.table
@@ -41,6 +43,7 @@ epidemicDuration <- function(results){
   no_days <- unique(no_days)
   # Statistics
   mean_duration <- mean(no_days[, max_t])
+  sd_duration <- sd(no_days[, max_t])
   min_duration <- min(no_days[, max_t])
   max_duration <- max(no_days[, max_t])
   median_duration <- median(no_days[, max_t])
@@ -53,6 +56,7 @@ epidemicDuration <- function(results){
   iterations <- max(results[, sim_no])
   # Put into nice table
   scenario_results <- data.table::data.table(mean_duration = mean_duration,
+                                             sd_duration = sd_duration,
                                              min_duration = min_duration,
                                              max_duration = max_duration,
                                              median_duration = median_duration,

@@ -26,6 +26,7 @@ Plus the number of sites in each state (1:39) plus redundancy (40:42)
 (class data.table) summary of epidemic infections (measured in number of sites infected):
 \enumerate{
 \item \code{mean_infections} the mean epidemic infections for the scenario
+\item \code{sd_infections} the standard deviation of the epidemic infections for the scenario
 \item \code{min_infections} minimum epidemic infections
 \item \code{max_infections} maximum epidemic infections
 \item \code{median_infections} medium epidemic infections

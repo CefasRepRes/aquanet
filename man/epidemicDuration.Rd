@@ -26,6 +26,7 @@ Plus the number of sites in each state (1:39) plus redundancy (40:42)
 (class data.table) summary of epidemic duration (measured in days):
 \enumerate{
 \item \code{mean_duration} the mean epidemic duration for the scenario
+\item \code{sd_duration} the standard deviation of the epidemic duration for the scenario
 \item \code{min_duration} minimum epidemic duration
 \item \code{max_duration} maximum epidemic duration
 \item \code{median_duration} medium epidemic duration

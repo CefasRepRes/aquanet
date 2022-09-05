@@ -15,18 +15,20 @@
 #'
 #' @return (class data.table) summary of epidemic infections (measured in number of sites infected):
 #' 1. `mean_infections` the mean epidemic infections for the scenario
-#' 2. `min_infections` minimum epidemic infections
-#' 3. `max_infections` maximum epidemic infections
-#' 4. `median_infections` medium epidemic infections
-#' 5. `q05_infections` the 5% quartile for epidemic infections
-#' 6. `q95_infections` the 95% quartile for epidemic infections
-#' 7. `percent_die_out` the percentage of simulations for which the epidemic did not
+#' 2. `sd_infections` the standard deviation of the epidemic infections for the scenario
+#' 3. `min_infections` minimum epidemic infections
+#' 4. `max_infections` maximum epidemic infections
+#' 5. `median_infections` medium epidemic infections
+#' 6. `q05_infections` the 5% quartile for epidemic infections
+#' 7. `q95_infections` the 95% quartile for epidemic infections
+#' 8. `percent_die_out` the percentage of simulations for which the epidemic did not
 #' infect more than 5 sites in total
-#' 8. `no_iter` number of iterations/simulations run
+#' 9. `no_iter` number of iterations/simulations run
 #'
 #' @export
 #'
 #' @importFrom stats median
+#' @importFrom stats sd
 #'
 epidemicSize <- function(results){
   # Convert results into data.table
@@ -39,6 +41,7 @@ epidemicSize <- function(results){
   no_inf <- unique(no_inf)
   # Statistics
   mean_infections <- mean(no_inf[, max_inf])
+  sd_infections <- sd(no_inf[, max_inf])
   min_infections <- min(no_inf[, max_inf])
   max_infections <- max(no_inf[, max_inf])
   median_infections <- median(no_inf[, max_inf])
@@ -51,6 +54,7 @@ epidemicSize <- function(results){
   iterations <- max(results[, sim_no])
   # Put into nice table
   scenario_results <- data.table::data.table(mean_infections = mean_infections,
+                                             sd_infections = sd_infections,
                                              min_infections = min_infections,
                                              max_infections = max_infections,
                                              median_infections = median_infections,
