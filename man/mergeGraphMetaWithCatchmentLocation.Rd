@@ -7,8 +7,8 @@
 mergeGraphMetaWithCatchmentLocation(graph, filename_sites_catchments)
 }
 \arguments{
-\item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
-(using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+\item{graph}{(class igraph) graph of connections/movements between sites produced with iGraph
+in '03_CreateContactNetwork.R' of AquaNet-Mod. This includes both live fish movements and
 Section 30 movements.}
 
 \item{filename_sites_catchments}{(class string) String containing the file path and file name for
@@ -20,5 +20,6 @@ site resides in.}
 matrix produced with igraph and site location and catchment information.
 }
 \description{
-mergeGraphMetaWithCatchmentLocation
+This function extracts metadata (siteID, PersonID, modelID, catchmentID, type) from the
+connectivity graph and appends it to the site catchment locality information.
 }

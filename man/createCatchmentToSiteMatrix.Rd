@@ -8,7 +8,7 @@ createCatchmentToSiteMatrix(graph, filename_catchment_layer, crs_epsg)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
-(using script importSiteData.R of AquaNet-Mod). This includes both live fish movements and
+in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
 Section 30 movements.}
 
 \item{filename_catchment_layer}{(class string) String containing the file path and file name for
@@ -18,13 +18,20 @@ Section 30 movements.}
 to use for projecting the data.}
 }
 \value{
-(class list) of length 2 containing (1) data frame of site to catchment information and
-(2) dgCMatrix sparse matrix containing site to catchment summary.
+(class list) of length 2 containing:
+\enumerate{
+\item (class data frame) data frame of site to catchment information.
+\item (class dgCMatrix) sparse matrix containing site to catchment summary.
+}
 }
 \description{
+This function produces a sparse matrix detailing which catchments each site is situated in (see
+details).
+}
+\details{
 Extract connectivity matrix (graph) information to produce a data frame of siteID linked to
 catchment code (TRUNK_CODE) and merge with detailed catchment information from GIS layer data
-(.shp). This produced list output 1 which which maps site to catchment. To produce list output 2,
+(.shp). This produces list output 1 which which maps site to catchment. To produce list output 2,
 convert the catchment (columns) to site (rows) information to a sparse matrix. Note: ensure that
 the order of sites matches that included within the contact matrix.
 }

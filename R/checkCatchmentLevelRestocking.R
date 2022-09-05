@@ -1,5 +1,9 @@
 #' checkCatchmentLevelRestocking
 #'
+#' This function identifies catchments that are ready to restock as all sites within them are in a
+#' post-fallow state. It also identifies catchments containing sites in a fallow state (see
+#' details).
+#'
 #' Function takes control matrix stating which sites are in a fallow state and which are in a post-
 #' fallow state (ready for restocking). This information is combined with the siteID-to-catchment
 #' matrix to calculate the number of sites in a fallow or post-fallow state within each catchment.
@@ -12,16 +16,16 @@
 #' control state or 0 = not in the specified control state.
 #'
 #' @param spmatrix_sites_catchment (class dgCMatrix, Matrix package) sparse matrix containing site
-#' to catchment summary.
-#' Note: this is created with the `aquanet::createCatchmentToSiteMatrix()` function.
+#' to catchment summary. Note: this is created with the `aquanet::createCatchmentToSiteMatrix()`
+#' function.
 #'
 #' @param n_catchments (class integer) number of catchments.
 #'
 #' @return (class list) of length 3 containing:
 #' 1. (class matrix) input `control_matrix` containing 7 columns depicting different control
-#' states and rows (of length number of sites) depicting whether each sites is 1 = in the specified
-#' control state or 0 = not in the specified control state. This matrix is unedited and output to
-#' keep a record of the input data used to generate these catchment restocking data.
+#' states and rows depicting whether each sites is 1 = in the specified control state or 0 = not in
+#' the specified control state. This matrix is unedited and output to keep a record of the input
+#' data used to generate these catchment restocking data.
 #' 2. (class logical) vector of length number of catchments (`n_catchments`) depicting whether
 #' catchments contain fallow sites.
 #' 3. (class logical) vector of length number of catchments (`n_catchments`) depicting whether
@@ -54,7 +58,11 @@ checkCatchmentLevelRestocking <- function(control_matrix,
   catchments_with_fallow_some <- rep(FALSE, n_catchments)
   catchments_with_fallow_some[catchment_with_fallow] <- catchment_n_sites_fallow[catchment_with_fallow] != 0
 
-  # TODO name list elements
-  return(list(control_matrix, catchments_with_fallow_some, catchments_with_post_fallow_only))
+  # return results
+  # TODO: control matrix not altered here - remove output?
+  # TODO: is catchments_with_fallow_some output used?
+  return(list(control_matrix = control_matrix,
+              catchments_with_fallow_some = catchments_with_fallow_some,
+              catchments_with_post_fallow_only = catchments_with_post_fallow_only))
 
 }

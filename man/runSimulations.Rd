@@ -26,7 +26,8 @@ runSimulations(
   contact_tracing,
   remove_top_sites,
   n_infections_remove_top_sites,
-  disease_controls
+  disease_controls,
+  proportion_cullable
 )
 }
 \arguments{
@@ -37,7 +38,7 @@ runSimulations(
 \item{seed_num}{(class numeric) number used to generate random seed for result replication.}
 
 \item{clear_results}{(class logical) TRUE/FALSE stating whether .RData results should be cleared
-from \code{filepath_results} and nested directories. This ensures if you re-run aquanet-mod the
+from \code{filepath_results} and nested directories. This ensures if you re-run AquaNet-Mod the
 results files are all obtained from a single run.}
 
 \item{tmax}{(class numeric) maximum amount of time in days that each simulation should run for.}
@@ -92,30 +93,38 @@ catchment, "None" means there are no catchment level controls).}
 \item{filepath_results}{(class string) path to results directory for model run.}
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
-tracing is taking place.}
+tracing should take place.}
 
-\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the remova
-of the most connected sites in the network is taking place.}
+\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the removal
+of the most connected sites in the network should take place.}
 
 \item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
 number of infected sites exceeds this number, switch to using the top sites removed contact
 probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not
-any disease control measurs are taking place.}
+any disease control measures should take place.}
+
+\item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
 }
 \value{
-(class list) of length 2 containing (1) the number of cores used for the run and (2) the
-output of the foreach loop running the \code{aquanet::simulationCode()} function.
+(class list) of length 2 containing:
+\enumerate{
+\item (class numeric) the number of cores used for the run.
+\item the output of the foreach loop running the \code{aquanet::simulationCode()} function.
+}
 }
 \description{
-If \code{clear_results} = TRUE, the runSimulations function first clears all .RData files within the
-\code{filepath_results} and daughter directories.
+This function runs the code to simulate disease transmission throughout a network of aquaculture
+sites through time using parallel computing (see details).
 }
 \details{
+If \code{clear_results} = TRUE, the runSimulations function first clears all .RData files within the
+\code{filepath_results} and daughter directories.
+
 The number of simulations per job is calculated and a set of R copies running in parallel,
 communicating over sockets is generated.
 
-The \code{aquanet::simulationCode()} function is then called in parallel to run the aquanet-mod
+The \code{aquanet::simulationCode()} function is then called in parallel to run the AquaNet-Mod
 simulation with defined inputs. One complete, the parellel R copies are stopped.
 }
