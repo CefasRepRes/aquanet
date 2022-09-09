@@ -175,7 +175,7 @@ simulationCode <- function(runs,
 
   # create empty result tables to populate (speeds up for loop by memory pre-allocation)
   output_all_states <- stats::setNames(data.table::data.table(matrix(0,
-                                                                     nrow = 5 + n_sites + n_states, # 3 batch_num, k, sim_num
+                                                                     nrow = 6 + n_sites + n_states, # 3 batch_num, k, sim_num
                                                                      ncol = commit_int)),
                                        as.character(iteration_vector))
 
@@ -375,6 +375,7 @@ simulationCode <- function(runs,
                                                                    sim_num,
                                                                    tdiff,
                                                                    (t - tdiff),
+                                                                   trans_type,
                                                                    sites_states_totals,
                                                                    sites_states_vector)]
 
@@ -398,7 +399,7 @@ simulationCode <- function(runs,
                                filepath_results = filepath_results)
 
         # clear the tables after commit
-        output_all_states[ , as.character(iteration_vector) := rep(0, 5 + n_sites + n_states)]
+        output_all_states[ , as.character(iteration_vector) := rep(0, 6 + n_sites + n_states)]
       }
 
       # pick the next transmission event and modify a site's state accordingly
