@@ -8,8 +8,9 @@
 #' 2. `sim_no` (numeric) the simulation number
 #' 3. `t_diff` (numeric) the amount of time the site has spent in the state specified (in days)
 #' 4. `t` (numeric) the model time
+#' 5. `trans_type` (numeric) the transition type which is occuring at that timestep
 #'
-#' Columns 5:20 are logical site type vectors assigned in `site_types.csv`-
+#' Columns 6:21 are logical site type vectors assigned in `site_types.csv`-
 #' whether or not a site contains that operation type.
 #'
 #' e.g. smallhatch = 1 means the site contains a small hatchery.
@@ -47,29 +48,11 @@ loadResultsFullSiteType <- function(scenario_name){
                     "full_results",
                     filenames[i]))
     sims_all <- rbind(sims_all, sims)}
-  # Select relevant columns
+  # Format and check for threes
   sites_summary <- data.table(sims_all)
-  sites_summary <- sites_summary[, .(siteID,
-                                     state,
-                                     simNo,
-                                     tdiff,
-                                     t)]
   sites_summary$siteID <- as.numeric(sites_summary$siteID)
   threes <- sites_summary[state %in% c(3, 13, 23, 33)]
   if(nrow(threes) == 0) return(warning("There are no state threes in your outputs. Check your simulation code"))
-  # Change siteID to modelID (because that's what it is)
-  colnames(sites_summary)[1] <- "modelID"
-  # Get actual site id
-  site_id_mod <- data.table::fread(here::here("outputs",
-                                              scenario_name,
-                                              "site_details_with_model_id.csv"))
-  site_id_mod <- site_id_mod[, .(siteID,
-                                 modelID)]
-  sites_summary <- base::merge(sites_summary,
-                         site_id_mod,
-                         all.x = TRUE,
-                         by = "modelID")
-  sites_summary <- sites_summary[, modelID := NULL]
   # Read in site type vector
   site_type <- data.table::fread(here::here("outputs",
                                             scenario_name,

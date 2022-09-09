@@ -23,10 +23,11 @@ TODO: add file with state definitions and link here
 \item \code{sim_no} (numeric) the simulation number
 \item \code{t_diff} (numeric) the amount of time the site has spent in the state specified (in days)
 \item \code{t} (numeric) the model time
+\item \code{trans_type} (numeric) the transition type which is occuring at that timestep
 }
 }
 \details{
-Columns 5:20 are logical site type vectors assigned in \code{site_types.csv}-
+Columns 6:21 are logical site type vectors assigned in \code{site_types.csv}-
 whether or not a site contains that operation type.
 
 e.g. smallhatch = 1 means the site contains a small hatchery.
