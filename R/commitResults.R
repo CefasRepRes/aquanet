@@ -63,7 +63,7 @@ commitResults <- function(df_states,
                      simNo = as.integer(df_states[3, ])[matrix_states@j + 1],
                      tdiff = as.numeric(df_states[4, ])[matrix_states@j + 1],
                      t = as.numeric(df_states[5, ])[matrix_states@j + 1],
-                     trans_type = as.numeric(df_states[6, ][matrix_states@j + 1]))
+                     trans_type = as.numeric(df_states[6, ])[matrix_states@j + 1])
 
   # merge simulation data with true siteID and order by timeID
   sims <- merge(df_site_names, sims, by = "modelID", all.y = TRUE)
