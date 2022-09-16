@@ -28,14 +28,6 @@ stateCosts <- function(data, state, site_types){
                      14, 15,
                      24, 25,
                      34, 35)
-    # Add a cull state (same cost as fallow)
-    data$cull_state <- NA
-    for(j in 1:nrow(data)){
-      if(data$state[j] %in% c(4, 14, 24, 34) &&
-         data$state[j-1] %in% c(2, 8, 12, 18, 22, 28, 32, 38)){
-        data$cull_state[j-1] <- "Y"
-      }
-    }
     state_summary <- data[cull_state == "Y" | state %in% state_codes]
   } else if(state == "no_manage"){
     state_codes <- c(10, 30)

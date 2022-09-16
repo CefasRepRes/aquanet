@@ -72,6 +72,14 @@ timePerStage <- function(scenario_name){
     sims_site_time_summary <- sims_site_time_summary[, "t" := NULL]
     # Rename t_diff to something more appropriate
     colnames(sims_site_time_summary)[colnames(sims_site_time_summary) == "t_diff"] <- "t_total"
+    # Add a cull state (same cost as fallow)
+    sims_site_time_summary$cull_state <- NA
+    for(j in 1:nrow(sims_site_time_summary)){
+      if(sims_site_time_summary$state[j] %in% c(4, 14, 24, 34) &&
+         sims_site_time_summary$state[j-1] %in% c(2, 8, 12, 18, 22, 28, 32, 38)){
+        sims_site_time_summary$cull_state[j-1] <- "Y"
+      }
+    }
     ## Save the results =====
     save(sims_site_time_summary,
          file = here::here("outputs",
