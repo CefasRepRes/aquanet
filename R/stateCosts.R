@@ -1,7 +1,8 @@
 #' stateCosts
 #'
 #' Calculates the total duration costs for each simulation across fallow, contact tracing,
-#' catchment control and unmanaged disease scenarios. Returns a data frame containing
+#' catchment control and unmanaged disease scenarios. Returns (1) a full breakdown of daily
+#' costs by site type and simulation and (2) a summary data frame containing
 #' the simulation number and the cost incurred by sites being in that state.
 #'
 #' @param data (class data.frame) output of timePerStage. Contains the site ID,
@@ -14,7 +15,7 @@
 #' 4. `catchment_control` uninfected site under catchment-level controls
 #' @param site_types (class list) a list of possible site types
 #'
-#' @return (class data.frame) sim_cost_summary
+#' @return (class list) cost_output
 #' @export
 #'
 #' @import data.table
@@ -27,20 +28,33 @@ stateCosts <- function(data, state, site_types){
                      14, 15,
                      24, 25,
                      34, 35)
+    # Add a cull state (same cost as fallow)
+    data$cull_state <- NA
+    for(j in 1:nrow(data)){
+      if(data$state[j] %in% c(4, 14, 24, 34) &&
+         data$state[j-1] %in% c(2, 8, 12, 18, 22, 28, 32, 38)){
+        data$cull_state[j-1] <- "Y"
+      }
+    }
+    state_summary <- data[cull_state == "Y" | state %in% state_codes]
   } else if(state == "no_manage"){
     state_codes <- c(10, 30)
+    # Filter data by state
+    state_summary <- data[state %in% state_codes]
   } else if(state == "contact_trace"){
     state_codes <- c(1, 7,
                      11, 17,
                      21, 27,
                      31, 37)
+    # Filter data by state
+    state_summary <- data[state %in% state_codes]
   } else if(state == "catchment_control"){
     state_codes <- c(20, 21,
                      24, 25,
                      26, 27)
+    # Filter data by state
+    state_summary <- data[state %in% state_codes]
   }
-  # Filter data by state
-  state_summary <- data[state %in% state_codes]
   # Get daily cost for that stage
   daily_cost <- data.table(daily_cost)
   state_daily_cost <- daily_cost[stage == state]
@@ -70,9 +84,11 @@ stateCosts <- function(data, state, site_types){
 
   # Calculate total cost over the course of a simulation
   sim_cost_summary <- tidyr::pivot_wider(state_costs, names_from = site_types,
-                                    values_from = duration_cost) # Reformat
+                                         values_from = duration_cost) # Reformat
   sim_cost_summary$total_cost <- rowSums(sim_cost_summary[, -1], na.rm = T) # Total cost [, -1] so as not to include the sim_no in total
   colnames(sim_cost_summary)[16] <- paste0(state, "_total_cost")
   sim_cost_summary <- sim_cost_summary[, c("sim_no", paste0(state, "_total_cost"))]
-  return(sim_cost_summary)
+  cost_output <- list(state_costs, sim_cost_summary)
+  names(cost_output) <- c("full_state_costs", "summary_state_costs")
+  return(cost_output)
 }
