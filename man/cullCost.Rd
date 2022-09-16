@@ -4,11 +4,14 @@
 \alias{cullCost}
 \title{cullCost}
 \usage{
-cullCost(data, cull_costs, site_types)
+cullCost(farm_data, non_farm_data, cull_costs, site_types)
 }
 \arguments{
-\item{data}{(class data.frame) the \code{time_summary} data frame created from the
-\code{timePerStage} function.}
+\item{farm_data}{(class data.frame) the \code{time_summary} data frame created from the
+\code{timePerStage} function, for farms only.}
+
+\item{non_farm_data}{(class data.frame) the \code{time_summary} data frame created from the
+\code{timePerStage} function, for non-farms (fisheries) only.}
 
 \item{cull_costs}{(class data.frame) of the costs to both the site and the
 competent authority for each site type.}

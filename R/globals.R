@@ -18,4 +18,5 @@ utils::globalVariables(c(".",
                          "stage",
                          "cull_cost_farm",
                          "cull_cost_fhi",
-                         "cull_state"))
+                         "cull_state",
+                         "cull_cost_site"))
