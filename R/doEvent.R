@@ -385,7 +385,7 @@ doEvent <- function(state_vector,
     run_time_params[["Late_Controls_Fisheries"]] # 'Sl' in manuscript
 
   # logical vector of sites subject to move controls but allowed to import fish
-  sites_controlled_movements_imports <- as.logical(control_matrix[ , 3])
+  sites_controlled_movements_imports <- as.logical(control_matrix[ , 3] * !state_vector)
 
   # logical vector of sites which have passed stage 2 surveillance without infection
   sites_allow_moves_all <- (time_vector > control_period) & sites_controlled_movements_imports
