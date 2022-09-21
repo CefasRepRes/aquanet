@@ -113,6 +113,9 @@
 #' @return (class numeric) batch number `batch_num` and output_summary_states saved to
 #' `filepath_results`.
 #'
+#' @param days_before_catchment_restock (class numeric) number of days that all sites within a
+#' catchment need to be in the post-fallow state before restocking.
+#'
 #'
 #' @export
 #'
@@ -140,7 +143,8 @@ simulationCode <- function(runs,
                            remove_top_sites,
                            n_infections_remove_top_sites,
                            disease_controls,
-                           proportion_cullable) {
+                           proportion_cullable,
+                           days_before_catchment_restock) {
 
   ## extract information from input parameters ----
 
@@ -418,7 +422,8 @@ simulationCode <- function(runs,
                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
                                       source_inf_vector = source_inf_vector,
                                       source_inf_matrix = source_inf_matrix,
-                                      contact_tracing = contact_tracing)
+                                      contact_tracing = contact_tracing,
+                                      days_before_catchment_restock = days_before_catchment_restock)
 
       # reassign variables with updates outputs for next iteration of while loop
       state_vector <- doEvent_out[[1]]

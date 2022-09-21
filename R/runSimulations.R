@@ -90,6 +90,9 @@
 #'
 #' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
 #'
+#' @param days_before_catchment_restock (class numeric) number of days that all sites within a
+#' catchment need to be in the post-fallow state before restocking.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (class numeric) the number of cores used for the run.
 #' 2. the output of the foreach loop running the `aquanet::simulationCode()` function.
@@ -122,7 +125,8 @@ runSimulations <- function(n_cores,
                            remove_top_sites,
                            n_infections_remove_top_sites,
                            disease_controls,
-                           proportion_cullable) {
+                           proportion_cullable,
+                           days_before_catchment_restock) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -176,7 +180,8 @@ runSimulations <- function(n_cores,
       remove_top_sites = remove_top_sites,
       n_infections_remove_top_sites = n_infections_remove_top_sites,
       disease_controls = disease_controls,
-      proportion_cullable = proportion_cullable
+      proportion_cullable = proportion_cullable,
+      days_before_catchment_restock = days_before_catchment_restock
     )
 
   # shut down set of copies of R running in parallel communicating over sockets

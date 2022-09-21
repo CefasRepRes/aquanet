@@ -27,7 +27,8 @@ runSimulations(
   remove_top_sites,
   n_infections_remove_top_sites,
   disease_controls,
-  proportion_cullable
+  proportion_cullable,
+  days_before_catchment_restock
 )
 }
 \arguments{
@@ -107,6 +108,9 @@ probability matrix.}
 any disease control measures should take place.}
 
 \item{proportion_cullable}{(class numeric) proportion of fisheries able to cull site.}
+
+\item{days_before_catchment_restock}{(class numeric) number of days that all sites within a
+catchment need to be in the post-fallow state before restocking.}
 }
 \value{
 (class list) of length 2 containing:
