@@ -161,7 +161,7 @@ simulationCode <- function(runs,
   n_catchments <- spmatrix_sites_catchment@Dim[2]
 
   # extract matrix of contacts between sites within the same catchment
-  lgmatrix_catch_catch <- out_createWithinCatchmentEdges[[1]]
+  lgmatrix_catch_catch <- out_createWithinCatchmentEdges[["lgmatrix_catch_catch"]]
 
 
   ## create variables to populate ----
