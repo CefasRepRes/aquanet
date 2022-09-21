@@ -63,6 +63,6 @@ listTransitionRates <- function(run_time_params,
   return(list(rate_type = rate_type,
               position = position,
               rate = rate,
-              source_site = source_site,
+              source = source_site,
               n_rates = n_rates))
 }
