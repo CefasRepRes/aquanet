@@ -426,14 +426,14 @@ simulationCode <- function(runs,
                                       days_before_catchment_restock = days_before_catchment_restock)
 
       # reassign variables with updates outputs for next iteration of while loop
-      state_vector <- doEvent_out[[1]]
-      control_matrix <- doEvent_out[[2]]
-      time_vector <- doEvent_out[[3]]
-      catchment_time_vector <- doEvent_out[[4]]
-      catchments_with_post_fallow_only <- doEvent_out[[5]]
-      source_inf_vector <- doEvent_out[[6]]
-      trans_type <- doEvent_out[[7]]
-      source_inf_matrix <- doEvent_out[[8]]
+      state_vector <- doEvent_out[["state_vector"]]
+      control_matrix <- doEvent_out[["control_matrix"]]
+      time_vector <- doEvent_out[["time_vector"]]
+      catchment_time_vector <- doEvent_out[["catchment_time_vector"]]
+      catchments_with_post_fallow_only <- doEvent_out[["catchments_with_post_fallow_only"]]
+      source_inf_vector <- doEvent_out[["source_inf_vector"]]
+      trans_type <- doEvent_out[["trans_type"]]
+      source_inf_matrix <- doEvent_out[["source_inf_matrix"]]
 
       # every 100 steps print run information to screen
       if (n_steps %% 100 == 1) {
