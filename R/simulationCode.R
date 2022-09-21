@@ -149,8 +149,8 @@ simulationCode <- function(runs,
   ## extract information from input parameters ----
 
   # extract number of sites and matrix of live fish movements contact probabilities
-  n_sites <- out_createContactProbabilityMatrix[[1]]
-  matrix_movements_prob <- out_createContactProbabilityMatrix[[3]]
+  n_sites <- out_createContactProbabilityMatrix[["n_sites"]]
+  matrix_movements_prob <- out_createContactProbabilityMatrix[["matrix_movements_prob"]]
 
   # extract siteID alongside modelID
   site_names <- data.frame(modelID = 1:length(dimnames(matrix_movements_prob)[[1]]),
