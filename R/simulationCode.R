@@ -92,7 +92,8 @@
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
 #' catchment, "None" means there are no catchment level controls).
 #'
-#' @param filepath_results (class string) path to results directory for model run.
+#' @param filepath_results (class character) character vector containing paths to various results
+#' directories for model run created in `aquanet-mod/code/RunModelCommandLine.R`.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing should take place.
@@ -463,7 +464,7 @@ simulationCode <- function(runs,
 
   # save table containing number of sites in each state at each time point
   save(output_summary_states,
-       file = paste(filepath_results, "/batch_results/batchNo-", batch_num, ".RData", sep = ""),
+       file = paste(filepath_results[["results_batch"]], "/batchNo-", batch_num, ".RData", sep = ""),
        compress = FALSE)
 
   return(batch_num)

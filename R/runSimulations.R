@@ -72,7 +72,8 @@
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
 #' catchment, "None" means there are no catchment level controls).
 #'
-#' @param filepath_results (class string) path to results directory for model run.
+#' @param filepath_results (class character) character vector containing paths to various results
+#' directories for model run created in `aquanet-mod/code/RunModelCommandLine.R`.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing should take place.
@@ -125,7 +126,7 @@ runSimulations <- function(n_cores,
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
-  files <- list.files(path = filepath_results,
+  files <- list.files(path = filepath_results[["results"]],
                       pattern = "\\.RData$",
                       recursive = TRUE,
                       full.names = TRUE)
