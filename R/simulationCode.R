@@ -310,13 +310,13 @@ simulationCode <- function(runs,
                                             disease_controls = disease_controls)
 
       # extract list of all transition rates
-      transition_rates <- updated_rates[[1]]
+      transition_rates <- updated_rates[["trans_rates"]]
 
       # extract updated list of catchment movement rules - edited by excludeWithinCatchmentMovements() in updateRates()
-      list_catchment_movements <- updated_rates[[2]]
+      list_catchment_movements <- updated_rates[["matrix_risk_contacts"]]
 
       # extract updated logical vector of sites with movement restrictions
-      sites_all_movement_restricted <- updated_rates[[3]]
+      sites_all_movement_restricted <- updated_rates[["sites_all_movement_restricted"]]
 
       # extract updated logical vector of sites with controlled status
       sites_controlled <- list_catchment_movements[[6]]
