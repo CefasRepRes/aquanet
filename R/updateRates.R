@@ -137,9 +137,9 @@ updateRates <- function(control_matrix,
   ### Select contact matrix ---
 
   if(remove_top_sites == TRUE && sum(sites_states_cumulative) > n_infections_remove_top_sites) {
-    movement_probability <- movements_prob_top_sites_removed[[3]]
+    movement_probability <- movements_prob_top_sites_removed[["matrix_movements_prob"]]
   } else {
-    movement_probability <- movements_prob[[3]]
+    movement_probability <- movements_prob[["matrix_movements_prob"]]
   }
 
   ### define movement restrictions ----
@@ -213,7 +213,7 @@ updateRates <- function(control_matrix,
   ### calculate LFM infection rate ----
 
   # Rate 1: exposure rate of LFM contacts from infected to susceptible sites
-  rate_site_infection <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[[1]],
+  rate_site_infection <- aquanet::listRatesSusceptibleRiskContacts(spmatrix_risk_contacts = risk_contacts_catch_corrected[["spmatrix_risk_contacts"]],
                                                                    state_vector = state_vector,
                                                                    trans_type = 0)
 
@@ -324,14 +324,14 @@ updateRates <- function(control_matrix,
                                                        trans_type = 4)
 
     # Rate 10: probability of a contact occurring downstream of an outbreak via the river network
-    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = river_prob[[2]],
+    contacts_river <- aquanet::calcRiverTransmission(matrix_river_distances_prob = river_prob[["matrix_river_distances_prob"]],
                                                      clinical_state_vector = clinical_vector,
                                                      spread_restricted_off = spread_prevented_off,
                                                      spread_restricted_on = spread_prevented_on,
                                                      trans_type = 10)
 
     # Rate 11: probability of a contact occurring due to local fomite transmission
-    contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = site_distances_prob[[2]],
+    contacts_fomite <- aquanet::calcRiverTransmission(matrix_river_distances_prob = site_distances_prob[["matrix_distances_probability"]],
                                                       clinical_state_vector = clinical_vector,
                                                       spread_restricted_off = spread_prevented_off,
                                                       spread_restricted_on = spread_prevented_on,
@@ -367,7 +367,7 @@ updateRates <- function(control_matrix,
   }
 
   return(list(trans_rates = trans_rates,
-              catchment_movements = risk_contacts_catch_corrected[[2]],
+              catchment_movements = risk_contacts_catch_corrected[["catchment_movements"]],
               sites_all_movement_restricted = sites_all_movement_restricted))
 
 }
