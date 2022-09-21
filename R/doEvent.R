@@ -10,7 +10,7 @@
 #' therefore ready to restock.
 #'
 #' Next, extract required information from function inputs: sites that are fallow,  sites subject to
-#'  transition identified in `transition rates[[2]]`, total number of possible site transitions, a
+#'  transition identified in `transition rates[["position"]]`, total number of possible site transitions, a
 #' corrected probability of each transition occurring (number of transitions), and the number of
 #' transition probabilities.
 #'
@@ -161,13 +161,13 @@ doEvent <- function(state_vector,
   sites_fallow <- as.logical(control_matrix[ , 4])
 
   # vector of sites subject to transition (possible infection events)
-  site_vector <- transition_rates[[2]]
+  site_vector <- transition_rates[["position"]]
 
   # calculate the total rates of transmission
-  rates_total <- sum(transition_rates[[3]])
+  rates_total <- sum(transition_rates[["rate"]])
 
   # create vector of probabilities
-  prob <- transition_rates[[3]] / rates_total
+  prob <- transition_rates[["rate"]] / rates_total
   n_prob <- length(prob)
 
 
@@ -199,7 +199,7 @@ doEvent <- function(state_vector,
   site <- site_vector[event] + 1
 
   # extract transition rate for selected event - and modify the state appropriately
-  trans_type <- transition_rates[[1]][event]
+  trans_type <- transition_rates[["rate_type"]][event]
 
 
   ## S --> I | L --> I ----
@@ -225,7 +225,7 @@ doEvent <- function(state_vector,
         if (trans_type %in% c(0, 10)) {
           # extract infection source site and update source_inf_vector and source_inf_matrix
           # in case contact tracing applied later
-          source_inf <- transition_rates[[4]][event] + 1
+          source_inf <- transition_rates[["source"]][event] + 1
           source_inf_vector[site] <- source_inf
           source_inf_matrix[source_inf,  site] <- 1
         }
