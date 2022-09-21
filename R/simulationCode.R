@@ -157,7 +157,7 @@ simulationCode <- function(runs,
                            siteID = dimnames(matrix_movements_prob)[[1]])
 
   # extract number of catchments and matrix of catchment to site relationships
-  spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[[2]]
+  spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[["spmatrix_catchment_sites"]]
   n_catchments <- spmatrix_sites_catchment@Dim[2]
 
   # extract matrix of contacts between sites within the same catchment
