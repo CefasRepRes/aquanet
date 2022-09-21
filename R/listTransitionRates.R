@@ -60,9 +60,9 @@ listTransitionRates <- function(run_time_params,
   rate_type <- rep(trans_type, times = n_rates)
   source_site <- rep(NA, times = n_rates)
 
-  return(list(rate_type,
-              position,
-              rate,
-              source_site,
-              n_rates))
+  return(list(rate_type = rate_type,
+              position = position,
+              rate = rate,
+              source_site = source_site,
+              n_rates = n_rates))
 }
