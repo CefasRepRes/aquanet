@@ -429,11 +429,11 @@ doEvent <- function(state_vector,
                                                                    n_catchments = n_catchments)
 
     # update catchment time vector for catchments containing fallow sites
-    catchment_with_fallow_some <- catchment_restocking[[2]]
+    catchment_with_fallow_some <- catchment_restocking[["catchments_with_fallow_some"]]
     catchment_time_vector[catchment_with_fallow_some] <- 0
 
     # overwrite catchments_with_post_fallow_only to contain sites ready for restocking
-    catchments_with_post_fallow_only <- catchment_restocking[[3]]
+    catchments_with_post_fallow_only <- catchment_restocking[["catchments_with_post_fallow_only"]]
   }
 
   # select catchments for restock - with only post-fallow sites ready to restock for >= X days
