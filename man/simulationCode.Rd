@@ -82,7 +82,8 @@ apply (0 = allows movements within the same catchments, 1 = allows movements wit
 infected catchments, and 2 = allows no movements by any of the sites within an infected
 catchment, "None" means there are no catchment level controls).}
 
-\item{filepath_results}{(class string) path to results directory for model run.}
+\item{filepath_results}{(class character) character vector containing paths to various results
+directories for model run created in \code{aquanet-mod/code/RunModelCommandLine.R}.}
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
 tracing should take place.}
