@@ -90,5 +90,5 @@ listRatesSusceptibleRiskContacts <- function(spmatrix_risk_contacts,
               position = contacts[["position"]],
               rate = contacts[["rate"]],
               source = contacts[["source"]],
-              n_contacts = n_contacts))
+              n_rates = n_contacts))
 }
