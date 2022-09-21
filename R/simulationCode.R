@@ -243,13 +243,13 @@ simulationCode <- function(runs,
     n_catchments_controlled <- 0
 
     # create list of catchment_movement objects
-    list_catchment_movements <- list(spmatrix_sites_catchment,
-                                     lgmatrix_catch_catch,
-                                     catchments_controlled_prev,
-                                     matrix_contacts_exclude,
-                                     type_catchment_controls,
-                                     sites_controlled,
-                                     n_catchments_controlled)
+    list_catchment_movements <- list("spmatrix_sites_catchment" = spmatrix_sites_catchment,
+                                     "lgmatrix_catch_catch" = lgmatrix_catch_catch,
+                                     "catchments_controlled_prev" = catchments_controlled_prev,
+                                     "matrix_contacts_exclude" = matrix_contacts_exclude,
+                                     "type_catchment_controls" = type_catchment_controls,
+                                     "sites_controlled" = sites_controlled,
+                                     "n_catchments_controlled" = n_catchments_controlled)
 
 
     ## add fisheries that can be culled to culling vector of farms ----
@@ -313,16 +313,16 @@ simulationCode <- function(runs,
       transition_rates <- updated_rates[["trans_rates"]]
 
       # extract updated list of catchment movement rules - edited by excludeWithinCatchmentMovements() in updateRates()
-      list_catchment_movements <- updated_rates[["matrix_risk_contacts"]]
+      list_catchment_movements <- updated_rates[["catchment_movements"]]
 
       # extract updated logical vector of sites with movement restrictions
       sites_all_movement_restricted <- updated_rates[["sites_all_movement_restricted"]]
 
       # extract updated logical vector of sites with controlled status
-      sites_controlled <- list_catchment_movements[[6]]
+      sites_controlled <- list_catchment_movements[["sites_controlled"]]
 
       # update the number of controlled catchments (updated in excludeWithinCatchmentMovements in updateRates)
-      n_catchments_controlled <- list_catchment_movements[[7]]
+      n_catchments_controlled <- list_catchment_movements[["n_catchments_controlled"]]
 
       # calculate site attributes (infection and control status) as a single state per site
       sites_states_vector <- as.integer((state_vector * 10) +
