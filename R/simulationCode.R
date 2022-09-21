@@ -360,12 +360,12 @@ simulationCode <- function(runs,
       }
 
       # if there are no infectious sites in the network stop the loop
-      if (length(transition_rates[[3]]) == 0) {
+      if (length(transition_rates[["rate"]]) == 0) {
         break()
       }
 
       # randomly pick next time step, based on a weighted expontial distribution
-      tdiff <- stats::rexp(1, sum(transition_rates[[3]]))
+      tdiff <- stats::rexp(1, sum(transition_rates[["rate"]]))
 
       # increment the time and steps
       t <- t + tdiff
@@ -442,7 +442,7 @@ simulationCode <- function(runs,
                 length(state_vector),
                 sum(state_vector),
                 tdiff,
-                length(transition_rates[[3]])))
+                length(transition_rates[["rate"]])))
       }
     }
   }
