@@ -246,6 +246,7 @@ updateRates <- function(control_matrix,
 
   # create empty list for transition rate storage
   trans_rates <- vector(mode = "list", length = 4)
+  names(trans_rates) <- c("rate_type", "position", "rate", "source")
 
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_site_infection, list_base = trans_rates)
   trans_rates <- aquanet::combineTransitionRates(list_append = rate_farm_recovery, list_base = trans_rates)
