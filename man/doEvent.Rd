@@ -125,7 +125,7 @@ have been in a post-fallow state for at least \code{days_before_catchment_restoc
 therefore ready to restock.
 
 Next, extract required information from function inputs: sites that are fallow,  sites subject to
-transition identified in \verb{transition rates[[2]]}, total number of possible site transitions, a
+transition identified in \verb{transition rates[["position"]]}, total number of possible site transitions, a
 corrected probability of each transition occurring (number of transitions), and the number of
 transition probabilities.
 

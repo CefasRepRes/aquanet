@@ -1,6 +1,7 @@
 #' updateRates
 #'
-#' This function ,,, (see details).
+#' This function calculates the rates that each site can transition between different states in
+#' AquaNet-Mod (see details).
 #'
 #' Define logical vectors of sites depending on different combinations of  movement restrictions and
 #'  site states specified within an input `control_matrix`. This includes sites where movements are
