@@ -70,10 +70,9 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #' @param movement_period (class numeric) The period of time (in days) for which movement data (live
 #'  fish movements and section 30 movements) were collected and used to create `graph` parameter.
 #'
-#' @param percentile (class numeric) The percentile used to distinguish top connected sites. Contact
-#' probabilities for sites with number of outward (supplying) movements and sites with number of
-#' inward (receiving) movements above this percentile will be removed from the contact probability
-#' matrix.
+#' @param n_remove (class numeric) The number of topmost connected sites to be removed from the
+#' contact probability matrix. This includes sites with highest number of outward (supplying)
+#' movements and sites with number of inward (receiving) movements.
 #'
 #' @return (class list) of length 3 containing:
 #' 1. (class integer) number of sites in movements matrix.
@@ -85,11 +84,15 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #' @importFrom igraph get.adjacency
 #' @importFrom stats quantile
 #' @importFrom Matrix rowSums colSums
-createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period, percentile) {
+#' @importFrom dplyr slice_max
+createContactProbabilityMatrixTopSitesRemoved <- function(graph,
+                                                          movement_period,
+                                                          n_remove) {
   # get adjacency matrix of movements between sites from contact network (graph)
   matrix_movements <- igraph::get.adjacency(graph,
                                             attr = "movements",
-                                            names = TRUE)
+                                            names = TRUE,
+                                            sparse = TRUE)
 
   # divide number of movements by the time over which movement information was collected
   matrix_movements_prob <- matrix_movements/movement_period
@@ -97,20 +100,23 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph, movement_period
   # if there are any contacts with a probability of greater than one, assume a probability of one
   matrix_movements_prob[matrix_movements_prob > 1] <- 1
 
+  # uncompress 'dgCMatrix' to 'dgTMatrix' type (easier to look up the source of infection)
+  matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
+
   # extract number of sites represented within the model
   n_sites <- length(matrix_movements_prob[ , 1])
 
   # calculate number of inward and outward movements per a site
-  out_per_site <- Matrix::rowSums(matrix_movements)
-  in_per_site <- Matrix::colSums(matrix_movements)
+  out_per_site <- as.data.frame(Matrix::rowSums(matrix_movements))
+  in_per_site <- as.data.frame(Matrix::colSums(matrix_movements))
 
   # extract sites whose movements are greater than the percentile-th quantile
-  out_sites_quantile = names(out_per_site)[out_per_site > quantile(out_per_site, percentile)]
-  in_sites_quantile <- names(in_per_site)[in_per_site > quantile(in_per_site, percentile)]
+  out_sites_remove <- dplyr::slice_max(out_per_site, n = n_remove)
+  in_sites_remove <- dplyr::slice_max(in_per_site, n_remove = n_remove)
 
   # zero any contacts which originate from sites within the percentile-th quantile
-  matrix_movements_prob[out_sites_quantile, ] <- 0
-  matrix_movements_prob[in_sites_quantile, ] <- 0
+  matrix_movements_prob[out_sites_remove, ] <- 0
+  matrix_movements_prob[in_sites_remove, ] <- 0
 
   return(list(n_sites = n_sites,
               matrix_movements = matrix_movements,
