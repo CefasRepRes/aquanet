@@ -32,6 +32,5 @@ Imports:
     igraph,
     Matrix,
     methods,
-    rgdal,
     sf,
     units
