@@ -27,11 +27,11 @@ Imports:
     data.table,
     doParallel,
     doRNG,
+    dplyr,
     foreach,
     igraph,
     Matrix,
     methods,
     rgdal,
     sf,
-    sp,
     units
