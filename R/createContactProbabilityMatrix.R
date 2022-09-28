@@ -81,6 +81,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #'
 #' @export
 #'
+#' @importFrom methods as
 #' @importFrom igraph get.adjacency
 #' @importFrom stats quantile
 #' @importFrom Matrix rowSums colSums
