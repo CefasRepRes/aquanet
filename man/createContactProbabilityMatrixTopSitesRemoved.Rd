@@ -23,7 +23,7 @@ movements and sites with number of inward (receiving) movements.}
 \enumerate{
 \item (class integer) number of sites in movements matrix.
 \item (class dgCMatrix, Matrix package) movements matrix.
-\item (class dgCMatrix, Matrix package) probability of movements matrix with top sites zeroed.
+\item (class dgTMatrix, Matrix package) probability of movements matrix with top sites zeroed.
 }
 }
 \description{

@@ -77,7 +77,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #' @return (class list) of length 3 containing:
 #' 1. (class integer) number of sites in movements matrix.
 #' 2. (class dgCMatrix, Matrix package) movements matrix.
-#' 3. (class dgCMatrix, Matrix package) probability of movements matrix with top sites zeroed.
+#' 3. (class dgTMatrix, Matrix package) probability of movements matrix with top sites zeroed.
 #'
 #' @export
 #'
