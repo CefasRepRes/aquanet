@@ -30,6 +30,7 @@ Imports:
     dplyr,
     foreach,
     igraph,
+    magrittr,
     Matrix,
     methods,
     sf,

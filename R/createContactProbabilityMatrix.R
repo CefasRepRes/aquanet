@@ -85,6 +85,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #' @importFrom stats quantile
 #' @importFrom Matrix rowSums colSums
 #' @importFrom dplyr slice_max
+#' @importFrom magrittr %>%
 createContactProbabilityMatrixTopSitesRemoved <- function(graph,
                                                           movement_period,
                                                           n_remove) {
@@ -107,12 +108,14 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
   n_sites <- length(matrix_movements_prob[ , 1])
 
   # calculate number of inward and outward movements per a site
-  out_per_site <- as.data.frame(Matrix::rowSums(matrix_movements))
-  in_per_site <- as.data.frame(Matrix::colSums(matrix_movements))
+  out_per_site <- Matrix::rowSums(matrix_movements)
+  in_per_site <- Matrix::colSums(matrix_movements)
 
   # extract sites whose movements are greater than the percentile-th quantile
-  out_sites_remove <- dplyr::slice_max(out_per_site, n = n_remove)
-  in_sites_remove <- dplyr::slice_max(in_per_site, n = n_remove)
+  out_sites_remove <- as.data.frame(out_per_site) %>%
+    dplyr::slice_max(out_per_site, n = n_remove)
+  in_sites_remove <- as.data.frame(in_per_site) %>%
+    dplyr::slice_max(in_per_site, n = n_remove)
 
   # zero any contacts which originate from sites within the percentile-th quantile
   matrix_movements_prob[out_sites_remove, ] <- 0
