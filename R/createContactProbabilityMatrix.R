@@ -102,9 +102,6 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
   # if there are any contacts with a probability of greater than one, assume a probability of one
   matrix_movements_prob[matrix_movements_prob > 1] <- 1
 
-  # uncompress 'dgCMatrix' to 'dgTMatrix' type (easier to look up the source of infection)
-  matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
-
   # extract number of sites represented within the model
   n_sites <- length(matrix_movements_prob[ , 1])
 
@@ -121,6 +118,9 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
   # zero any contacts which originate from sites within the percentile-th quantile
   matrix_movements_prob[out_sites_remove, ] <- 0
   matrix_movements_prob[in_sites_remove, ] <- 0
+
+  # uncompress 'dgCMatrix' to 'dgTMatrix' type (easier to look up the source of infection)
+  matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
 
   return(list(n_sites = n_sites,
               matrix_movements = matrix_movements,
