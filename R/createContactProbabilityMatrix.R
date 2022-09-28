@@ -81,10 +81,11 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
 #'
 #' @export
 #'
+#' @import Matrix
+#'
 #' @importFrom methods as
 #' @importFrom igraph get.adjacency
 #' @importFrom stats quantile
-#' @importFrom Matrix rowSums colSums
 #' @importFrom dplyr slice_max
 #' @importFrom magrittr %>%
 createContactProbabilityMatrixTopSitesRemoved <- function(graph,
