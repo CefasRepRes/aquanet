@@ -116,8 +116,8 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
     dplyr::slice_max(in_per_site, n = n_remove)
 
   # zero any contacts which originate from sites within the percentile-th quantile
-  matrix_movements_prob[out_sites_remove, ] <- 0
-  matrix_movements_prob[in_sites_remove, ] <- 0
+  matrix_movements_prob[rownames(out_sites_remove), ] <- 0
+  matrix_movements_prob[rownames(in_sites_remove), ] <- 0
 
   # uncompress 'dgCMatrix' to 'dgTMatrix' type (easier to look up the source of infection)
   matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
