@@ -112,7 +112,7 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
 
   # extract sites whose movements are greater than the percentile-th quantile
   out_sites_remove <- dplyr::slice_max(out_per_site, n = n_remove)
-  in_sites_remove <- dplyr::slice_max(in_per_site, n_remove = n_remove)
+  in_sites_remove <- dplyr::slice_max(in_per_site, n = n_remove)
 
   # zero any contacts which originate from sites within the percentile-th quantile
   matrix_movements_prob[out_sites_remove, ] <- 0
