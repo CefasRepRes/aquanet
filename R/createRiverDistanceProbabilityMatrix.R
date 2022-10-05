@@ -45,10 +45,10 @@ createRiverDistanceProbabilityMatrix <- function(filepath_river_distances,
                                                  out_createContactProbabilityMatrix,
                                                  max_dist, p1km) {
   # create vector of sites in the same order as the adjacency matrix
-  vector_sites <- as.numeric(out_createContactProbabilityMatrix[[3]]@Dimnames[[1]])
+  vector_sites <- as.numeric(out_createContactProbabilityMatrix[["matrix_movements_prob"]]@Dimnames[[1]])
 
   # extract number of sites from the contact probability matrix
-  n_sites <- out_createContactProbabilityMatrix[[1]]
+  n_sites <- out_createContactProbabilityMatrix[["n_sites"]]
 
   # load csv of site to site distances through the river network (generated with GIS tool)
   river_distances <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)

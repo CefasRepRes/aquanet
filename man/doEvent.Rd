@@ -19,7 +19,8 @@ doEvent(
   catchments_with_post_fallow_only,
   source_inf_vector,
   source_inf_matrix,
-  contact_tracing
+  contact_tracing,
+  days_before_catchment_restock
 )
 }
 \arguments{
@@ -80,6 +81,9 @@ connectivity'. Note: this matrix is used for forward contact tracing.}
 
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
 tracing is taking place.}
+
+\item{days_before_catchment_restock}{(class numeric) number of days that all sites within a
+catchment need to be in the post-fallow state before restocking.}
 }
 \value{
 (class list) of length 8 containing:
@@ -117,10 +121,11 @@ of the transition event and the amount of time each site or group of sites are i
 }
 \details{
 First, create variable a logical vector to store information on whether all sites in a catchment
-have been in a post-fallow state for at least 4 days and are therefore ready to restock.
+have been in a post-fallow state for at least \code{days_before_catchment_restock} days and are
+therefore ready to restock.
 
 Next, extract required information from function inputs: sites that are fallow,  sites subject to
-transition identified in \verb{transition rates[[2]]}, total number of possible site transitions, a
+transition identified in \verb{transition rates[["position"]]}, total number of possible site transitions, a
 corrected probability of each transition occurring (number of transitions), and the number of
 transition probabilities.
 
@@ -151,6 +156,7 @@ control state.
 If sites have been in a fallow state for required number of days convert controls to post-fallow
 state. Check catchment level restocking to identify catchments containing only post-fallow sites
 and reset the \code{catchment_time_vector} to 0 for these. If these catchments have been in a ready
-to restock state for greater than or equal to 4 days then move the sites within these catchments
-to a no disease control state and reset the \code{time_vector} for these sites.
+to restock state for greater than or equal to \code{days_before_catchment_restock} days then move the
+sites within these catchments to a no disease control state and reset the \code{time_vector} for
+these sites.
 }

@@ -4,11 +4,7 @@
 \alias{createContactProbabilityMatrixTopSitesRemoved}
 \title{createContactProbabilityMatrixTopSitesRemoved}
 \usage{
-createContactProbabilityMatrixTopSitesRemoved(
-  graph,
-  movement_period,
-  percentile
-)
+createContactProbabilityMatrixTopSitesRemoved(graph, movement_period, n_remove)
 }
 \arguments{
 \item{graph}{(class igraph) Graph of connections/movements between sites produced with iGraph
@@ -18,17 +14,16 @@ Section 30 movements.}
 \item{movement_period}{(class numeric) The period of time (in days) for which movement data (live
 fish movements and section 30 movements) were collected and used to create \code{graph} parameter.}
 
-\item{percentile}{(class numeric) The percentile used to distinguish top connected sites. Contact
-probabilities for sites with number of outward (supplying) movements and sites with number of
-inward (receiving) movements above this percentile will be removed from the contact probability
-matrix.}
+\item{n_remove}{(class numeric) The number of topmost connected sites to be removed from the
+contact probability matrix. This includes sites with highest number of outward (supplying)
+movements and sites with number of inward (receiving) movements.}
 }
 \value{
 (class list) of length 3 containing:
 \enumerate{
 \item (class integer) number of sites in movements matrix.
 \item (class dgCMatrix, Matrix package) movements matrix.
-\item (class dgCMatrix, Matrix package) probability of movements matrix with top sites zeroed.
+\item (class dgTMatrix, Matrix package) probability of movements matrix with top sites zeroed.
 }
 }
 \description{

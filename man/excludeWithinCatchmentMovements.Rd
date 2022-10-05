@@ -69,15 +69,16 @@ restrictions \code{move_restricted_sites} and determine total number of catchmen
 
 If the catchments under control are the same as the previous time step then subtract the
 previously defined matrix of risk contacts \code{matrix_contacts_exclude} in
-\code{catchment_movements[[4]]} containing risk contacts that should be excluded due to movement
-restrictions from the input matrix of risk contacts \code{spmatrix_risk_contacts}.
+\verb{catchment_movements[["matrix_contacts_exclude]]} containing risk contacts that should be
+excluded due to movement restrictions from the input matrix of risk contacts
+\code{spmatrix_risk_contacts}.
 
 If the catchments under control in the current time step differ from the previous time step then
 extract a vector of sites that are contained within controlled catchments and reassign this to
-\code{catchment_movements[[6]]}. Use this list of sites to produce a matrix of contact probabilities
-for sites within controlled catchments. Then, depending on the level of catchment controls
-defined in \code{catchment_movements[[5]]} generate a matrix of within catchment site to site contacts
-to exclude.
+\verb{catchment_movements[["sites_controlled]]}. Use this list of sites to produce a matrix of
+contact probabilities for sites within controlled catchments. Then, depending on the level of
+catchment controls defined in \verb{catchment_movements[["type_catchment_controls]]} generate a
+matrix of within catchment site to site contacts to exclude.
 
 In both scenarios subtract the matrix of contacts to exclude from the input matrix of risk
 contacts \code{spmatrix_risk_contacts}. Then reassign objects 3, 4 and 7 within the

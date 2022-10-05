@@ -8,15 +8,16 @@
 #'
 #' If the catchments under control are the same as the previous time step then subtract the
 #' previously defined matrix of risk contacts `matrix_contacts_exclude` in
-#' `catchment_movements[[4]]` containing risk contacts that should be excluded due to movement
-#' restrictions from the input matrix of risk contacts `spmatrix_risk_contacts`.
+#' `catchment_movements[["matrix_contacts_exclude]]` containing risk contacts that should be
+#' excluded due to movement restrictions from the input matrix of risk contacts
+#' `spmatrix_risk_contacts`.
 #'
 #' If the catchments under control in the current time step differ from the previous time step then
 #' extract a vector of sites that are contained within controlled catchments and reassign this to
-#' `catchment_movements[[6]]`. Use this list of sites to produce a matrix of contact probabilities
-#' for sites within controlled catchments. Then, depending on the level of catchment controls
-#' defined in `catchment_movements[[5]]` generate a matrix of within catchment site to site contacts
-#'  to exclude.
+#' `catchment_movements[["sites_controlled]]`. Use this list of sites to produce a matrix of
+#' contact probabilities for sites within controlled catchments. Then, depending on the level of
+#' catchment controls defined in `catchment_movements[["type_catchment_controls]]` generate a
+#' matrix of within catchment site to site contacts to exclude.
 #'
 #' In both scenarios subtract the matrix of contacts to exclude from the input matrix of risk
 #' contacts `spmatrix_risk_contacts`. Then reassign objects 3, 4 and 7 within the
@@ -74,11 +75,11 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             catchment_movements,
                                             matrix_movements_prob) {
   # extract elements from list
-  spmatrix_sites_catchment <- catchment_movements[[1]]
-  lgmatrix_catch_catch <- catchment_movements[[2]]
-  catchments_controlled_prev <- catchment_movements[[3]]
-  matrix_contacts_exclude <- catchment_movements[[4]]
-  site_control_type <- catchment_movements[[5]]
+  spmatrix_sites_catchment <- catchment_movements[["spmatrix_sites_catchment"]]
+  lgmatrix_catch_catch <- catchment_movements[["lgmatrix_catch_catch"]]
+  catchments_controlled_prev <- catchment_movements[["catchments_controlled_prev"]]
+  matrix_contacts_exclude <- catchment_movements[["matrix_contacts_exclude"]]
+  site_control_type <- catchment_movements[["type_catchment_controls"]]
 
   # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether
   # movements are restricted if there are no catchment controls, ignore this step
@@ -101,7 +102,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     sites_controlled_prob[sites_controlled_prob > 0] <- 1
 
     # reassign the secondary controlled sites element with sites under catchment controls in this time step
-    catchment_movements[[6]] <- sites_controlled
+    catchment_movements[["sites_controlled"]] <- sites_controlled
 
     # if the site control type is 0 or 1
     if (site_control_type %in% c(0,1)) {
@@ -139,9 +140,9 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   spmatrix_risk_contacts <- spmatrix_risk_contacts - risk_contacts_remove
 
   # reassign new catchment control information (catchment, contacts to exclude and number of catchments)
-  catchment_movements[[3]] <- catchments_controlled
-  catchment_movements[[4]] <- matrix_contacts_exclude
-  catchment_movements[[7]] <- n_catchments_controlled
+  catchment_movements[["catchments_controlled_prev"]] <- catchments_controlled
+  catchment_movements[["matrix_contacts_exclude"]] <- matrix_contacts_exclude
+  catchment_movements[["n_catchments_controlled"]] <- n_catchments_controlled
 
   # return list containing (1) sparse matrix of risk contacts (excluding within catchment movements
   # depending on site control measures) and (2) catchment_movements list with updated controlled catchments
