@@ -72,7 +72,8 @@
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
 #' catchment, "None" means there are no catchment level controls).
 #'
-#' @param filepath_results (class string) path to results directory for model run.
+#' @param filepath_results (class character) character vector containing paths to various results
+#' directories for model run created in `aquanet-mod/code/RunModelCommandLine.R`.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing should take place.
@@ -88,6 +89,9 @@
 #' any disease control measures should take place.
 #'
 #' @param proportion_cullable (class numeric) proportion of fisheries able to cull site.
+#'
+#' @param days_before_catchment_restock (class numeric) number of days that all sites within a
+#' catchment need to be in the post-fallow state before restocking.
 #'
 #' @return (class list) of length 2 containing:
 #' 1. (class numeric) the number of cores used for the run.
@@ -121,11 +125,12 @@ runSimulations <- function(n_cores,
                            remove_top_sites,
                            n_infections_remove_top_sites,
                            disease_controls,
-                           proportion_cullable) {
+                           proportion_cullable,
+                           days_before_catchment_restock) {
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
-  files <- list.files(path = filepath_results,
+  files <- list.files(path = filepath_results[["results"]],
                       pattern = "\\.RData$",
                       recursive = TRUE,
                       full.names = TRUE)
@@ -175,7 +180,8 @@ runSimulations <- function(n_cores,
       remove_top_sites = remove_top_sites,
       n_infections_remove_top_sites = n_infections_remove_top_sites,
       disease_controls = disease_controls,
-      proportion_cullable = proportion_cullable
+      proportion_cullable = proportion_cullable,
+      days_before_catchment_restock = days_before_catchment_restock
     )
 
   # shut down set of copies of R running in parallel communicating over sockets

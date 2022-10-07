@@ -6,10 +6,11 @@
 #' (see details).
 #'
 #' First, create variable a logical vector to store information on whether all sites in a catchment
-#' have been in a post-fallow state for at least 4 days and are therefore ready to restock.
+#' have been in a post-fallow state for at least `days_before_catchment_restock` days and are
+#' therefore ready to restock.
 #'
 #' Next, extract required information from function inputs: sites that are fallow,  sites subject to
-#'  transition identified in `transition rates[[2]]`, total number of possible site transitions, a
+#'  transition identified in `transition rates[["position"]]`, total number of possible site transitions, a
 #' corrected probability of each transition occurring (number of transitions), and the number of
 #' transition probabilities.
 #'
@@ -40,8 +41,9 @@
 #' If sites have been in a fallow state for required number of days convert controls to post-fallow
 #' state. Check catchment level restocking to identify catchments containing only post-fallow sites
 #'  and reset the `catchment_time_vector` to 0 for these. If these catchments have been in a ready
-#' to restock state for greater than or equal to 4 days then move the sites within these catchments
-#' to a no disease control state and reset the `time_vector` for these sites.
+#' to restock state for greater than or equal to `days_before_catchment_restock` days then move the
+#' sites within these catchments to a no disease control state and reset the `time_vector` for
+#' these sites.
 #'
 #' @param state_vector (class numeric) numeric binary vector of length 'number of sites' containing
 #' information about the state of each site in relation to a condition. This state vector should
@@ -99,6 +101,9 @@
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing is taking place.
 #'
+#' @param days_before_catchment_restock (class numeric) number of days that all sites within a
+#' catchment need to be in the post-fallow state before restocking.
+#'
 #'
 #' @return (class list) of length 8 containing:
 #' 1. (class numeric) `state_vector` numeric binary vector of length 'number of sites' containing
@@ -141,7 +146,8 @@ doEvent <- function(state_vector,
                     catchments_with_post_fallow_only,
                     source_inf_vector,
                     source_inf_matrix,
-                    contact_tracing) {
+                    contact_tracing,
+                    days_before_catchment_restock) {
 
   ## create variables to populate ----
 
@@ -155,13 +161,13 @@ doEvent <- function(state_vector,
   sites_fallow <- as.logical(control_matrix[ , 4])
 
   # vector of sites subject to transition (possible infection events)
-  site_vector <- transition_rates[[2]]
+  site_vector <- transition_rates[["position"]]
 
   # calculate the total rates of transmission
-  rates_total <- sum(transition_rates[[3]])
+  rates_total <- sum(transition_rates[["rate"]])
 
   # create vector of probabilities
-  prob <- transition_rates[[3]] / rates_total
+  prob <- transition_rates[["rate"]] / rates_total
   n_prob <- length(prob)
 
 
@@ -193,7 +199,7 @@ doEvent <- function(state_vector,
   site <- site_vector[event] + 1
 
   # extract transition rate for selected event - and modify the state appropriately
-  trans_type <- transition_rates[[1]][event]
+  trans_type <- transition_rates[["rate_type"]][event]
 
 
   ## S --> I | L --> I ----
@@ -219,7 +225,7 @@ doEvent <- function(state_vector,
         if (trans_type %in% c(0, 10)) {
           # extract infection source site and update source_inf_vector and source_inf_matrix
           # in case contact tracing applied later
-          source_inf <- transition_rates[[4]][event] + 1
+          source_inf <- transition_rates[["source"]][event] + 1
           source_inf_vector[site] <- source_inf
           source_inf_matrix[source_inf,  site] <- 1
         }
@@ -423,15 +429,15 @@ doEvent <- function(state_vector,
                                                                    n_catchments = n_catchments)
 
     # update catchment time vector for catchments containing fallow sites
-    catchment_with_fallow_some <- catchment_restocking[[2]]
+    catchment_with_fallow_some <- catchment_restocking[["catchments_with_fallow_some"]]
     catchment_time_vector[catchment_with_fallow_some] <- 0
 
     # overwrite catchments_with_post_fallow_only to contain sites ready for restocking
-    catchments_with_post_fallow_only <- catchment_restocking[[3]]
+    catchments_with_post_fallow_only <- catchment_restocking[["catchments_with_post_fallow_only"]]
   }
 
-  # select catchments for restock - with only post-fallow sites ready to restock for >= 4 days
-  catchments_ready_restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= 4
+  # select catchments for restock - with only post-fallow sites ready to restock for >= X days
+  catchments_ready_restock[catchments_with_post_fallow_only] <- catchment_time_vector[catchments_with_post_fallow_only] >= days_before_catchment_restock
 
   # total number of catchments ready for restock
   n_catchments_ready_restock <- sum(as.numeric(catchments_ready_restock))

@@ -19,4 +19,10 @@ utils::globalVariables(c(".",
                          "cull_cost_farm",
                          "cull_cost_fhi",
                          "cull_state",
-                         "cull_cost_site"))
+                         "cull_cost_site",
+                         "output_summary_states",
+                         "sim_no",
+                         "cumulative_no_infected_sites",
+                         "max_inf",
+                         "max_t",
+                         "infected_sites"))

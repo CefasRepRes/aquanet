@@ -11,21 +11,20 @@ loadResultsSummary(scenario_name)
 in RunModelCommandLine.R}
 }
 \value{
-(class data.frame) no_per_state_wide
-}
-\description{
-Loads and wrangles the batch (summary) data outputted from a scenario run.
-Returns a data frame with the following information for each timestep:
+(class data frame) containing the following information for each time step:
 \enumerate{
 \item \code{batch_no} the batch number
 \item \code{k} the run number within the batch
 \item \code{t} the model time
-\item \code{t_diff} the difference between the current time and the time at the previous timestep
-(the duration of the previous timestep)
+\item \code{t_diff} the difference between the current time and the time at the previous time step
+(the duration of the previous time step)
 \item \code{sim_no} the simulation number
 \item \code{rate_type} the transition type
-\item \code{no_controlled_catchments} the number of catchments under controls in that timestep
+\item \code{no_controlled_catchments} the number of catchments under controls in that time step
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation
 Plus the number of sites in each state (1:39) plus redundancy (40:42)
 }
+}
+\description{
+This function loads and manipulates the batch (summary) data outputted from a scenario run.
 }
