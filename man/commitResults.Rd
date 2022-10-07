@@ -45,7 +45,8 @@ model (note, include some redundancy here).}
 
 \item{save_num}{(class numeric) number of full saves for model run.}
 
-\item{filepath_results}{(class string) path to results directory for model run.}
+\item{filepath_results}{(class character) character vector containing paths to various results
+directories for model run created in \code{aquanet-mod/code/RunModelCommandLine.R}.}
 }
 \value{
 Saved .RData file containing data frame located within the \code{filepath_results}

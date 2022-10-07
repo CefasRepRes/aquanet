@@ -92,7 +92,8 @@
 #' infected catchments, and 2 = allows no movements by any of the sites within an infected
 #' catchment, "None" means there are no catchment level controls).
 #'
-#' @param filepath_results (class string) path to results directory for model run.
+#' @param filepath_results (class character) character vector containing paths to various results
+#' directories for model run created in `aquanet-mod/code/RunModelCommandLine.R`.
 #'
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing should take place.
@@ -111,6 +112,9 @@
 #'
 #' @return (class numeric) batch number `batch_num` and output_summary_states saved to
 #' `filepath_results`.
+#'
+#' @param days_before_catchment_restock (class numeric) number of days that all sites within a
+#' catchment need to be in the post-fallow state before restocking.
 #'
 #'
 #' @export
@@ -139,24 +143,25 @@ simulationCode <- function(runs,
                            remove_top_sites,
                            n_infections_remove_top_sites,
                            disease_controls,
-                           proportion_cullable) {
+                           proportion_cullable,
+                           days_before_catchment_restock) {
 
   ## extract information from input parameters ----
 
   # extract number of sites and matrix of live fish movements contact probabilities
-  n_sites <- out_createContactProbabilityMatrix[[1]]
-  matrix_movements_prob <- out_createContactProbabilityMatrix[[3]]
+  n_sites <- out_createContactProbabilityMatrix[["n_sites"]]
+  matrix_movements_prob <- out_createContactProbabilityMatrix[["matrix_movements_prob"]]
 
   # extract siteID alongside modelID
   site_names <- data.frame(modelID = 1:length(dimnames(matrix_movements_prob)[[1]]),
                            siteID = dimnames(matrix_movements_prob)[[1]])
 
   # extract number of catchments and matrix of catchment to site relationships
-  spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[[2]]
+  spmatrix_sites_catchment <- out_createCatchmentToSiteMatrix[["spmatrix_catchment_sites"]]
   n_catchments <- spmatrix_sites_catchment@Dim[2]
 
   # extract matrix of contacts between sites within the same catchment
-  lgmatrix_catch_catch <- out_createWithinCatchmentEdges[[1]]
+  lgmatrix_catch_catch <- out_createWithinCatchmentEdges[["lgmatrix_catch_catch"]]
 
 
   ## create variables to populate ----
@@ -238,13 +243,13 @@ simulationCode <- function(runs,
     n_catchments_controlled <- 0
 
     # create list of catchment_movement objects
-    list_catchment_movements <- list(spmatrix_sites_catchment,
-                                     lgmatrix_catch_catch,
-                                     catchments_controlled_prev,
-                                     matrix_contacts_exclude,
-                                     type_catchment_controls,
-                                     sites_controlled,
-                                     n_catchments_controlled)
+    list_catchment_movements <- list("spmatrix_sites_catchment" = spmatrix_sites_catchment,
+                                     "lgmatrix_catch_catch" = lgmatrix_catch_catch,
+                                     "catchments_controlled_prev" = catchments_controlled_prev,
+                                     "matrix_contacts_exclude" = matrix_contacts_exclude,
+                                     "type_catchment_controls" = type_catchment_controls,
+                                     "sites_controlled" = sites_controlled,
+                                     "n_catchments_controlled" = n_catchments_controlled)
 
 
     ## add fisheries that can be culled to culling vector of farms ----
@@ -305,19 +310,19 @@ simulationCode <- function(runs,
                                             disease_controls = disease_controls)
 
       # extract list of all transition rates
-      transition_rates <- updated_rates[[1]]
+      transition_rates <- updated_rates[["trans_rates"]]
 
       # extract updated list of catchment movement rules - edited by excludeWithinCatchmentMovements() in updateRates()
-      list_catchment_movements <- updated_rates[[2]]
+      list_catchment_movements <- updated_rates[["catchment_movements"]]
 
       # extract updated logical vector of sites with movement restrictions
-      sites_all_movement_restricted <- updated_rates[[3]]
+      sites_all_movement_restricted <- updated_rates[["sites_all_movement_restricted"]]
 
       # extract updated logical vector of sites with controlled status
-      sites_controlled <- list_catchment_movements[[6]]
+      sites_controlled <- list_catchment_movements[["sites_controlled"]]
 
       # update the number of controlled catchments (updated in excludeWithinCatchmentMovements in updateRates)
-      n_catchments_controlled <- list_catchment_movements[[7]]
+      n_catchments_controlled <- list_catchment_movements[["n_catchments_controlled"]]
 
       # calculate site attributes (infection and control status) as a single state per site
       sites_states_vector <- as.integer((state_vector * 10) +
@@ -355,12 +360,12 @@ simulationCode <- function(runs,
       }
 
       # if there are no infectious sites in the network stop the loop
-      if (length(transition_rates[[3]]) == 0) {
+      if (length(transition_rates[["rate"]]) == 0) {
         break()
       }
 
       # randomly pick next time step, based on a weighted expontial distribution
-      tdiff <- stats::rexp(1, sum(transition_rates[[3]]))
+      tdiff <- stats::rexp(1, sum(transition_rates[["rate"]]))
 
       # increment the time and steps
       t <- t + tdiff
@@ -417,17 +422,18 @@ simulationCode <- function(runs,
                                       catchments_with_post_fallow_only = catchments_with_post_fallow_only,
                                       source_inf_vector = source_inf_vector,
                                       source_inf_matrix = source_inf_matrix,
-                                      contact_tracing = contact_tracing)
+                                      contact_tracing = contact_tracing,
+                                      days_before_catchment_restock = days_before_catchment_restock)
 
       # reassign variables with updates outputs for next iteration of while loop
-      state_vector <- doEvent_out[[1]]
-      control_matrix <- doEvent_out[[2]]
-      time_vector <- doEvent_out[[3]]
-      catchment_time_vector <- doEvent_out[[4]]
-      catchments_with_post_fallow_only <- doEvent_out[[5]]
-      source_inf_vector <- doEvent_out[[6]]
-      trans_type <- doEvent_out[[7]]
-      source_inf_matrix <- doEvent_out[[8]]
+      state_vector <- doEvent_out[["state_vector"]]
+      control_matrix <- doEvent_out[["control_matrix"]]
+      time_vector <- doEvent_out[["time_vector"]]
+      catchment_time_vector <- doEvent_out[["catchment_time_vector"]]
+      catchments_with_post_fallow_only <- doEvent_out[["catchments_with_post_fallow_only"]]
+      source_inf_vector <- doEvent_out[["source_inf_vector"]]
+      trans_type <- doEvent_out[["trans_type"]]
+      source_inf_matrix <- doEvent_out[["source_inf_matrix"]]
 
       # every 100 steps print run information to screen
       if (n_steps %% 100 == 1) {
@@ -436,7 +442,7 @@ simulationCode <- function(runs,
                 length(state_vector),
                 sum(state_vector),
                 tdiff,
-                length(transition_rates[[3]])))
+                length(transition_rates[["rate"]])))
       }
     }
   }
@@ -463,7 +469,7 @@ simulationCode <- function(runs,
 
   # save table containing number of sites in each state at each time point
   save(output_summary_states,
-       file = paste(filepath_results, "/batch_results/batchNo-", batch_num, ".RData", sep = ""),
+       file = paste(filepath_results[["results_batch"]], "/batchNo-", batch_num, ".RData", sep = ""),
        compress = FALSE)
 
   return(batch_num)

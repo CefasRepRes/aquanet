@@ -31,7 +31,8 @@
 #'
 #' @param save_num (class numeric) number of full saves for model run.
 #'
-#' @param filepath_results (class string) path to results directory for model run.
+#' @param filepath_results (class character) character vector containing paths to various results
+#' directories for model run created in `aquanet-mod/code/RunModelCommandLine.R`.
 #'
 #' @return Saved .RData file containing data frame located within the `filepath_results`
 #' full_results directory. Output data frame `sims` contains model ID, site ID, infection and
@@ -72,8 +73,8 @@ commitResults <- function(df_states,
 
   # save simulation site states and simulation times
   save(sims,
-       file = paste(filepath_results,
-                    "/full_results/batchNo-", batch_num,
+       file = paste(filepath_results[["results_full"]],
+                    "/batchNo-", batch_num,
                     "_simNo-", simulation_num,
                     "_NoCommits-", save_num,
                     ".RData",

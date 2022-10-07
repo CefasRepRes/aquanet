@@ -7,23 +7,23 @@
 epidemicDuration(results)
 }
 \arguments{
-\item{results}{(class data.frame) A data frame created from \code{loadResultsSummary}
-Contains:
+\item{results}{(class data.frame) A data frame created from \code{aquanet::loadResultsSummary} that
+contains:
 \enumerate{
 \item \code{batch_no} the batch number
 \item \code{k} the run number within the batch
 \item \code{t} the model time
-\item \code{t_diff} the difference between the current time and the time at the previous timestep
-(the duration of the previous timestep)
+\item \code{t_diff} the difference between the current time and the time at the previous time step
+(the duration of the previous time step)
 \item \code{sim_no} the simulation number
 \item \code{rate_type} the transition type
-\item \code{no_controlled_catchments} the number of catchments under controls in that timestep
+\item \code{no_controlled_catchments} the number of catchments under controls in that time step
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation
 Plus the number of sites in each state (1:39) plus redundancy (40:42)
 }}
 }
 \value{
-(class data.table) summary of epidemic duration (measured in days):
+(class data.table) summary of epidemic duration (measured in days) that contains:
 \enumerate{
 \item \code{mean_duration} the mean epidemic duration for the scenario
 \item \code{sd_duration} the standard deviation of the epidemic duration for the scenario

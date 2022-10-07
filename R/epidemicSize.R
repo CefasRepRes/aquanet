@@ -1,12 +1,12 @@
 #' epidemicSize
 #'
-#' @param results (class data.frame) A data frame created from `loadResultsSummary`
-#' Contains:
+#' @param results (class data.frame) A data frame created from `aquanet::loadResultsSummary` that
+#' contains:
 #' 1. `batch_no` the batch number
 #' 2. `k` the run number within the batch
 #' 3. `t` the model time
-#' 4. `t_diff` the difference between the current time and the time at the previous timestep
-#' (the duration of the previous timestep)
+#' 4. `t_diff` the difference between the current time and the time at the previous timestep (the
+#' duration of the previous timestep)
 #' 5. `sim_no` the simulation number
 #' 6. `rate_type` the transition type
 #' 7. `no_controlled_catchments` the number of catchments under controls in that timestep
@@ -30,16 +30,21 @@
 #' @importFrom stats median
 #' @importFrom stats sd
 #'
-epidemicSize <- function(results){
-  # Convert results into data.table
+epidemicSize <- function(results) {
+
+  # convert results into data.table
   results <- data.table(results)
-  # Remove sim_no 0 (due to overallocation)
-  valid_results <- results[sim_no != 0]# Epidemic size
-  no_inf <- valid_results[, c("sim_no", "cumulative_no_infected_sites")][ # Select sim_no and cumulative infected sites
-    , by = sim_no, .(max_inf = max(cumulative_no_infected_sites))][ # Get maximum infected sites per sim_no
-      , c("sim_no", "max_inf")] # Select sim_no and max_inf
+
+  # remove sim_no 0 (due to overallocation)
+  valid_results <- results[sim_no != 0] # epidemic size
+
+  no_inf <- valid_results[, c("sim_no", "cumulative_no_infected_sites")][ # select sim_no and cumulative infected sites
+    , by = sim_no, .(max_inf = max(cumulative_no_infected_sites))][ # get maximum infected sites per sim_no
+      , c("sim_no", "max_inf")] # select sim_no and max_inf
+
   no_inf <- unique(no_inf)
-  # Statistics
+
+  # statistics ----
   mean_infections <- mean(no_inf[, max_inf])
   sd_infections <- sd(no_inf[, max_inf])
   min_infections <- min(no_inf[, max_inf])
@@ -47,12 +52,15 @@ epidemicSize <- function(results){
   median_infections <- median(no_inf[, max_inf])
   q5_infections <- quantile(no_inf[, max_inf], 0.05)
   q95_infections <- quantile(no_inf[, max_inf], 0.95)
-  # Calculate percent of simulations which died out
-  # Time out is where the epidemic infects fewer than 5 sites in total
-  die_out <- (sum(no_inf[, max_inf] < 5)/3000)*100
-  # Get number of iterations
+
+  # calculate percent of simulations which died out
+  # time out is where the epidemic infects fewer than 5 sites in total
+  die_out <- (sum(no_inf[, max_inf] < 5) / 3000) * 100
+
+  # get number of iterations
   iterations <- max(results[, sim_no])
-  # Put into nice table
+
+  # put into nice table
   scenario_results <- data.table::data.table(mean_infections = mean_infections,
                                              sd_infections = sd_infections,
                                              min_infections = min_infections,

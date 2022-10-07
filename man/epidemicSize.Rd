@@ -7,14 +7,14 @@
 epidemicSize(results)
 }
 \arguments{
-\item{results}{(class data.frame) A data frame created from \code{loadResultsSummary}
-Contains:
+\item{results}{(class data.frame) A data frame created from \code{aquanet::loadResultsSummary} that
+contains:
 \enumerate{
 \item \code{batch_no} the batch number
 \item \code{k} the run number within the batch
 \item \code{t} the model time
-\item \code{t_diff} the difference between the current time and the time at the previous timestep
-(the duration of the previous timestep)
+\item \code{t_diff} the difference between the current time and the time at the previous timestep (the
+duration of the previous timestep)
 \item \code{sim_no} the simulation number
 \item \code{rate_type} the transition type
 \item \code{no_controlled_catchments} the number of catchments under controls in that timestep

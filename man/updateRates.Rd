@@ -116,7 +116,8 @@ site is subject to any kind of movement restrictions.
 }
 }
 \description{
-This function ,,, (see details).
+This function calculates the rates that each site can transition between different states in
+AquaNet-Mod (see details).
 }
 \details{
 Define logical vectors of sites depending on different combinations of  movement restrictions and
