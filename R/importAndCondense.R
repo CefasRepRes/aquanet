@@ -36,7 +36,7 @@ importAndCondense <- function(scenario_name){
                           pattern = "batchNo-*")
   sims_all <- data.frame()
   for(j in 1:length(filenames)){
-    arrow::read_parquet(here::here("outputs",
+    sims <- arrow::read_parquet(here::here("outputs",
                     scenario_name,
                     "full_results",
                     filenames[j]))
