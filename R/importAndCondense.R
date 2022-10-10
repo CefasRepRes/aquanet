@@ -27,6 +27,7 @@
 #'
 #' @import data.table
 #' @import here
+#' @importFrom arrow read_parquet
 #'
 importAndCondense <- function(scenario_name){
   filenames <- list.files(here::here("outputs",
@@ -35,7 +36,7 @@ importAndCondense <- function(scenario_name){
                           pattern = "batchNo-*")
   sims_all <- data.frame()
   for(j in 1:length(filenames)){
-    load(here::here("outputs",
+    arrow::read_parquet(here::here("outputs",
                     scenario_name,
                     "full_results",
                     filenames[j]))

@@ -41,6 +41,8 @@
 #'
 #' @export
 #'
+#' @importFrom arrow write_parquet
+#'
 commitResults <- function(df_states,
                           df_site_names,
                           n_states,
@@ -72,12 +74,11 @@ commitResults <- function(df_states,
   rownames(sims) <- NULL # reset row names in case downstream elements rely on this
 
   # save simulation site states and simulation times
-  save(sims,
-       file = paste(filepath_results[["results_full"]],
-                    "/batchNo-", batch_num,
-                    "_simNo-", simulation_num,
-                    "_NoCommits-", save_num,
-                    ".RData",
-                    sep=""),
-       compress=FALSE)
+  arrow::write_parquet(x = sims,
+                       sink = paste(filepath_results[["results_full"]],
+                                    "/batchNo-", batch_num,
+                                    "_simNo-", simulation_num,
+                                    "_NoCommits-", save_num,
+                                    ".RData",
+                                    sep = ""))
 }
