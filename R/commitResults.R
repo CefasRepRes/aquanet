@@ -79,6 +79,6 @@ commitResults <- function(df_states,
                                     "/batchNo-", batch_num,
                                     "_simNo-", simulation_num,
                                     "_NoCommits-", save_num,
-                                    ".RData",
+                                    ".parquet",
                                     sep = ""))
 }

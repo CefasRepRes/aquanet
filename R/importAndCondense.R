@@ -115,9 +115,9 @@ importAndCondense <- function(scenario_name){
                        old = "simNo",
                        new = "sim_no")
   # Save as R datafile
-  save(sites_summary_type,
+  write_parquet(sites_summary_type,
        file = here::here("outputs",
                          scenario_name,
                          "economics",
-                         paste0(scenario_name, "-details-condensed.Rdata")))
+                         paste0(scenario_name, "-details-condensed.parquet")))
 }
