@@ -36,4 +36,5 @@ Imports:
     methods,
     sf,
     units,
-    tidyr
+    tidyr,
+    arrow

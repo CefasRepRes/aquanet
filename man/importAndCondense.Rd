@@ -15,6 +15,8 @@ in the params.yaml}
 }
 \description{
 Loads and condenses the full data (full_details) outputted from a scenario run.
+}
+\details{
 Returns a data frame with the following information for each site in each simulation:
 \enumerate{
 \item \code{site_id} (numeric) the site identification number
@@ -24,8 +26,7 @@ TODO: add file with state definitions and link here
 \item \code{t_total} (numeric) the total amount of time the site has spent in the state specified (in days)
 \item \code{trans_type} (numeric) the transition type which is occuring at that timestep
 }
-}
-\details{
+
 Columns 6:21 are logical site type vectors assigned in \code{site_types.csv}-
 whether or not a site contains that operation type.
 

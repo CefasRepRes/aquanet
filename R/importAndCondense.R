@@ -1,6 +1,7 @@
 #' importAndCondense
 #'
 #' Loads and condenses the full data (full_details) outputted from a scenario run.
+#'
 #' Returns a data frame with the following information for each site in each simulation:
 #' 1. `site_id` (numeric) the site identification number
 #' 2. `state` (numeric) the state the site is in.
@@ -23,101 +24,86 @@
 #' in the params.yaml
 #'
 #' @return (class data.table) sites_summary_type
+#'
 #' @export
 #'
 #' @import data.table
-#' @import here
-#' @importFrom arrow read_parquet
+#' @importFrom here here
+#' @importFrom arrow read_parquet write_parquet
+#' @importFrom utils head
 #'
 importAndCondense <- function(scenario_name){
+
+  # define column names used with data.table syntax
+    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  group <- timeID <- trans_type <- NULL
+
+  # list files for import and condense
   filenames <- list.files(here::here("outputs",
                                      scenario_name,
                                      "full_results"),
                           pattern = "batchNo-*")
-  sims_all <- data.frame()
-  for(j in 1:length(filenames)){
-    sims <- arrow::read_parquet(here::here("outputs",
-                    scenario_name,
-                    "full_results",
-                    filenames[j]))
-    # Convert to data.table for speed
-    sims <- data.table::data.table(sims)
-    # Begin loop -----
-    ## Loop over simulations =====
-    # Create list of simulation numbers
-    sim_nos <- unique(sims[, simNo])
-    sims_time_summary <- data.frame()
-    for(k in 1:length(sim_nos)){
-      # Filter by simulation
-      sim <- sims[simNo == sim_nos[k]]
-      ## Loop over sites =====
-      # Create list of site IDs
-      site_ID <- unique(sim[, siteID])
-      # Empty data frame to store results
-      store <- data.frame()
-      for(s in 1:length(site_ID)){
-        # Filter by site
-        by_site <- sim[siteID == site_ID[s]]
-        # Create a record ID for each row
-        by_site$recordID <- rownames(by_site)
-        # Create a vector to store rows to be removed
-        remove_row <- rep(NA, nrow(by_site))
-        ## Loop over rows ======
-        # This loop checks if he state matches that on the previous row.
-        # If it does match, it sums the time (t_diff) and removes the previous row
-        # If not, the time remains the same.
-        if(nrow(by_site) > 1){
-          for(i in 2:nrow(by_site)){
-            # If the state is the same as the previous state, add the times together
-            if((by_site$state[i] == by_site$state[i - 1]) %in% TRUE){
-              by_site$tdiff[i] <- by_site$tdiff[i] + by_site$tdiff[i - 1]
-              # Save the previous row for removal
-              remove_row[[i]] <- as.numeric(i - 1)
-            } else { # If the states are not the same, save the time
-              by_site$tdiff[i] <- by_site$tdiff[i]
-            }}
-        }
-        # Remove excess rows
-        remove_row <- na.omit(remove_row)
-        by_site <- by_site[!(recordID %in% remove_row)]
-        # Bind to data frame
-        store <- rbind(store, by_site)
-      }
-      # Bind to data frame
-      sims_all <- rbind(sims_all, store)
-      print(sim_nos[k])
-    }# Print the file name to see progress
-    print(filenames[j])
-  }
-  # Format and check for threes
-  sites_summary <- data.table::data.table(sims_all)
-  sites_summary$siteID <- as.numeric(sites_summary$siteID)
-  threes <- sites_summary[state %in% c(3, 13, 23, 33)]
-  if(nrow(threes) == 0) return(warning("There are no state threes in your outputs. Check your simulation code"))
-  # Read in site type vector
-  site_type <- data.table::fread(here::here("outputs",
+
+  # for each file name import and condense
+  import_condense <- lapply(setNames(filenames, filenames), function(x) {
+
+    # import the parquet file
+    file <- arrow::read_parquet(here::here("outputs",
+                                           scenario_name,
+                                           "full_results",
+                                           x))
+
+    # convert to data.table for speed (and ensure tdiff is numeric)
+    sims <- data.table::data.table(file)
+    sims$tdiff <- as.numeric(sims$tdiff)
+    sims$siteID <- as.numeric(sims$siteID)
+
+    # create a record ID for each row (grouped by simNo and siteID)
+    sims[ , recordID := seq_len(.N), by = .(simNo, siteID)]
+
+    # add group columns to get lengths of consecutive states (grouped by simNo and siteID)
+    sims[ , group := data.table::rleid(state), by = .(simNo, siteID)]
+
+    # add tdiff for each consecutive time point where the state is the same
+    sites_summary <- sims[ ,
+                     .(timeID = min(timeID), tdiff = sum(tdiff), t = min(t), trans_type = utils::head(trans_type, 1)),
+                     . (modelID, siteID, state, group, simNo)]
+
+    # sanity check for state 3 - NOTE: this can be removed
+    threes <- sites_summary[state %in% c(3, 13, 23, 33)]
+    if(nrow(threes) == 0) return(warning("There are no state threes in your outputs. Check your simulation code"))
+
+    # read in site type vector
+    site_type <- data.table::fread(here::here("outputs",
                                             scenario_name,
                                             "site_types.csv"))
-  # Join to summary
-  sites_summary_type <- base::merge(sites_summary,
-                                    site_type,
-                                    all.x = TRUE,
-                                    by.x = "siteID",
-                                    by.y = "site_code")
-  # Rename columns
-  data.table::setnames(sites_summary_type,
-                       old = "siteID",
-                       new = "site_id")
-  data.table::setnames(sites_summary_type,
-                       old = "tdiff",
-                       new = "t_diff")
-  data.table::setnames(sites_summary_type,
-                       old = "simNo",
-                       new = "sim_no")
-  # Save as R datafile
-  write_parquet(sites_summary_type,
-       file = here::here("outputs",
-                         scenario_name,
-                         "economics",
-                         paste0(scenario_name, "-details-condensed.parquet")))
+    # join to sites_summary
+    sites_summary_type <- data.table::merge.data.table(sites_summary,
+                                                       site_type,
+                                                       all.x = TRUE,
+                                                       by.x = "siteID",
+                                                       by.y = "site_code")
+
+    # rename columns
+    data.table::setnames(sites_summary_type, old = "siteID", new = "site_id")
+    data.table::setnames(sites_summary_type, old = "tdiff", new = "t_diff")
+    data.table::setnames(sites_summary_type, old = "simNo", new = "sim_no")
+
+    # return data table of summarised time in each state per site and simulation
+    return(sites_summary_type)
+
+  })
+
+  # combine the lists of data.tables to get all condensed simulation data
+  import_condense_all <- data.table::as.data.table(data.table::rbindlist(import_condense))
+
+  # save as parquet file
+  arrow::write_parquet(import_condense_all,
+                       sink = here::here("outputs",
+                                         scenario_name,
+                                         "economics",
+                                         paste0(scenario_name, "-details-condensed.parquet")))
+  # return condensed files
+  return(import_condense_all)
+
 }
