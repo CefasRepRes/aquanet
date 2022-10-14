@@ -7,33 +7,29 @@
 importAndCondense(scenario_name)
 }
 \arguments{
-\item{scenario_name}{(class string) the name of the scenario being loaded. Assigned
-in the params.yaml}
+\item{scenario_name}{(class string) name of the scenario assigned in the \code{params.yaml}.}
 }
 \value{
-(class data.table) sites_summary_type
+(class data.table) data.table containing time spend consecutively in each of the
+simulation states for each site and each simulation run. Multiple occurrences of a site in the
+same state are counted separately. This contains the following information:
+\enumerate{
+\item \code{site_id} (integer) the site identification number.
+\item \code{modelID} (integer) site idenfication number generated in model
+\item \code{state} (integer) the state the site is in. TODO: add file with state definitions and link here
+\item \code{group} (integer)
+\item \code{sim_no} (integer) simulation number.
+\item \code{timeID} (integer) simulation time step ID.
+\item \code{t_diff} (numeric) sum of time spend in state.
+\item \code{t} (numeric) time at which change of state occurs.
+\item \code{trans_type} (numeric) transition type that results in change of state.
+\item onwards binary vectors indicating site type assigned in \code{site_types.csv}.
+\item \code{row_sums} (integer) the sum of the site type vector, and is used to diagnose uncategorised
+sites (usually fisheries).
+}
 }
 \description{
-Loads and condenses the full data (full_details) outputted from a scenario run.
-}
-\details{
-Returns a data frame with the following information for each site in each simulation:
-\enumerate{
-\item \code{site_id} (numeric) the site identification number
-\item \code{state} (numeric) the state the site is in.
-TODO: add file with state definitions and link here
-\item \code{sim_no} (numeric) the simulation number
-\item \code{t_total} (numeric) the total amount of time the site has spent in the state specified (in days)
-\item \code{trans_type} (numeric) the transition type which is occuring at that timestep
-}
-
-Columns 6:21 are logical site type vectors assigned in \code{site_types.csv}-
-whether or not a site contains that operation type.
-
-e.g. smallhatch = 1 means the site contains a small hatchery.
-
-e.g. farm_vector = 0 means the site is NOT a farm.
-
-Column 21 is the sum of the site type vector, and is used to diagnosed uncategorised
-sites (usually fisheries)
+Loads and condenses multiple the full data (full_details) output from a scenario run. Data are
+grouped by simulation number and siteID. The amount of time each site spends in each state is
+summed at each state change in the simulation.
 }

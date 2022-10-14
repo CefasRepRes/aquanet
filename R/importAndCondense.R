@@ -1,29 +1,26 @@
 #' importAndCondense
 #'
-#' Loads and condenses the full data (full_details) outputted from a scenario run.
+#' Loads and condenses multiple the full data (full_details) output from a scenario run. Data are
+#' grouped by simulation number and siteID. The amount of time each site spends in each state is
+#' summed at each state change in the simulation.
 #'
-#' Returns a data frame with the following information for each site in each simulation:
-#' 1. `site_id` (numeric) the site identification number
-#' 2. `state` (numeric) the state the site is in.
-#' TODO: add file with state definitions and link here
-#' 2. `sim_no` (numeric) the simulation number
-#' 3. `t_total` (numeric) the total amount of time the site has spent in the state specified (in days)
-#' 4. `trans_type` (numeric) the transition type which is occuring at that timestep
+#' @param scenario_name (class string) name of the scenario assigned in the `params.yaml`.
 #'
-#' Columns 6:21 are logical site type vectors assigned in `site_types.csv`-
-#' whether or not a site contains that operation type.
-#'
-#' e.g. smallhatch = 1 means the site contains a small hatchery.
-#'
-#' e.g. farm_vector = 0 means the site is NOT a farm.
-#'
-#' Column 21 is the sum of the site type vector, and is used to diagnosed uncategorised
-#' sites (usually fisheries)
-#'
-#' @param scenario_name (class string) the name of the scenario being loaded. Assigned
-#' in the params.yaml
-#'
-#' @return (class data.table) sites_summary_type
+#' @return (class data.table) data.table containing time spend consecutively in each of the
+#' simulation states for each site and each simulation run. Multiple occurrences of a site in the
+#' same state are counted separately. This contains the following information:
+#' 1. `site_id` (integer) the site identification number.
+#' 2. `modelID` (integer) site idenfication number generated in model
+#' 3. `state` (integer) the state the site is in. TODO: add file with state definitions and link here
+#' 4. `group` (integer)
+#' 5. `sim_no` (integer) simulation number.
+#' 5. `timeID` (integer) simulation time step ID.
+#' 6. `t_diff` (numeric) sum of time spend in state.
+#' 7. `t` (numeric) time at which change of state occurs.
+#' 8. `trans_type` (numeric) transition type that results in change of state.
+#' 9. onwards binary vectors indicating site type assigned in `site_types.csv`.
+#' 25. `row_sums` (integer) the sum of the site type vector, and is used to diagnose uncategorised
+#' sites (usually fisheries).
 #'
 #' @export
 #'
@@ -97,12 +94,19 @@ importAndCondense <- function(scenario_name){
   # combine the lists of data.tables to get all condensed simulation data
   import_condense_all <- data.table::as.data.table(data.table::rbindlist(import_condense))
 
+  # define output directory
+  economics_dir <- here::here("outputs", scenario_name, "economics")
+
+  # if economics directory doesn't exist, create it
+  if (!dir.exists(economics_dir)) {
+    dir.create(economics_dir)
+    }
+
   # save as parquet file
   arrow::write_parquet(import_condense_all,
-                       sink = here::here("outputs",
-                                         scenario_name,
-                                         "economics",
+                       sink = here::here(economics_dir,
                                          paste0(scenario_name, "-details-condensed.parquet")))
+
   # return condensed files
   return(import_condense_all)
 
