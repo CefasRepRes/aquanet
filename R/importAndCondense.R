@@ -94,6 +94,18 @@ importAndCondense <- function(scenario_name){
   # combine the lists of data.tables to get all condensed simulation data
   import_condense_all <- data.table::as.data.table(data.table::rbindlist(import_condense))
 
+  # define surveillance states and cull states
+  surveillance_states <- c(2, 8, 12, 18, 22, 28, 32, 38)
+  culled_states <- c(4, 14, 24, 34)
+
+  # determine whether surveillance stage is followed by culled state and whether it is
+  # therefore defined as a cull_state (grouped by sim_no and site_id)
+  import_condense_all[ , cull_state := fifelse((state %in% surveillance_states & # surveillance state
+                                                  shift(state, type = "lead") %in% culled_states), # next state is culled
+                                                "Y",
+                                                "NA"),
+                       by = .(sim_no, site_id)]
+
   # define output directory
   economics_dir <- here::here("outputs", scenario_name, "economics")
 
