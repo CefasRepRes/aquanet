@@ -83,7 +83,7 @@ importAndCondense <- function(scenario_name){
 
     # rename columns
     data.table::setnames(sites_summary_type, old = "siteID", new = "site_id")
-    data.table::setnames(sites_summary_type, old = "tdiff", new = "t_diff")
+    data.table::setnames(sites_summary_type, old = "tdiff", new = "t_total")
     data.table::setnames(sites_summary_type, old = "simNo", new = "sim_no")
 
     # return data table of summarised time in each state per site and simulation
