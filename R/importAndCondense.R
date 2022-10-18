@@ -102,8 +102,8 @@ importAndCondense <- function(scenario_name){
   # therefore defined as a cull_state (grouped by sim_no and site_id)
   import_condense_all[ , cull_state := fifelse((state %in% surveillance_states & # surveillance state
                                                   shift(state, type = "lead") %in% culled_states), # next state is culled
-                                                "Y",
-                                                "NA"),
+                                                TRUE,
+                                                FALSE),
                        by = .(sim_no, site_id)]
 
   # define output directory

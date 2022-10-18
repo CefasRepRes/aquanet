@@ -34,7 +34,7 @@ stateCosts <- function(data,
   # filter data depending on input state
   if(state == "fallow"){
     state_codes <- c(4, 5, 14, 15, 24, 25, 34, 35)
-    state_summary <- data[cull_state == "Y" | state %in% state_codes]
+    state_summary <- data[cull_state == TRUE | state %in% state_codes]
 
   } else if(state == "no_manage"){
     state_codes <- c(10, 30)
