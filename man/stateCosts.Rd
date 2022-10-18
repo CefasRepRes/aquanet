@@ -11,22 +11,22 @@ stateCosts(data, state, site_types)
 state, simulation number, total time, and the logical vector of site types.}
 
 \item{state}{(class character) describes the state for which the costs will be
-calculated. Can be:
-\enumerate{
-\item \code{fallow} in a fallow state (infected or uninfected)
-\item \code{no_manage} infected in an unmanaged state
-\item \code{contact_trace} in a contact tracing state (infected or uninfected)
-\item \code{catchment_control} uninfected site under catchment-level controls
-}}
+calculated. Accepted inputs are: \code{"fallow"} in a fallow state (infected or uninfected),
+\code{"no_manage"} infected in an unmanaged state, \code{"contact_trace"} in a contact tracing state
+(infected or uninfected), or \code{"catchment_control"} uninfected site under catchment-level
+controls.}
 
-\item{site_types}{(class list) a list of possible site types}
+\item{site_types}{(class character) a vector of possible site types.}
 }
 \value{
-(class list) cost_output
+(class list) of length 2 containing:
+\enumerate{
+\item (class data.table) a full breakdown of daily costs by site type and simulation.
+\item (class data.table) a summary data frame containing the simulation number and the cost
+incurred by sites being in that state.
+}
 }
 \description{
 Calculates the total duration costs for each simulation across fallow, contact tracing,
-catchment control and unmanaged disease scenarios. Returns (1) a full breakdown of daily
-costs by site type and simulation and (2) a summary data frame containing
-the simulation number and the cost incurred by sites being in that state.
+catchment control and unmanaged disease scenarios.
 }

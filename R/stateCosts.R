@@ -1,25 +1,27 @@
 #' stateCosts
 #'
 #' Calculates the total duration costs for each simulation across fallow, contact tracing,
-#' catchment control and unmanaged disease scenarios. Returns (1) a full breakdown of daily
-#' costs by site type and simulation and (2) a summary data frame containing
-#' the simulation number and the cost incurred by sites being in that state.
+#' catchment control and unmanaged disease scenarios.
 #'
 #' @param data (class data.frame) output of timePerStage. Contains the site ID,
 #' state, simulation number, total time, and the logical vector of site types.
-#' @param state (class character) describes the state for which the costs will be
-#' calculated. Can be:
-#' 1. `fallow` in a fallow state (infected or uninfected)
-#' 2. `no_manage` infected in an unmanaged state
-#' 3. `contact_trace` in a contact tracing state (infected or uninfected)
-#' 4. `catchment_control` uninfected site under catchment-level controls
-#' @param site_types (class list) a list of possible site types
 #'
-#' @return (class list) cost_output
+#' @param state (class character) describes the state for which the costs will be
+#' calculated. Accepted inputs are: `"fallow"` in a fallow state (infected or uninfected),
+#' `"no_manage"` infected in an unmanaged state, `"contact_trace"` in a contact tracing state
+#' (infected or uninfected), or `"catchment_control"` uninfected site under catchment-level
+#' controls.
+#'
+#' @param site_types (class character) a vector of possible site types.
+#'
+#' @return (class list) of length 2 containing:
+#' 1. (class data.table) a full breakdown of daily costs by site type and simulation.
+#' 2. (class data.table) a summary data frame containing the simulation number and the cost
+#' incurred by sites being in that state.
+#'
 #' @export
 #'
 #' @import data.table
-#' @import tidyr
 #'
 stateCosts <- function(data,
                        state,
