@@ -26,6 +26,7 @@
 #' @importFrom stats quantile
 #' @importFrom Matrix rowSums colSums
 #' @importFrom dplyr slice_max
+#' @importFrom magrittr %>%
 createContactProbabilityMatrixTopSitesRemoved <- function(graph,
                                                           movement_period,
                                                           n_remove) {
