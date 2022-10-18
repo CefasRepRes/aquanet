@@ -1,18 +1,21 @@
 #' cullCost
 #'
-#' Calculates a one-off cost to both the site and the competent authority in the
-#' case of a site needing to be culled. Returns a data frame the
-#' cost to cull across each simulation.
+#' Calculates a one-off cost to both the site and the competent authority in the case of a site
+#' needing to be culled. Returns a data frame the cost to cull across each simulation.
 #'
 #' @param farm_data (class data.frame) the `time_summary` data frame created from the
-#' `timePerStage` function, for farms only.
-#' @param non_farm_data (class data.frame) the `time_summary` data frame created from the
-#' `timePerStage` function, for non-farms (fisheries) only.
-#' @param cull_costs (class data.frame) of the costs to both the site and the
-#' competent authority for each site type.
-#' @param site_types (class list) a list of possible site types.
+#' `aquanet::importAndCondense()` function, for farms only.
 #'
-#' @return (class data.frame) full_cull_cost_sim
+#' @param non_farm_data (class data.frame) the `time_summary` data frame created from the
+#' `aquanet::importAndCondense` function, for non-farms (fisheries) only.
+#'
+#' @param cull_costs (class data.frame) of the costs to both the site and the competent authority
+#' for each site type.
+#'
+#' @param site_types (class character)  a vector of possible site types.
+#'
+#' @return (class data.table) the cost to cull across each simulation.
+#'
 #' @export
 #'
 #' @import data.table

@@ -8,21 +8,20 @@ cullCost(farm_data, non_farm_data, cull_costs, site_types)
 }
 \arguments{
 \item{farm_data}{(class data.frame) the \code{time_summary} data frame created from the
-\code{timePerStage} function, for farms only.}
+\code{aquanet::importAndCondense()} function, for farms only.}
 
 \item{non_farm_data}{(class data.frame) the \code{time_summary} data frame created from the
-\code{timePerStage} function, for non-farms (fisheries) only.}
+\code{aquanet::importAndCondense} function, for non-farms (fisheries) only.}
 
-\item{cull_costs}{(class data.frame) of the costs to both the site and the
-competent authority for each site type.}
+\item{cull_costs}{(class data.frame) of the costs to both the site and the competent authority
+for each site type.}
 
-\item{site_types}{(class list) a list of possible site types.}
+\item{site_types}{(class character)  a vector of possible site types.}
 }
 \value{
-(class data.frame) full_cull_cost_sim
+(class data.table) the cost to cull across each simulation.
 }
 \description{
-Calculates a one-off cost to both the site and the competent authority in the
-case of a site needing to be culled. Returns a data frame the
-cost to cull across each simulation.
+Calculates a one-off cost to both the site and the competent authority in the case of a site
+needing to be culled. Returns a data frame the cost to cull across each simulation.
 }
