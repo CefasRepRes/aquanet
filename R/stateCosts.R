@@ -21,66 +21,76 @@
 #' @import data.table
 #' @import tidyr
 #'
-stateCosts <- function(data, state, site_types){
-  # Select state
+stateCosts <- function(data,
+                       state,
+                       site_types){
+
+  # define column names used with data.table syntax
+    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  value <- t_total <- time_in_state <- total_duration <- duration_cost <- NULL
+
+  # filter data depending on input state
   if(state == "fallow"){
-    state_codes <- c(4, 5,
-                     14, 15,
-                     24, 25,
-                     34, 35)
+    state_codes <- c(4, 5, 14, 15, 24, 25, 34, 35)
     state_summary <- data[cull_state == "Y" | state %in% state_codes]
+
   } else if(state == "no_manage"){
     state_codes <- c(10, 30)
-    # Filter data by state
     state_summary <- data[state %in% state_codes]
+
   } else if(state == "contact_trace"){
-    state_codes <- c(1, 7,
-                     11, 17,
-                     21, 27,
-                     31, 37)
-    # Filter data by state
+    state_codes <- c(1, 7, 11, 17, 21, 27, 31, 37)
     state_summary <- data[state %in% state_codes]
+
   } else if(state == "catchment_control"){
-    state_codes <- c(20, 21,
-                     24, 25,
-                     26, 27)
-    # Filter data by state
+    state_codes <- c(20, 21, 24, 25, 26, 27)
     state_summary <- data[state %in% state_codes]
+
   }
-  # Get daily cost for that stage
+
+  # get daily cost for that stage
   daily_cost <- data.table(daily_cost)
   state_daily_cost <- daily_cost[stage == state]
-  # Calculate duration costs for each site and sim
-  sims <- unique(state_summary[, sim_no])
-  costs <- data.table()
-  length(costs) <- length(sims)
-  for(k in 1:length(sims)){ # Loop over sim_no
-    for(i in 1:length(site_types)){ # Loop over site type
-      if(!(state %in% c("fallow", "no_manage", "contact_trace", "catchment_control"))) +
-        stop("You have entered an incorrect state type. Please choose from fallow, no_manage, contact_trace or catchment_controls")
-      type <- site_types[[i]] # Set site type
-      daily_site_cost <- state_daily_cost[site_type == type]
-      state_summary_by_sim <- state_summary[sim_no == sims[k]]
-      # Calculate the cost over the duration of the simulation
-      # duration_cost = site type (1) * duration of time in the state * daily cost
-      duration_cost <- (state_summary_by_sim[, ..type] * state_summary_by_sim[, "t_total"]) * daily_site_cost$farm_cost_per_day
-      total_duration_cost <- as.data.frame(sum(duration_cost)) # Calculate the total cost over the duration
-      total_duration_cost$sim_no <- sims[k] # Add simulation number
-      costs <- rbind(costs, total_duration_cost)
-    }
-    print(sims[k])}
 
-  # Make into data frame
-  state_costs <- cbind(site_types, costs)
-  colnames(state_costs)[2] <- "duration_cost"
+  if (!(state %in% c("fallow", "no_manage", "contact_trace", "catchment_control"))) +
+    stop("You have entered an incorrect state type. Please choose from fallow, no_manage, contact_trace or catchment_controls")
 
-  # Calculate total cost over the course of a simulation
-  sim_cost_summary <- tidyr::pivot_wider(state_costs, names_from = site_types,
-                                         values_from = duration_cost) # Reformat
-  sim_cost_summary$total_cost <- rowSums(sim_cost_summary[, -1], na.rm = T) # Total cost [, -1] so as not to include the sim_no in total
-  colnames(sim_cost_summary)[16] <- paste0(state, "_total_cost")
-  sim_cost_summary <- sim_cost_summary[, c("sim_no", paste0(state, "_total_cost"))]
-  cost_output <- list(state_costs, sim_cost_summary)
-  names(cost_output) <- c("full_state_costs", "summary_state_costs")
+  # convert to long format combining site_types into 'variable' column with 'value' column of 0/1
+  state_summary_long <- data.table::melt(state_summary,
+                                         id.vars = c("site_id", "modelID", "state", "group",
+                                                     "sim_no", "timeID", "t_total", "t", "trans_type",
+                                                     "farm_vector", "row_sums", "cull_state"),
+                                         measure.vars = c(site_types))
+
+  # multiply site_type 'value' by 't_total' to determine time spent for each site type
+  state_summary_long[ , value := value * t_total, ]
+
+  # rename columns to something more readable
+  data.table::setnames(state_summary_long, old = "variable", new = "site_types")
+  data.table::setnames(state_summary_long, old = "value", new = "time_in_state")
+
+  # sum the 'time_in_state' by each of the 'site_types' (group by sim_no)
+  aggregated <- state_summary_long[ , .(total_duration =  sum(time_in_state)), by = .(sim_no, site_types)]
+
+  # multiply 'total_duration' by corresponding site_type daily costs to get state_costs
+  state_costs <- aggregated[ ,
+                             .(site_types = site_types,
+                               total_duration = total_duration,
+                               duration_cost = total_duration * state_daily_cost$farm_cost_per_day[eval(site_types)]),
+                             by = .(sim_no)]
+
+  # aggregate to get cost per simulation (across all site_types)
+  sim_cost_summary <- state_costs[ , .(total_cost = sum(duration_cost, na.rm = T)) , by = .(sim_no)]
+
+  # rename columns to incorporate state
+  data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
+
+  data.table::setnames(state_costs, old = "total_duration", new = paste0(state, "_total_duration"))
+  data.table::setnames(state_costs, old = "duration_cost", new = paste0(state, "_total_duration_cost"))
+
+  # output list of results and return
+  cost_output <- list("full_state_costs" = state_costs,
+                      "summary_state_costs" = sim_cost_summary)
   return(cost_output)
+
 }
