@@ -17,46 +17,67 @@
 #'
 #' @import data.table
 #'
-cullCost <- function(farm_data, non_farm_data, cull_costs, site_types){
-  # When a site enters a cull state enter a one-off cost
-  farm_data <- data.table(farm_data)
-  non_farm_data <- data.table(non_farm_data)
-  cull <- farm_data[cull_state == "Y"]
-  sims <- unique(farm_data[, sim_no])
-  # Loop over simulations and add the one-off cull cost, depending on site type
-  full_cull_cost_farm <- data.table()
-  system.time({
-    for(k in 1:length(sims)){
-      for(i in 1:length(site_types)){
-        type <- site_types[[i]]
-        cull <- data.table(cull)
-        cull_by_sim <- cull[sim_no == sims[k]]
-        cull_cost <- data.table(cull_cost)
-        filter_cull_cost <- cull_cost[site_type == type]
-        # Separate costs to the farm and the FHI (competent authority)
-        farm_cull_cost <- sum(cull_by_sim[, ..type]) * filter_cull_cost$cull_cost_farm
-        fhi_cull_cost <- sum(cull_by_sim[, ..type]) * filter_cull_cost$cull_cost_fhi
-        # Combine into single farm_data frame
-        comb_cull_cost <- data.table(cull_cost_site = farm_cull_cost,
-                                     cull_cost_fhi = fhi_cull_cost,
-                                     sim_no = sims[k])
-        # Save results
-        full_cull_cost_farm <- rbind(full_cull_cost_farm, comb_cull_cost)
-      }
-      print(sims[k])
-    }})
-  # Calculate the cost for fisheries (not by type)
-  non_farm_cull <- non_farm_data[cull_state == "Y"]
+cullCost <- function(farm_data,
+                     non_farm_data,
+                     cull_costs,
+                     site_types) {
+
+  # define column names used with data.table syntax
+    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  value <- number_culled <- NULL
+
+  # convert input data frames to data tables
+  farm_data <- data.table::data.table(farm_data)
+  non_farm_data <- data.table::data.table(non_farm_data)
+  cull_cost <- data.table::data.table(cull_cost)
+
+  # calculate farm cull costs ----
+  # convert farm data to long format
+  farm_data_long <- data.table::melt(farm_data,
+                                     id.vars = c("site_id", "modelID", "state", "group",
+                                                 "sim_no", "timeID", "t_total", "t", "trans_type",
+                                                 "farm_vector", "row_sums", "cull_state"),
+                                     measure.vars = c(site_types))
+
+  # rename columns for readability
+  data.table::setnames(farm_data_long, old = "variable", new = "site_types")
+
+  # multiply value column indicate whether site by cull state (grouped by sim_no)
+  farm_data_long[ , value := value * cull_state, ]
+
+  # count the number of culls by site_type (grouped by sim_no)
+  farm_cull_counts <- farm_data_long[ , .(number_culled = sum(value)), by = .(sim_no, site_types)]
+
+  # get the costs of culling farms by site_type (grouped by sim_no)
+  farm_cull_costs <- farm_cull_counts[ ,
+                                       .(site_types = site_types,
+                                         cull_cost_site = number_culled * cull_cost[site_type == eval(site_types)]$cull_cost_farm,
+                                         cull_cost_fhi = number_culled * cull_cost[site_type == eval(site_types)]$cull_cost_fhi),
+                                       by = .(sim_no)]
+
+  # calculate the total cull costs costs per sim_no
+  full_cull_cost_sim_farm <- farm_cull_costs[ ,
+                                              .(cull_cost_site_farms = sum(cull_cost_fhi, na.rm = TRUE),
+                                                cull_cost_fhi_farms = sum(cull_cost_site, na.rm = TRUE)),
+                                              by = .(sim_no)]
+
+
+  # calculate fishery cull costs (not by type) ----
+  non_farm_cull <- non_farm_data[cull_state == TRUE]
   non_farm_cull_per_sim <- non_farm_cull[, .N, by = sim_no]
   non_farm_cull_per_sim$cull_cost_fhi_fisheries <- non_farm_cull_per_sim$N * 18225
   non_farm_cull_per_sim$cull_cost_site_fisheries <- NA
   non_farm_cull_per_sim <- non_farm_cull_per_sim[, !"N"]
-  # Summarise per simulation
-  full_cull_cost_sim_farm <- full_cull_cost_farm[, by = sim_no,
-                                                 .(cull_cost_site_farms = sum(cull_cost_site, na.rm = T),
-                                                   cull_cost_fhi_farms = sum(cull_cost_fhi, na.rm = T))]
-  full_cull_cost_sim <- merge(full_cull_cost_sim_farm, non_farm_cull_per_sim,
-                              all = TRUE, by = "sim_no")
-  full_cull_cost_sim$total_cull_cost <- rowSums(full_cull_cost_sim[, -1], na.rm = T) # Total cost [, -1] so as not to include the sim_no in total
+
+
+  # combine cull cost results farms and fisheries ----
+  full_cull_cost_sim <- merge(full_cull_cost_sim_farm,
+                              non_farm_cull_per_sim,
+                              all = TRUE,
+                              by = "sim_no")
+
+  # Total cost per simulation for culling of farms and fisheries (to site and competent authority)
+  full_cull_cost_sim$total_cull_cost <- rowSums(full_cull_cost_sim[, -"sim_no"], na.rm = TRUE)
+
   return(full_cull_cost_sim)
 }
