@@ -24,6 +24,10 @@
 #'
 loadResultsSummary <- function(scenario_name) {
 
+  # define column names used with data.table syntax
+    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  output_summary_states <- NULL
+
   # get the file path
   location_summary <- paste0(here::here("outputs",
                                         scenario_name,

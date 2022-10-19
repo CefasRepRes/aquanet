@@ -128,6 +128,10 @@ runSimulations <- function(n_cores,
                            proportion_cullable,
                            days_before_catchment_restock) {
 
+  # define batch_num utilised with foreach loop syntax
+    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  batch_num <- NULL
+
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
   files <- list.files(path = filepath_results[["results"]],

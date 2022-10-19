@@ -33,7 +33,8 @@ importAndCondense <- function(scenario_name){
 
   # define column names used with data.table syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  group <- timeID <- trans_type <- NULL
+  group <- timeID <- trans_type <- siteID <- tdiff <- recordID <- NULL
+  cull_state <- simNo <- sim_no <- state <- site_id <- modelID <- . <- NULL
 
   # list files for import and condense
   filenames <- list.files(here::here("outputs",

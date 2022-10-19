@@ -30,6 +30,7 @@ stateCosts <- function(data,
   # define column names used with data.table syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   value <- t_total <- time_in_state <- total_duration <- duration_cost <- NULL
+  cull_state <- sim_no <- stage <- . <- NULL
 
   # filter data depending on input state
   if(state == "fallow"){
