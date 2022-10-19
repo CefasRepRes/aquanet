@@ -1,29 +1,32 @@
 #' epidemicDuration
 #'
-#' @param results (class data.frame) A data frame created from `aquanet::loadResultsSummary` that
+#' This function summarises the simulation results to return statistics related to the duration of
+#' the epidemic, including mean and median duration and percentage time out.
+#'
+#' @param results (class data.frame) A data frame created from `aquanet::loadResultsSummary()` that
 #' contains:
-#' 1. `batch_no` the batch number
-#' 2. `k` the run number within the batch
-#' 3. `t` the model time
-#' 4. `t_diff` the difference between the current time and the time at the previous time step
-#' (the duration of the previous time step)
-#' 5. `sim_no` the simulation number
-#' 6. `rate_type` the transition type
-#' 7. `no_controlled_catchments` the number of catchments under controls in that time step
-#' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation
-#' Plus the number of sites in each state (1:39) plus redundancy (40:42)
+#' 1. `batch_no` the batch number.
+#' 2. `k` the run number within the batch.
+#' 3. `t` the model time.
+#' 4. `t_diff` the difference between the current time and the time at the previous time step (the
+#' duration of the previous time step).
+#' 5. `sim_no` the simulation number.
+#' 6. `rate_type` the transition type.
+#' 7. `no_controlled_catchments` the number of catchments under controls in that time step.
+#' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation.
+#' Plus the number of sites in each state (1:39) plus redundancy (40:42).
 #'
 #' @return (class data.table) summary of epidemic duration (measured in days) that contains:
-#' 1. `mean_duration` the mean epidemic duration for the scenario
-#' 2. `sd_duration` the standard deviation of the epidemic duration for the scenario
-#' 3. `min_duration` minimum epidemic duration
-#' 4. `max_duration` maximum epidemic duration
-#' 5. `median_duration` medium epidemic duration
-#' 6. `q05_duration` the 5% quartile for epidemic duration
-#' 7. `q95_duration` the 95% quartile for epidemic duration
-#' 8. `percent_time_out` the percentage of simulations for which the epidemic did not
-#' last longer than 5 years (1800 model days)
-#' 9. `no_iter` numer of iterations/simulations run
+#' 1. `mean_duration` the mean epidemic duration for the scenario.
+#' 2. `sd_duration` the standard deviation of the epidemic duration for the scenario.
+#' 3. `min_duration` minimum epidemic duration.
+#' 4. `max_duration` maximum epidemic duration.
+#' 5. `median_duration` medium epidemic duration.
+#' 6. `q05_duration` the 5% quartile for epidemic duration.
+#' 7. `q95_duration` the 95% quartile for epidemic duration.
+#' 8. `percent_time_out` the percentage of simulations for which the epidemic did not last longer
+#' than 5 years (1800 model days).
+#' 9. `no_iter` numer of iterations per simulation run.
 #'
 #' @export
 #'

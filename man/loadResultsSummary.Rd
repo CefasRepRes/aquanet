@@ -7,21 +7,20 @@
 loadResultsSummary(scenario_name)
 }
 \arguments{
-\item{scenario_name}{(class string) the name of the scenario being loaded. Assigned
-in RunModelCommandLine.R}
+\item{scenario_name}{(class string) the name of the scenario being loaded.}
 }
 \value{
 (class data frame) containing the following information for each time step:
 \enumerate{
-\item \code{batch_no} the batch number
-\item \code{k} the run number within the batch
-\item \code{t} the model time
-\item \code{t_diff} the difference between the current time and the time at the previous time step
-(the duration of the previous time step)
-\item \code{sim_no} the simulation number
-\item \code{rate_type} the transition type
-\item \code{no_controlled_catchments} the number of catchments under controls in that time step
-\item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation
+\item \code{batch_no} the batch number.
+\item \code{k} the run number within the batch.
+\item \code{t} the model time.
+\item \code{t_diff} the difference between the current time and the time at the previous time step (the
+duration of the previous time step).
+\item \code{sim_no} the simulation number.
+\item \code{rate_type} the transition type.
+\item \code{no_controlled_catchments} the number of catchments under controls in that time step.
+\item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation.
 Plus the number of sites in each state (1:39) plus redundancy (40:42)
 }
 }

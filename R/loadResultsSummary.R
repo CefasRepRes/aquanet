@@ -2,19 +2,18 @@
 #'
 #' This function loads and manipulates the batch (summary) data outputted from a scenario run.
 #'
-#' @param scenario_name (class string) the name of the scenario being loaded. Assigned
-#' in RunModelCommandLine.R
+#' @param scenario_name (class string) the name of the scenario being loaded.
 #'
 #' @return (class data frame) containing the following information for each time step:
-#' 1. `batch_no` the batch number
-#' 2. `k` the run number within the batch
-#' 3. `t` the model time
-#' 4. `t_diff` the difference between the current time and the time at the previous time step
-#' (the duration of the previous time step)
-#' 5. `sim_no` the simulation number
-#' 6. `rate_type` the transition type
-#' 7. `no_controlled_catchments` the number of catchments under controls in that time step
-#' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation
+#' 1. `batch_no` the batch number.
+#' 2. `k` the run number within the batch.
+#' 3. `t` the model time.
+#' 4. `t_diff` the difference between the current time and the time at the previous time step (the
+#' duration of the previous time step).
+#' 5. `sim_no` the simulation number.
+#' 6. `rate_type` the transition type.
+#' 7. `no_controlled_catchments` the number of catchments under controls in that time step.
+#' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation.
 #' Plus the number of sites in each state (1:39) plus redundancy (40:42)
 #'
 #' @export
@@ -67,9 +66,11 @@ loadResultsSummary <- function(scenario_name) {
                       := output_summary_states]
     print(i)
   }
+
   # warning message if output_summary_states doesn't match what is expected (50 rows)
   if(nrow(output_summary_states) != (42 + 8)) {
     base::warning("The script may have been feed the wrong parameters.")
+
   }
 
   # Transpose no_per_state_wide

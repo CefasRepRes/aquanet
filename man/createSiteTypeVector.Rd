@@ -17,6 +17,6 @@ createSiteTypeVector(graph_name, site_type)
 of type \code{site_type}.
 }
 \description{
-Function creates a logical vector (0 = FALSE, 1 = TRUE) of whether a site belongs to a given type. Used
-in economic analyses.
+Function creates a logical vector (0 = FALSE, 1 = TRUE) of whether a site belongs to a given
+type needed for \code{code/Economics.R}.
 }
