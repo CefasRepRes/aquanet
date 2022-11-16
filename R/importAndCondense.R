@@ -46,10 +46,14 @@ importAndCondense <- function(scenario_name){
   import_condense <- lapply(setNames(filenames, filenames), function(x) {
 
     # import the parquet file
-    file <- arrow::read_parquet(here::here("outputs",
-                                           scenario_name,
-                                           "full_results",
-                                           x))
+    ## TODO switch back to parquet file format
+    ## TEMPORARY FIX TO RUN ECONOMICS WITH .RData FILES
+    file <- load(here::here("outputs",
+                            scenario_name,
+                            "full_results",
+                            x))
+
+    file <- sims
 
     # convert to data.table for speed (and ensure tdiff is numeric)
     sims <- data.table::data.table(file)
