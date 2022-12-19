@@ -4,7 +4,7 @@
 \alias{epidemicDuration}
 \title{epidemicDuration}
 \usage{
-epidemicDuration(results)
+epidemicDuration(results, summary = F)
 }
 \arguments{
 \item{results}{(class data.frame) A data frame created from \code{aquanet::loadResultsSummary()} that
@@ -21,9 +21,16 @@ duration of the previous time step).
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation.
 Plus the number of sites in each state (1:39) plus redundancy (40:42).
 }}
+
+\item{summary}{(class logical) A logical to return either a summary (T) or the duration of the epidemic
+per scenario (F). F is the default.}
 }
 \value{
-(class data.table) summary of epidemic duration (measured in days) that contains:
+(class data.table)
+
+If summary = F, the simulation number \code{sim_no} and the epidemic duration \code{max_t}.
+
+summary of epidemic duration (measured in days) that contains:
 \enumerate{
 \item \code{mean_duration} the mean epidemic duration for the scenario.
 \item \code{sd_duration} the standard deviation of the epidemic duration for the scenario.

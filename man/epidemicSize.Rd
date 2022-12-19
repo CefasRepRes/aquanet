@@ -4,7 +4,7 @@
 \alias{epidemicSize}
 \title{epidemicSize}
 \usage{
-epidemicSize(results)
+epidemicSize(results, summary = F)
 }
 \arguments{
 \item{results}{(class data.frame) A data frame created from \code{aquanet::loadResultsSummary()} that
@@ -21,9 +21,16 @@ duration of the previous timestep).
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation.
 Plus the number of sites in each state (1:39) plus redundancy (40:42)
 }}
+
+\item{summary}{(class logical) A logical to return either a summary (T) or the number of infections
+per scenario (F). F is the default.}
 }
 \value{
-(class data.table) summary of epidemic infections (measured in number of sites infected):
+(class data.table)
+
+If summary = F, the simulation number \code{sim_no} and the total number of infected sites \code{tot_inf}.
+
+If summary = T, summary of epidemic infections (measured in number of sites infected):
 \enumerate{
 \item \code{mean_infections} the mean epidemic infections for the scenario.
 \item \code{sd_infections} the standard deviation of the epidemic infections for the scenario

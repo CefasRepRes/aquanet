@@ -16,7 +16,14 @@
 #' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation.
 #' Plus the number of sites in each state (1:39) plus redundancy (40:42).
 #'
-#' @return (class data.table) summary of epidemic duration (measured in days) that contains:
+#' @param summary (class logical) A logical to return either a summary (T) or the duration of the epidemic
+#' per scenario (F). F is the default.
+#'
+#' @return (class data.table)
+#'
+#' If summary = F, the simulation number `sim_no` and the epidemic duration `max_t`.
+#'
+#' summary of epidemic duration (measured in days) that contains:
 #' 1. `mean_duration` the mean epidemic duration for the scenario.
 #' 2. `sd_duration` the standard deviation of the epidemic duration for the scenario.
 #' 3. `min_duration` minimum epidemic duration.
@@ -33,7 +40,7 @@
 #' @importFrom stats median
 #' @importFrom stats sd quantile
 #'
-epidemicDuration <- function(results) {
+epidemicDuration <- function(results, summary = F) {
 
   # define column names used with data.table syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -53,6 +60,14 @@ epidemicDuration <- function(results) {
   # remove duplicates
   no_days <- unique(no_days)
 
+  # add a marker where the epidemic timed out
+  # timed out is where the epidemic lasts fewer than 5 years
+  for(i in 1:nrow(no_days)){
+    no_days[i, time_out := if(no_days[i, max_t] < (5 * 360)){TRUE} else {FALSE}]
+  }
+
+  # summary
+  if(summary == TRUE){
   # statistics ----
   mean_duration <- mean(no_days[ , max_t])
   sd_duration <- stats::sd(no_days[ , max_t])
@@ -62,12 +77,12 @@ epidemicDuration <- function(results) {
   q5_duration <- stats::quantile(no_days[ , max_t], 0.05)
   q95_duration <- stats::quantile(no_days[ , max_t], 0.95)
 
-  # calculate percent of timed out simulations
-  # time out is where the epidemic doesn't last more than 5 years
-  time_out <- (sum(no_days[ , max_t] < 5 * 360) / 3000) * 100
-
   # get number of iterations
   iterations <- max(results[ , sim_no])
+
+  # calculate percent of timed out simulations
+  # time out is where the epidemic doesn't last more than 5 years
+  time_out <- sum(no_days[ , time_out == T]) / iterations * 100
 
   # put into nice table
   scenario_results <- data.table::data.table(mean_duration = mean_duration,
@@ -79,5 +94,8 @@ epidemicDuration <- function(results) {
                                              q95_duration = q95_duration,
                                              percent_time_out = time_out,
                                              no_iter = iterations)
+  } else {
+    scenario_results <- no_days
+  }
   return(scenario_results)
 }
