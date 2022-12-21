@@ -26,7 +26,7 @@ cullCost <- function(farm_data,
                      site_types) {
 
   # define column names used with data.table syntax
-    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   value <- number_culled <- site_type <- cull_cost_fhi <- cull_state <- NULL
   cull_cost_site <- sim_no <- . <- NULL
 
@@ -69,7 +69,8 @@ cullCost <- function(farm_data,
   # calculate fishery cull costs (not by type) ----
   non_farm_cull <- non_farm_data[cull_state == TRUE]
   non_farm_cull_per_sim <- non_farm_cull[, .N, by = sim_no]
-  non_farm_cull_per_sim$cull_cost_fhi_fisheries <- non_farm_cull_per_sim$N * 18225
+  non_farm_cost <- mean(cull_cost[site_type %like% "fish"]$cull_cost_fhi)
+  non_farm_cull_per_sim$cull_cost_fhi_fisheries <- non_farm_cull_per_sim$N * non_farm_cost
   non_farm_cull_per_sim$cull_cost_site_fisheries <- NA
   non_farm_cull_per_sim <- non_farm_cull_per_sim[, !"N"]
 
@@ -82,6 +83,7 @@ cullCost <- function(farm_data,
 
   # Total cost per simulation for culling of farms and fisheries (to site and competent authority)
   full_cull_cost_sim$total_cull_cost <- rowSums(full_cull_cost_sim[, -"sim_no"], na.rm = TRUE)
+
 
   return(full_cull_cost_sim)
 }
