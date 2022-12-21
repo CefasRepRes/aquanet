@@ -84,6 +84,9 @@ cullCost <- function(farm_data,
   # Total cost per simulation for culling of farms and fisheries (to site and competent authority)
   full_cull_cost_sim$total_cull_cost <- rowSums(full_cull_cost_sim[, -"sim_no"], na.rm = TRUE)
 
+  # Combine with breakdown by site type
+  full_cull_cost <- list("cull_cost_by_sim" = full_cull_cost_sim,
+                         "cull_cost_farm_by_type" = farm_cull_costs)
 
-  return(full_cull_cost_sim)
+  return(full_cull_cost)
 }
