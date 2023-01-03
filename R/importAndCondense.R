@@ -71,10 +71,6 @@ importAndCondense <- function(scenario_name){
                      .(timeID = min(timeID), tdiff = sum(tdiff), t = min(t), trans_type = utils::head(trans_type, 1)),
                      . (modelID, siteID, state, group, simNo)]
 
-    # sanity check for state 3 - NOTE: this can be removed
-    threes <- sites_summary[state %in% c(3, 13, 23, 33)]
-    if(nrow(threes) == 0) return(warning("There are no state threes in your outputs. Check your simulation code"))
-
     # read in site type vector
     site_type <- data.table::fread(here::here("outputs",
                                             scenario_name,
