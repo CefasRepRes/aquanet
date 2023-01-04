@@ -64,5 +64,7 @@ createContactProbabilityMatrixTopSitesRemoved <- function(graph,
   matrix_movements_prob[out_sites_remove, ] <- 0
   matrix_movements_prob[in_sites_remove, ] <- 0
 
-  return(list(n_sites, matrix_movements, matrix_movements_prob))
+  return(list(n_sites = n_sites,
+              matrix_movements = matrix_movements,
+              matrix_movements_prob = matrix_movements_prob))
 }
