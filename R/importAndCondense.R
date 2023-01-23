@@ -87,6 +87,12 @@ importAndCondense <- function(scenario_name){
     data.table::setnames(sites_summary_type, old = "tdiff", new = "t_total")
     data.table::setnames(sites_summary_type, old = "simNo", new = "sim_no")
 
+    # correct value of tdiff at end of sims
+    for(i in 1:nrow(sites_summary_type)){
+      if(sites_summary_type$t_total[i] > 3600){
+        sites_summary_type$t_total[i] <- 3600 - sites_summary_type$t[i]
+      }}
+
     # return data table of summarised time in each state per site and simulation
     return(sites_summary_type)
 
