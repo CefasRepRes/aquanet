@@ -33,14 +33,16 @@
 epidemicPeak <- function(results) {
 
   # define column names used with data.table syntax
-    # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+    # Ignore warning for ..col_select. If added it causes warnings later, and is an open issue in data.table
   infected_sites <- max_inf <- sim_no <- . <- NULL
 
   # convert results into data.table
   results <- data.table(results)
 
-  # Calcultate infected sites at each timestep
-  results$infected_sites <- rowSums(results[ , c(10:19, 30:39)])
+  # Calculate infected sites at each timestep
+  col_select <- as.character(c(10:19, 30:39))
+  results$infected_sites <- rowSums(results[, ..col_select])
 
   # remove sim_no 0 (due to overallocation)
   valid_results <- results[sim_no != 0] # epidemic size
