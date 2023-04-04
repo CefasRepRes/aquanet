@@ -44,7 +44,7 @@ epidemicDuration <- function(results, summary = F) {
 
   # define column names used with data.table syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  max_t <- sim_no <- . <- NULL
+  max_t <- sim_no <- . <- ..col_select <- NULL
 
   # convert results into data.table
   results <- data.table(results)
