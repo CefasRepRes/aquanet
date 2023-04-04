@@ -1,6 +1,6 @@
 Package: aquanet
 Title: Functions to Execute AquaNet-Mod (The Aquaculture Disease Network Model)
-Version: 0.0.0.9000
+Version: 1.1.0
 Authors@R: 
     c(person(given = "Rebecca",
              family = "Millard",
@@ -36,5 +36,4 @@ Imports:
     methods,
     sf,
     units,
-    tidyr,
     arrow
