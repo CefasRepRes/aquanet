@@ -38,7 +38,7 @@ createContactProbabilityMatrix <- function(graph, movement_period) {
   matrix_movements_prob[matrix_movements_prob > 1] <- 1
 
   # uncompress 'dgCMatrix' to 'dgTMatrix' type (easier to look up the source of infection)
-  matrix_movements_prob <- methods::as(matrix_movements_prob, 'dgTMatrix')
+  matrix_movements_prob <- methods::as(matrix_movements_prob, 'TsparseMatrix')
 
   # extract number of sites represented within the model
   n_sites <- length(matrix_movements_prob[ , 1])
