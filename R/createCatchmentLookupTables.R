@@ -51,14 +51,14 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 
   # extract the data from the catchment layer
   df_catchments <- as.data.frame(catchment_layer_crs)
-  cols <- c("ID", "FEATURE")
+  cols <- c("S_ID", "RIVER")
   df_catchments[cols] <- sapply(df_catchments[cols], as.character)
 
   # merge catchment data with site data extracted from graph
   df_catchment_sites <- merge(x = df_sites,
                               y = df_catchments,
                               by.x = "TRUNK_CODE",
-                              by.y = "TRUNK_CODE",
+                              by.y = "S_ID",
                               sort = FALSE,
                               all.x = TRUE)
 
