@@ -76,7 +76,7 @@ createDistanceMatrix <- function(graph,
   matrix_distances_probability <- sdm_rate_gamma * exp(-(matrix_distances_order)^2 * sdm_scalar_lambda)
   matrix_distances_probability <- ifelse(matrix_distances_probability < 0, 0, matrix_distances_probability)
   matrix_distances_probability <- ifelse(matrix_distances_probability == sdm_rate_gamma, 0, matrix_distances_probability)
-  matrix_distances_probability <- methods::as(matrix_distances_probability, "dgTMatrix")
+  matrix_distances_probability <- methods::as(matrix_distances_probability, "TsparseMatrix")
 
   # return list containing (1) site to site distances, (2) probability of transmission by distance,
   # and (3) data frame of site catchment information.
