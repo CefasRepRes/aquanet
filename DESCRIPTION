@@ -4,22 +4,21 @@ Version: 2.0.0
 Authors@R: 
     c(person(given = "Rebecca",
              family = "Millard",
-             email = "rebecca.millard@cefas.co.uk",
-             role = c("aut", "cre")),
+             role = "aut"),
       person(given = "Sarah",
              family = "Alewijnse",
-             email = "sarah.alewijnse@cefas.co.uk",
-             role = "aut"),
+             email = "sarah.alewijnse@cefas.gov.uk",
+             role = c("aut", "cre")),
       person(given = "David",
              family = "Ryder",
-             email = "david.ryder@cefas.co.uk",
+             email = "david.ryder@cefas.gov.uk",
              role = "aut"),
       person(given = "James",
              family = "Guilder",
              role = "aut"))
+Maintainer: Sarah Alewijnse <sarah.alewijnse@cefas.gov.uk>
 Description: A collection of functions required to process input data and run simulations for AquaNet-Mod (The Aquaculture Disease Network Model).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
