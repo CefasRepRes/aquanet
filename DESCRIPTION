@@ -11,7 +11,6 @@ Authors@R:
              role = c("aut", "cre")),
       person(given = "David",
              family = "Ryder",
-             email = "david.ryder@cefas.gov.uk",
              role = "aut"),
       person(given = "James",
              family = "Guilder",
