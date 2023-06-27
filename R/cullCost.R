@@ -27,7 +27,7 @@ cullCost <- function(farm_data,
 
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  value <- number_culled <- site_type <- cull_cost_fhi <- cull_state <- NULL
+  value <- number_culled <- site_type <- cull_cost_ca <- cull_state <- NULL
   cull_cost_site <- sim_no <- . <- NULL
 
   # convert input data frames to data tables
@@ -56,21 +56,21 @@ cullCost <- function(farm_data,
   farm_cull_costs <- farm_cull_counts[ ,
                                        .(site_types = site_types,
                                          cull_cost_site = number_culled * cull_cost[site_type == eval(site_types)]$cull_cost_farm,
-                                         cull_cost_fhi = number_culled * cull_cost[site_type == eval(site_types)]$cull_cost_fhi),
+                                         cull_cost_ca = number_culled * cull_cost[site_type == eval(site_types)]$cull_cost_ca),
                                        by = .(sim_no)]
 
   # calculate the total cull costs costs per sim_no
   full_cull_cost_sim_farm <- farm_cull_costs[ ,
-                                              .(cull_cost_site_farms = sum(cull_cost_fhi, na.rm = TRUE),
-                                                cull_cost_fhi_farms = sum(cull_cost_site, na.rm = TRUE)),
+                                              .(cull_cost_site_farms = sum(cull_cost_ca, na.rm = TRUE),
+                                                cull_cost_ca_farms = sum(cull_cost_site, na.rm = TRUE)),
                                               by = .(sim_no)]
 
 
   # calculate fishery cull costs (not by type) ----
   non_farm_cull <- non_farm_data[cull_state == TRUE]
   non_farm_cull_per_sim <- non_farm_cull[, .N, by = sim_no]
-  non_farm_cost <- mean(cull_cost[site_type %like% "fish"]$cull_cost_fhi)
-  non_farm_cull_per_sim$cull_cost_fhi_fisheries <- non_farm_cull_per_sim$N * non_farm_cost
+  non_farm_cost <- mean(cull_cost[site_type %like% "fish"]$cull_cost_ca)
+  non_farm_cull_per_sim$cull_cost_ca_fisheries <- non_farm_cull_per_sim$N * non_farm_cost
   non_farm_cull_per_sim$cull_cost_site_fisheries <- NA
   non_farm_cull_per_sim <- non_farm_cull_per_sim[, !"N"]
 

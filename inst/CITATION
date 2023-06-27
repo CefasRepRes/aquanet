@@ -1,0 +1,12 @@
+citHeader("To cite aquanet in publications use:")
+
+citEntry(
+  entry    = "misc",
+  title    = "Functions to Execute AquaNet-Mod (The Aquaculture Disease Network Model)",
+  author   = "Millard, R., Alewijnse, S., Ryder, D. and Guilder, J. ",
+  year     = "2023",
+  url      = "github.com/CefasRepRes/aquanet",
+  textVersion = paste(
+
+  )
+)
