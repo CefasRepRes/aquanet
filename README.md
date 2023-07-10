@@ -17,10 +17,10 @@ To cite the paper:
 
 ## Installation
 
-Use remotes package to install from GitHub (ensure installed from CRAN if not already). NOTE: insert personal access token at `PAT` to allow download whist repo is set to private for development.
+Use remotes package to install from GitHub (ensure installed from CRAN if not already).
 
 ````
-library("remotes")
-remotes::install_github("CefasRepRes/aquanet", auth_token = "PAT")
-library("CefasRepRes/aquanet")
+library(remotes)
+remotes::install_github("CefasRepRes/aquanet")
+library(aquanet)
 ````
