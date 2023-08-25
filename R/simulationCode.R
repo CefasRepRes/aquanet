@@ -234,7 +234,7 @@ simulationCode <- function(runs,
 
     # matrix to record catchments controlled in the previous time step (avoids recalculation)
     catchments_controlled_prev <- as(Matrix::Matrix(nrow = n_catchments, ncol = 1,
-                                                    data = 0, sparse = T), "dgeMatrix")
+                                                    data = 0, sparse = T), "unpackedMatrix")
 
     # vector to record sites controlled in the previous time step (avoids recalculation)
     sites_controlled <- vector(mode = "logical", length = n_sites)
