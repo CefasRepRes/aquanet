@@ -209,7 +209,8 @@ updateRates <- function(control_matrix,
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = catchment_movements,
-                                                                            matrix_movements_prob = movement_probability)
+                                                                            matrix_movements_prob = movement_probability,
+                                                                            river_downstream_transmission_matrix = river_prob)
 
   ### calculate LFM infection rate ----
 

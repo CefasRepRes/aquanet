@@ -61,6 +61,9 @@
 #' probability of live fish movements between sites. (Note: output of
 #' `createContactProbabilityMatrix` function of aquanet-mod).
 #'
+#' @param river_downstream_transmission_matrix (class dgTMatrix, Matrix package) sparse matrix
+#' containing the probability of disease transmission via the river network.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
 #' 2. (class list) of length 7 containing: updated catchment_movements input. Updated elements
@@ -73,7 +76,8 @@
 excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             spmatrix_risk_contacts,
                                             catchment_movements,
-                                            matrix_movements_prob) {
+                                            matrix_movements_prob,
+                                            river_downstream_transmission_matrix) {
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[["spmatrix_sites_catchment"]]
   lgmatrix_catch_catch <- catchment_movements[["lgmatrix_catch_catch"]]
@@ -96,6 +100,26 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     sites_controlled <- as.vector(spmatrix_sites_catchment %*% catchments_controlled)
     sites_controlled[sites_controlled > 1] <- 1
 
+    if (site_control_type == 3){
+      downstream_sites_controlled <- upstreamSiteRelease(downstream_sites = unique(river_downstream_transmission_matrix$river_distances_rm0$Dest.SiteID),
+                                                         sites_unique = spmatrix_sites_catchment@Dimnames[[1]],
+                                                         sites_controlled = sites_controlled)
+
+      # create contact probability matrix for sites within controlled catchments
+      # sites outside controlled catchments have p = 0 else 1
+      sites_controlled_prob <- matrix_movements_prob * downstream_sites_controlled
+      sites_controlled_prob[sites_controlled_prob > 0] <- 1
+
+      # reassign the secondary controlled sites element with sites under catchment controls in this time step
+      catchment_movements[["sites_controlled"]] <- downstream_sites_controlled
+
+      # create matrix of all contacts made within controlled catchments
+      sites_controlled_in_catchment_prob <- sites_controlled_prob * lgmatrix_catch_catch
+
+      # create matrix of all contacts made outside of controlled catchments
+      matrix_contacts_exclude <- sites_controlled_prob - sites_controlled_in_catchment_prob
+
+    } else {
     # create contact probability matrix for sites within controlled catchments
     # sites outside controlled catchments have p = 0 else 1
     sites_controlled_prob <- matrix_movements_prob * sites_controlled
@@ -103,9 +127,10 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
 
     # reassign the secondary controlled sites element with sites under catchment controls in this time step
     catchment_movements[["sites_controlled"]] <- sites_controlled
+    }
 
     # if the site control type is 0 or 1
-    if (site_control_type %in% c(0,1)) {
+    if (site_control_type %in% c(0, 1)) {
       # create matrix of all contacts made within controlled catchments
       sites_controlled_in_catchment_prob <- sites_controlled_prob * lgmatrix_catch_catch
 

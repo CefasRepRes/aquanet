@@ -8,7 +8,8 @@ excludeWithinCatchmentMovements(
   move_restricted_sites,
   spmatrix_risk_contacts,
   catchment_movements,
-  matrix_movements_prob
+  matrix_movements_prob,
+  river_downstream_transmission_matrix
 )
 }
 \arguments{
@@ -49,6 +50,9 @@ levels of control.
 \item{matrix_movements_prob}{(class dgTMatrix, Matrix package) sparse matrix containing the
 probability of live fish movements between sites. (Note: output of
 \code{createContactProbabilityMatrix} function of aquanet-mod).}
+
+\item{river_downstream_transmission_matrix}{(class dgTMatrix, Matrix package) sparse matrix
+containing the probability of disease transmission via the river network.}
 }
 \value{
 (class list) of length 2 containing:
