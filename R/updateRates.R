@@ -99,6 +99,9 @@
 #' @param disease_controls (class logical) vector of length 1 indicating whether or not any disease
 #' control measures should take place.
 #'
+#' @param river_distances_df (class data frame) a data frame of distances between sites
+#' along the river network. Created using the GIS tool.
+#'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
 #' 1.1. (class numeric) vector of transition types.
@@ -133,7 +136,8 @@ updateRates <- function(control_matrix,
                         remove_top_sites,
                         sites_states_cumulative,
                         n_infections_remove_top_sites,
-                        disease_controls) {
+                        disease_controls,
+                        river_distances_df) {
 
   ### Select contact matrix ---
 
@@ -207,6 +211,7 @@ updateRates <- function(control_matrix,
 
   # exclude within catchment movements unless there are no catchment movement restrictions
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
+                                                                            river_distances_df = river_distances_df,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = catchment_movements,
                                                                             matrix_movements_prob = movement_probability,

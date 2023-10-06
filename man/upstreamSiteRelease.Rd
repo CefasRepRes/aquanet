@@ -4,11 +4,20 @@
 \alias{upstreamSiteRelease}
 \title{upstreamSiteRelease}
 \usage{
-upstreamSiteRelease(downstream_sites, sites_unique, sites_controlled)
+upstreamSiteRelease(
+  river_distances_df,
+  move_restricted_sites,
+  sites_unique,
+  sites_controlled
+)
 }
 \arguments{
-\item{downstream_sites}{(class vector) a vector of downstream sites, created
-by the \code{createRiverDistanceProbabilityMatrix} function.}
+\item{river_distances_df}{(class data frame) a data frame of distances between sites
+along the river network. Created using the GIS tool.}
+
+\item{move_restricted_sites}{(class logical) logical vector of length 'number of sites' that
+states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
+(Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{sites_unique}{(class vector) a vector of unique site IDs.}
 
@@ -21,12 +30,6 @@ catchment-level controls (0 = FALSE, 1 = TRUE).
 }
 \description{
 This function is used when the catchment-level controls include the release of
-sites upstream of infected sites.
-}
-\details{
-First, a vector of upstream sites is identified, where 0 = downstream and 1 =
-upstream.
-Second, upstream sites are removed from \code{downstream_sites_controlled}, which
-gives the sites under catchment-level controls.
-The output is then used to adjust the contact probability matrix.
+sites upstream of infected sites. It identifies "safe sites" upstream of the infected
+site so they may be removed from controls.
 }

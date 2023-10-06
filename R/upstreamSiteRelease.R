@@ -1,16 +1,15 @@
 #' upstreamSiteRelease
 #'
 #' This function is used when the catchment-level controls include the release of
-#' sites upstream of infected sites.
+#' sites upstream of infected sites. It identifies "safe sites" upstream of the infected
+#' site so they may be removed from controls.
 #'
-#' First, a vector of upstream sites is identified, where 0 = downstream and 1 =
-#' upstream.
-#' Second, upstream sites are removed from `downstream_sites_controlled`, which
-#' gives the sites under catchment-level controls.
-#' The output is then used to adjust the contact probability matrix.
 #'
-#' @param downstream_sites (class vector) a vector of downstream sites, created
-#' by the `createRiverDistanceProbabilityMatrix` function.
+#' @param river_distances_df (class data frame) a data frame of distances between sites
+#' along the river network. Created using the GIS tool.
+#' @param move_restricted_sites (class logical) logical vector of length 'number of sites' that
+#' states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
+#' (Note: created in the `aquanet::updateRates` function of aquanet-mod).
 #' @param sites_unique (class vector) a vector of unique site IDs.
 #' @param sites_controlled (class vector) a vector of sites currently under catchment-level
 #' controls (0 = FALSE, 1 = TRUE).
@@ -20,21 +19,33 @@
 #'
 #' @export
 #'
-upstreamSiteRelease <- function(downstream_sites,
+upstreamSiteRelease <- function(river_distances_df,
+                                move_restricted_sites,
                                 sites_unique,
                                 sites_controlled){
-  # create a vector of upstream sites
-    # 0 = downstream, 1 = upstream
+  # satisfy "no global binding" warning
+  infected <- Dest.SiteID <- sites <- NULL
+
+  # create a data frame of infected and detected sites
+  infected_df <- data.frame(site = sites_unique,
+                            infected = move_restricted_sites) %>% data.table()
+  infected_df <- infected_df[infected == TRUE]
+
+  # filter sites upstream of infected sites
+  river_distances_df <- data.table(river_distances_df)
+  upstream_clear <- river_distances_df[(Dest.SiteID %in% infected_df$site)]
+  upstream_clear_sites <- data.frame(sites = c(upstream_clear$Origin.SiteID, upstream_clear$Dest.SiteID)) %>% data.table()
+
+  # remove infected sites
+  upstream_clear_sites <- upstream_clear_sites[!(sites %in% infected_df$site)]
+  upstream_clear_sites <- as.vector(unique(upstream_clear_sites$sites))
+
+  # make into data frame with correct positioning
   upstream_df <- data.frame(site = sites_unique,
-                                 upstream = NA)
-  upstream_df$upstream <- ifelse(upstream_df$site %in% downstream_sites, 0, 1)
+                            upstream = NA)
+  upstream_df$upstream <- ifelse(upstream_df$site %in% upstream_clear_sites, 1, 0)
   upstream_vector <- as.vector(upstream_df$upstream)
 
-  # remove from sites_controlled
-  # correct to 0
-  downstream_sites_controlled <- sites_controlled - upstream_vector
-  downstream_sites_controlled[downstream_sites_controlled < 0] <- 0
-
   # Return the downstream_sites
-  return(downstream_sites_controlled)
+  return(upstream_vector)
 }

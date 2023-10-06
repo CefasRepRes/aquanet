@@ -116,6 +116,9 @@
 #' @param days_before_catchment_restock (class numeric) number of days that all sites within a
 #' catchment need to be in the post-fallow state before restocking.
 #'
+#' @param river_distances_df (class data frame) a data frame of distances between sites
+#' along the river network. Created using the GIS tool.
+#'
 #'
 #' @export
 #'
@@ -144,7 +147,8 @@ simulationCode <- function(runs,
                            n_infections_remove_top_sites,
                            disease_controls,
                            proportion_cullable,
-                           days_before_catchment_restock) {
+                           days_before_catchment_restock,
+                           river_distances_df) {
 
   ## extract information from input parameters ----
 
@@ -307,7 +311,8 @@ simulationCode <- function(runs,
                                             remove_top_sites = remove_top_sites,
                                             sites_states_cumulative = sites_states_cumulative,
                                             n_infections_remove_top_sites = n_infections_remove_top_sites,
-                                            disease_controls = disease_controls)
+                                            disease_controls = disease_controls,
+                                            river_distances_df = river_distances_df)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[["trans_rates"]]

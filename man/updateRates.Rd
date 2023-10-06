@@ -21,7 +21,8 @@ updateRates(
   remove_top_sites,
   sites_states_cumulative,
   n_infections_remove_top_sites,
-  disease_controls
+  disease_controls,
+  river_distances_df
 )
 }
 \arguments{
@@ -98,6 +99,9 @@ probability matrix.}
 
 \item{disease_controls}{(class logical) vector of length 1 indicating whether or not any disease
 control measures should take place.}
+
+\item{river_distances_df}{(class data frame) a data frame of distances between sites
+along the river network. Created using the GIS tool.}
 }
 \value{
 (class list) of length 3 containing:
