@@ -55,8 +55,11 @@ commitResults <- function(df_states,
                           save_num,
                           filepath_results) {
 
-  # create empty dgTMatrix to record site state at each step within the specified commit interval
-  matrix_states <- as(object = as.matrix(df_states[((3 + n_states + 1):(3 + n_states + n_sites)), ]),
+  # extract site states at each timestep
+    # 6 to account for 6 other data entries (batch_num, k, sim_num, tdiff, t and trans_type)
+    # n states for state summary
+    # + 1 to start after the above
+  matrix_states <- as(object = as.matrix(df_states[((6 + n_states + 1):(6 + n_states + n_sites)), ]),
                       Class = "dgTMatrix")
 
   # create data frame of simulation site states and times at each iteration
