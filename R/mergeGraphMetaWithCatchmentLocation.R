@@ -23,10 +23,8 @@ mergeGraphMetaWithCatchmentLocation <- function(graph,
 
   # extract model and site metadata from igraph output to dataframe
   metadata <- data.frame(siteID = igraph::V(graph)$siteID,
-                         personID = igraph::V(graph)$PersonID,
                          modelID = 1:length(igraph::V(graph)$siteID),
-                         catchmentID = igraph::V(graph)$CatchmentID,
-                         type = igraph::V(graph)$type)
+                         catchmentID = igraph::V(graph)$CatchmentID)
 
   # read in data frame of site location and catchment information
   sites_catchments <- read.csv(file = filename_sites_catchments, header = TRUE)
