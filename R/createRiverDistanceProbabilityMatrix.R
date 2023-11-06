@@ -44,7 +44,7 @@ createRiverDistanceProbabilityMatrix <- function(river_distances,
   river_distances_rm0 <- river_distances
 
   # create vector of sites in the same order as the adjacency matrix
-  vector_sites <- as.numeric(out_createContactProbabilityMatrix[["matrix_movements_prob"]]@Dimnames[[1]])
+  vector_sites <- out_createContactProbabilityMatrix[["matrix_movements_prob"]]@Dimnames[[1]]
 
   # extract number of sites from the contact probability matrix
   n_sites <- out_createContactProbabilityMatrix[["n_sites"]]

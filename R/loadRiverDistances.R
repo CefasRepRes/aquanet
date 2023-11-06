@@ -20,21 +20,19 @@
 loadRiverDistances <- function(filepath_river_distances,
                                out_createContactProbabilityMatrix){
   # create vector of sites in the same order as the adjacency matrix
-  vector_sites <- as.numeric(out_createContactProbabilityMatrix[["matrix_movements_prob"]]@Dimnames[[1]])
+  vector_sites <- out_createContactProbabilityMatrix[["matrix_movements_prob"]]@Dimnames[[1]]
 
   # load csv of site to site distances through the river network (generated with GIS tool)
   river_distances <- read.csv(file = filepath_river_distances, stringsAsFactors = FALSE)
 
   # define river distance origin and destination columns
   river_distances$Origin.SiteID <- regmatches(x = river_distances$Name,
-                                              m = regexpr(perl = TRUE,
-                                                          text = river_distances$Name,
-                                                          pattern = "^[0-9]+"))
+                                              m = regexpr(perl = TRUE, text = river_distances$Name,
+                                                          pattern = "^.*(?=(\ - ))"))
 
   river_distances$Dest.SiteID <- regmatches(x = river_distances$Name,
-                                            m = regexpr(perl = TRUE,
-                                                        text = river_distances$Name,
-                                                        pattern = "[0-9]+$"))
+                                            m = regexpr(perl = TRUE, text = river_distances$Name,
+                                                        pattern = "(?<= - ).*$"))
 
   # retain only site to site distances where both origin and destination are present in the contact
   # probability matrix
