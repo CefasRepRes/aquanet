@@ -10,7 +10,8 @@ excludeWithinCatchmentMovements(
   spmatrix_risk_contacts,
   catchment_movements,
   matrix_movements_prob,
-  river_downstream_transmission_matrix
+  river_downstream_transmission_matrix,
+  site_details
 )
 }
 \arguments{
@@ -57,6 +58,9 @@ probability of live fish movements between sites. (Note: output of
 
 \item{river_downstream_transmission_matrix}{(class dgTMatrix, Matrix package) sparse matrix
 containing the probability of disease transmission via the river network.}
+
+\item{site_details}{(class data frame) data frame of site details. Created by the
+mergeGraphMetaWithCatchmentLocation function in aquanet.}
 }
 \value{
 (class list) of length 2 containing:

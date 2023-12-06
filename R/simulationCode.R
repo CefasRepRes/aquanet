@@ -119,6 +119,8 @@
 #' @param river_distances_df (class data frame) a data frame of distances between sites
 #' along the river network. Created using the GIS tool.
 #'
+#' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
+#' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
 #'
 #' @export
 #'
@@ -148,7 +150,8 @@ simulationCode <- function(runs,
                            disease_controls,
                            proportion_cullable,
                            days_before_catchment_restock,
-                           river_distances_df) {
+                           river_distances_df,
+                           site_details) {
 
   ## extract information from input parameters ----
 
@@ -312,7 +315,8 @@ simulationCode <- function(runs,
                                             sites_states_cumulative = sites_states_cumulative,
                                             n_infections_remove_top_sites = n_infections_remove_top_sites,
                                             disease_controls = disease_controls,
-                                            river_distances_df = river_distances_df)
+                                            river_distances_df = river_distances_df,
+                                            site_details = site_details)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[["trans_rates"]]

@@ -96,6 +96,9 @@
 #' @param river_distances_df (class data frame) a data frame of distances between sites
 #' along the river network. Created using the GIS tool.
 #'
+#' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
+#' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (class numeric) the number of cores used for the run.
 #' 2. the output of the foreach loop running the `aquanet::simulationCode()` function.
@@ -130,7 +133,8 @@ runSimulations <- function(n_cores,
                            disease_controls,
                            proportion_cullable,
                            days_before_catchment_restock,
-                           river_distances_df) {
+                           river_distances_df,
+                           site_details) {
 
   # define batch_num utilised with foreach loop syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -190,7 +194,8 @@ runSimulations <- function(n_cores,
       disease_controls = disease_controls,
       proportion_cullable = proportion_cullable,
       days_before_catchment_restock = days_before_catchment_restock,
-      river_distances_df = river_distances_df
+      river_distances_df = river_distances_df,
+      site_details = site_details
     )
 
   # shut down set of copies of R running in parallel communicating over sockets

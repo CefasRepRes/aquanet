@@ -102,6 +102,9 @@
 #' @param river_distances_df (class data frame) a data frame of distances between sites
 #' along the river network. Created using the GIS tool.
 #'
+#' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
+#' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
+#'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
 #' 1.1. (class numeric) vector of transition types.
@@ -137,7 +140,8 @@ updateRates <- function(control_matrix,
                         sites_states_cumulative,
                         n_infections_remove_top_sites,
                         disease_controls,
-                        river_distances_df) {
+                        river_distances_df,
+                        site_details) {
 
   ### Select contact matrix ---
 
@@ -215,7 +219,8 @@ updateRates <- function(control_matrix,
                                                                             spmatrix_risk_contacts = matrix_risk_contacts,
                                                                             catchment_movements = catchment_movements,
                                                                             matrix_movements_prob = movement_probability,
-                                                                            river_downstream_transmission_matrix = river_prob)
+                                                                            river_downstream_transmission_matrix = river_prob,
+                                                                            site_details = site_details)
 
   ### calculate LFM infection rate ----
 

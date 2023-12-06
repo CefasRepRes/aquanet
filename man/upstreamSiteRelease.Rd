@@ -7,6 +7,7 @@
 upstreamSiteRelease(
   river_distances_df,
   move_restricted_sites,
+  sites_tidal,
   sites_unique,
   sites_controlled
 )
@@ -16,7 +17,10 @@ upstreamSiteRelease(
 along the river network. Created using the GIS tool.}
 
 \item{move_restricted_sites}{(class logical) logical vector of length 'number of sites' that
-states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
+states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).}
+
+\item{sites_tidal}{(class data frame) logical data frame of length 'number of sites' that
+states whether this site is located within a tidal boundary (TRUE) or not (FALSE).
 (Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
 
 \item{sites_unique}{(class vector) a vector of unique site IDs.}

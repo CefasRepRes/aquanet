@@ -22,7 +22,8 @@ updateRates(
   sites_states_cumulative,
   n_infections_remove_top_sites,
   disease_controls,
-  river_distances_df
+  river_distances_df,
+  site_details
 )
 }
 \arguments{
@@ -102,6 +103,9 @@ control measures should take place.}
 
 \item{river_distances_df}{(class data frame) a data frame of distances between sites
 along the river network. Created using the GIS tool.}
+
+\item{site_details}{(class data frame) a data frame of site and model IDs, locations and whether
+or not the site is tidal. Created using \code{aquanet::mergeGraphMetaWithCatchmentLocation}.}
 }
 \value{
 (class list) of length 3 containing:

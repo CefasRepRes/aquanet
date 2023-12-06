@@ -67,6 +67,9 @@
 #' @param river_downstream_transmission_matrix (class dgTMatrix, Matrix package) sparse matrix
 #' containing the probability of disease transmission via the river network.
 #'
+#' @param site_details (class data frame) data frame of site details. Created by the
+#' mergeGraphMetaWithCatchmentLocation function in aquanet.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
 #' 2. (class list) of length 7 containing: updated catchment_movements input. Updated elements
@@ -81,7 +84,8 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             spmatrix_risk_contacts,
                                             catchment_movements,
                                             matrix_movements_prob,
-                                            river_downstream_transmission_matrix) {
+                                            river_downstream_transmission_matrix,
+                                            site_details) {
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[["spmatrix_sites_catchment"]]
   lgmatrix_catch_catch <- catchment_movements[["lgmatrix_catch_catch"]]
@@ -106,11 +110,16 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
 
     # if the site control type is 3 (current E&W)
     if (site_control_type == 3){
+      # get tidal sites
+      sites_tidal <- data.frame(site_id = site_details$siteID,
+                                tidal = site_details$tidal) %>%
+        data.table()
       # get upstream sites
       upstream <- upstreamSiteRelease(river_distances_df = river_distances_df,
                                       move_restricted_sites = move_restricted_sites,
                                       sites_unique = spmatrix_sites_catchment@Dimnames[[1]],
-                                      sites_controlled = sites_controlled)
+                                      sites_controlled = sites_controlled,
+                                      sites_tidal = sites_tidal)
       # remove upstream sites from controlled sites
       sites_controlled <- sites_controlled - upstream
       sites_controlled[sites_controlled < 1] <- 0
