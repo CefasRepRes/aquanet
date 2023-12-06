@@ -54,7 +54,7 @@ importAndCondense <- function(scenario_name){
     # convert to data.table for speed (and ensure tdiff is numeric)
     sims <- data.table::data.table(file)
     sims$tdiff <- as.numeric(sims$tdiff)
-    sims$siteID <- as.numeric(sims$siteID)
+    sims$siteID <- sims$siteID
 
     # create a record ID for each row (grouped by simNo and siteID)
     sims[ , recordID := seq_len(.N), by = .(simNo, siteID)]

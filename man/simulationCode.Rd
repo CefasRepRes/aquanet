@@ -26,7 +26,9 @@ simulationCode(
   n_infections_remove_top_sites,
   disease_controls,
   proportion_cullable,
-  days_before_catchment_restock
+  days_before_catchment_restock,
+  river_distances_df,
+  site_details
 )
 }
 \arguments{
@@ -103,6 +105,12 @@ any disease control measures should take place.}
 
 \item{days_before_catchment_restock}{(class numeric) number of days that all sites within a
 catchment need to be in the post-fallow state before restocking.}
+
+\item{river_distances_df}{(class data frame) a data frame of distances between sites
+along the river network. Created using the GIS tool.}
+
+\item{site_details}{(class data frame) a data frame of site and model IDs, locations and whether
+or not the site is tidal. Created using \code{aquanet::mergeGraphMetaWithCatchmentLocation}.}
 }
 \value{
 (class numeric) batch number \code{batch_num} and output_summary_states saved to

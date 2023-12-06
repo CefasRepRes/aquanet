@@ -6,15 +6,21 @@
 \usage{
 excludeWithinCatchmentMovements(
   move_restricted_sites,
+  river_distances_df,
   spmatrix_risk_contacts,
   catchment_movements,
-  matrix_movements_prob
+  matrix_movements_prob,
+  river_downstream_transmission_matrix,
+  site_details
 )
 }
 \arguments{
 \item{move_restricted_sites}{(class logical) logical vector of length 'number of sites' that
 states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
 (Note: created in the \code{aquanet::updateRates} function of aquanet-mod).}
+
+\item{river_distances_df}{(class data frame) a data frame of distances between sites
+along the river network. Created using the GIS tool.}
 
 \item{spmatrix_risk_contacts}{(class dgCMatrix, Matrix package) sparse matrix containing live
 fish movements contact probability adapted to identify only contacts between sites that present a
@@ -49,6 +55,12 @@ levels of control.
 \item{matrix_movements_prob}{(class dgTMatrix, Matrix package) sparse matrix containing the
 probability of live fish movements between sites. (Note: output of
 \code{createContactProbabilityMatrix} function of aquanet-mod).}
+
+\item{river_downstream_transmission_matrix}{(class dgTMatrix, Matrix package) sparse matrix
+containing the probability of disease transmission via the river network.}
+
+\item{site_details}{(class data frame) data frame of site details. Created by the
+mergeGraphMetaWithCatchmentLocation function in aquanet.}
 }
 \value{
 (class list) of length 2 containing:
