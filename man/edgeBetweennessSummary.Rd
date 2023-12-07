@@ -3,12 +3,15 @@
 \name{edgeBetweennessSummary}
 \alias{edgeBetweennessSummary}
 \title{Edge Betweenness summary
-Summary of edge betweenness of contact network, which ranks which links are significant, based on the fraction of shortest paths that pass through the links between network nodes (susceptible contacts).}
+Summary of edge betweenness of contact network, which ranks which links are significant,
+based on the fraction of shortest paths that pass through the links between network
+nodes (susceptible contacts).}
 \usage{
 edgeBetweennessSummary(contact_network)
 }
 \arguments{
-\item{contact_network}{network simulates and tracks disease transmission from infected to susceptible contacts}
+\item{contact_network}{(class igraph)  Graph of connections/movements between sites produced with iGraph
+in '03_CreateContactNetwork.R' of AquaNet-mod.}
 }
 \value{
 network_betweenness
@@ -17,5 +20,7 @@ network_betweenness
 }
 \description{
 Edge Betweenness summary
-Summary of edge betweenness of contact network, which ranks which links are significant, based on the fraction of shortest paths that pass through the links between network nodes (susceptible contacts).
+Summary of edge betweenness of contact network, which ranks which links are significant,
+based on the fraction of shortest paths that pass through the links between network
+nodes (susceptible contacts).
 }

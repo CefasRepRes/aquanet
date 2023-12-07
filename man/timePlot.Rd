@@ -2,8 +2,7 @@
 % Please edit documentation in R/timePlots.R
 \name{timePlot}
 \alias{timePlot}
-\title{Time plots
-Time plots created displaying cumulative number of infected sites on the y axis and time in days on the x axis.}
+\title{timePlots}
 \usage{
 timePlot(scenario_name, y_max)
 }
@@ -16,6 +15,5 @@ timePlot(scenario_name, y_max)
 outputPlot
 }
 \description{
-Time plots
 Time plots created displaying cumulative number of infected sites on the y axis and time in days on the x axis.
 }

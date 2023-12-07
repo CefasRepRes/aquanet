@@ -34,4 +34,6 @@ Imports:
     methods,
     sf,
     units,
-    arrow
+    arrow,
+    ggplot2
+    

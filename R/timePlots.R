@@ -1,17 +1,23 @@
-
-# libraries needed- tidyverse, here, GridExtra,data.table, aquanet
-
-#' Time plots
+#' timePlots
+#'
 #' Time plots created displaying cumulative number of infected sites on the y axis and time in days on the x axis.
 #' @param scenario_name (class string) the name of the scenario being loaded.
 #' @param y_max maximum number of infected sites
 #'
 #' @return outputPlot
+#' @import here
+#' @import ggplot2
+#' @import dplyr
+#' @import data.table
+#' @importFrom stats smooth.spline
 #' @export
 #'
 
 timePlot <- function(scenario_name,
                      y_max){
+  # define column names used with dplyr syntax
+  # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- NULL
   # Load results
   scenario <- aquanet::loadResultsSummary(scenario_name)
   # Round time to the nearest day
