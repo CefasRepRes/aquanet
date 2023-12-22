@@ -2,18 +2,21 @@
 % Please edit documentation in R/vertexBetweenness.R
 \name{vertexBetweenness}
 \alias{vertexBetweenness}
-\title{Vertex Betweenness summary statistics
-Vertex Betweenness summary statistics. Indicating the measure of centrality in a graph based on shortest paths.}
+\title{Vertex Betweenness
+Summary of vertex betweenness of contact network, which ranks which nodes (susceptible contacts) are significant,
+based on the fraction of shortest paths that pass through each node.}
 \usage{
 vertexBetweenness(contact_network)
 }
 \arguments{
-\item{contact_network}{network simulates and tracks disease transmission from infected to susceptible contacts}
+\item{contact_network}{(class igraph)  Graph of connections/movements between sites produced with iGraph
+in '03_CreateContactNetwork.R' of AquaNet-mod.}
 }
 \value{
 network_betweenness
 }
 \description{
-Vertex Betweenness summary statistics
-Vertex Betweenness summary statistics. Indicating the measure of centrality in a graph based on shortest paths.
+Vertex Betweenness
+Summary of vertex betweenness of contact network, which ranks which nodes (susceptible contacts) are significant,
+based on the fraction of shortest paths that pass through each node.
 }

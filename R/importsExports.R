@@ -1,12 +1,18 @@
-#' Imports and exports
-#' Speficy if connection between nodes is imports or exports-imports represent in-degree connections (the number of incoming connections), outputs represents the number of out-degree connections (the number of outgoing connections ). Then calculate summary stats of the movements
-#' @param contact_network network simulates and tracks disease transmission from infected to susceptible contacts
-#' @param imports_exports string input- either 'imports' or 'exports'
+#' importsExports
+#' Summarise the  movement type of nodes (susceptible contacts)
+#' as either imports (the number of incoming connections),
+#' or outputs (the number of outgoing connections ).
+#' Then identify the node with the largest number of outputs.
+#' @param contact_network (class igraph)  Graph of connections/movements between sites produced with iGraph
+#' in '03_CreateContactNetwork.R' of AquaNet-mod.
+#' @param imports_exports string input of either 'imports' (in-degree movements) or 'exports'(out-degree movements)
 #'
 #' @return movements
 #' @export
 #'
 importsExports <- function(contact_network, imports_exports){
+
+  # assign movement as either 'in' or 'out' dependent on import_exports parameter
   if(imports_exports == "imports"){
     trade <- igraph::degree(contact_network,
                             mode = "in")
@@ -14,6 +20,8 @@ importsExports <- function(contact_network, imports_exports){
     trade <- igraph::degree(contact_network,
                             mode = "out")
   }
+
+  # summarise movements, identifying the sites with the largest number of exports
   most_trade <- which(trade == max(trade))
   movements <- data.frame(mean = mean(trade),
                           median = median(trade),

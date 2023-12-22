@@ -2,20 +2,27 @@
 % Please edit documentation in R/importsExports.R
 \name{importsExports}
 \alias{importsExports}
-\title{Imports and exports
-Speficy if connection between nodes is imports or exports-imports represent in-degree connections (the number of incoming connections), outputs represents the number of out-degree connections (the number of outgoing connections ). Then calculate summary stats of the movements}
+\title{Imports Exports
+Summarise the  movement type of nodes (susceptible contacts)
+as either imports (the number of incoming connections),
+or outputs (the number of outgoing connections ).
+Then identify the node with the largest number of outputs.}
 \usage{
 importsExports(contact_network, imports_exports)
 }
 \arguments{
-\item{contact_network}{network simulates and tracks disease transmission from infected to susceptible contacts}
+\item{contact_network}{(class igraph)  Graph of connections/movements between sites produced with iGraph
+in '03_CreateContactNetwork.R' of AquaNet-mod.}
 
-\item{imports_exports}{string input- either 'imports' or 'exports'}
+\item{imports_exports}{string input of either 'imports' (in-degree movements) or 'exports'(out-degree movements)}
 }
 \value{
 movements
 }
 \description{
-Imports and exports
-Speficy if connection between nodes is imports or exports-imports represent in-degree connections (the number of incoming connections), outputs represents the number of out-degree connections (the number of outgoing connections ). Then calculate summary stats of the movements
+Imports Exports
+Summarise the  movement type of nodes (susceptible contacts)
+as either imports (the number of incoming connections),
+or outputs (the number of outgoing connections ).
+Then identify the node with the largest number of outputs.
 }

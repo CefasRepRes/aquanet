@@ -1,4 +1,4 @@
-#' Edge Betweenness summary
+#' edgeBetweennessSummary
 #' Summary of edge betweenness of contact network, which ranks which links are significant,
 #' based on the fraction of shortest paths that pass through the links between network
 #' nodes (susceptible contacts).

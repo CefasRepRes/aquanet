@@ -2,18 +2,21 @@
 % Please edit documentation in R/vertexCloseness.R
 \name{vertexCloseness}
 \alias{vertexCloseness}
-\title{Vertex Closeness summary
-Summary statistics of vertex closeness centrality for the contact network.The closeness centrality of a vertex is the inverse of the sum of the distances from a vertex (point in a graph) to all the other vertices.}
+\title{Vertex Closeness
+Summary of vertex closeness of contact network, which ranks which nodes (susceptible contacts) are significant,
+based on the length of the shortest paths between a node to all other nodes in the network.}
 \usage{
 vertexCloseness(contact_network)
 }
 \arguments{
-\item{contact_network}{network simulates and tracks disease transmission from infected to susceptible contacts}
+\item{contact_network}{(class igraph)  Graph of connections/movements between sites produced with iGraph
+in '03_CreateContactNetwork.R' of AquaNet-mod.}
 }
 \value{
 network_closeness
 }
 \description{
-Vertex Closeness summary
-Summary statistics of vertex closeness centrality for the contact network.The closeness centrality of a vertex is the inverse of the sum of the distances from a vertex (point in a graph) to all the other vertices.
+Vertex Closeness
+Summary of vertex closeness of contact network, which ranks which nodes (susceptible contacts) are significant,
+based on the length of the shortest paths between a node to all other nodes in the network.
 }

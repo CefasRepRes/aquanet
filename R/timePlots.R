@@ -7,7 +7,6 @@
 #' @return outputPlot
 #' @import here
 #' @import ggplot2
-#' @import dplyr
 #' @import data.table
 #' @importFrom stats smooth.spline
 #' @export
@@ -19,21 +18,18 @@ timePlot <- function(scenario_name,
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- NULL
   # Load results
-  scenario <- aquanet::loadResultsSummary(scenario_name)
+  scenario <- data.table(aquanet::loadResultsSummary(scenario_name))
+  class(scenario)
+
   # Round time to the nearest day
   scenario$t_simplified <- round(scenario$t, digits = 0)
+
   # Average across days
-  scenario_average <- scenario %>%
-    select(t_simplified, cumulative_no_infected_sites) %>%
-    group_by(t_simplified) %>%
-    summarise(mean = mean(cumulative_no_infected_sites))
-  scenario_count <- scenario %>%
-    select(t_simplified, cumulative_no_infected_sites) %>%
-    group_by(t_simplified) %>%
-    count()
-  scenario_summary <- full_join(scenario_average,
-                                scenario_count,
-                                by = "t_simplified")
+  scenario_average <- scenario[, .(mean = mean(cumulative_no_infected_sites)), by = t_simplified]
+  nrow(scenario_average)
+  scenario_count <- scenario[, .N, by = t_simplified,]
+  scenario_summary <- merge(scenario_average,scenario_count, by = 't_simplified', nomatch = 0)
+
   # Smooth the average weighted by count
   scenario_smooth <- smooth.spline(x = scenario_summary$t_simplified,
                                    y = scenario_summary$mean,
