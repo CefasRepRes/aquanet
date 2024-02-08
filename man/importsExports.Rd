@@ -2,7 +2,7 @@
 % Please edit documentation in R/importsExports.R
 \name{importsExports}
 \alias{importsExports}
-\title{Imports Exports
+\title{importsExports
 Summarise the  movement type of nodes (susceptible contacts)
 as either imports (the number of incoming connections),
 or outputs (the number of outgoing connections ).
@@ -20,7 +20,7 @@ in '03_CreateContactNetwork.R' of AquaNet-mod.}
 movements
 }
 \description{
-Imports Exports
+importsExports
 Summarise the  movement type of nodes (susceptible contacts)
 as either imports (the number of incoming connections),
 or outputs (the number of outgoing connections ).

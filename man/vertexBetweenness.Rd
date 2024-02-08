@@ -2,7 +2,7 @@
 % Please edit documentation in R/vertexBetweenness.R
 \name{vertexBetweenness}
 \alias{vertexBetweenness}
-\title{Vertex Betweenness
+\title{vertexBetweenness
 Summary of vertex betweenness of contact network, which ranks which nodes (susceptible contacts) are significant,
 based on the fraction of shortest paths that pass through each node.}
 \usage{
@@ -16,7 +16,7 @@ in '03_CreateContactNetwork.R' of AquaNet-mod.}
 network_betweenness
 }
 \description{
-Vertex Betweenness
+vertexBetweenness
 Summary of vertex betweenness of contact network, which ranks which nodes (susceptible contacts) are significant,
 based on the fraction of shortest paths that pass through each node.
 }

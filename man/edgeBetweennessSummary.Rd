@@ -2,7 +2,7 @@
 % Please edit documentation in R/edgeBetweennessSummary.R
 \name{edgeBetweennessSummary}
 \alias{edgeBetweennessSummary}
-\title{Edge Betweenness summary
+\title{edgeBetweennessSummary
 Summary of edge betweenness of contact network, which ranks which links are significant,
 based on the fraction of shortest paths that pass through the links between network
 nodes (susceptible contacts).}
@@ -19,7 +19,7 @@ network_betweenness
 network_betweenness
 }
 \description{
-Edge Betweenness summary
+edgeBetweennessSummary
 Summary of edge betweenness of contact network, which ranks which links are significant,
 based on the fraction of shortest paths that pass through the links between network
 nodes (susceptible contacts).

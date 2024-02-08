@@ -2,7 +2,7 @@
 % Please edit documentation in R/vertexCloseness.R
 \name{vertexCloseness}
 \alias{vertexCloseness}
-\title{Vertex Closeness
+\title{vertexCloseness
 Summary of vertex closeness of contact network, which ranks which nodes (susceptible contacts) are significant,
 based on the length of the shortest paths between a node to all other nodes in the network.}
 \usage{
@@ -16,7 +16,7 @@ in '03_CreateContactNetwork.R' of AquaNet-mod.}
 network_closeness
 }
 \description{
-Vertex Closeness
+vertexCloseness
 Summary of vertex closeness of contact network, which ranks which nodes (susceptible contacts) are significant,
 based on the length of the shortest paths between a node to all other nodes in the network.
 }

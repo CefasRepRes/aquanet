@@ -2,6 +2,7 @@
 
 export(calcRandomSpillover)
 export(calcRiverTransmission)
+export(categorisedSites)
 export(checkCatchmentLevelRestocking)
 export(combineTransitionRates)
 export(commitResults)
@@ -80,3 +81,4 @@ importFrom(stats,smooth.spline)
 importFrom(units,drop_units)
 importFrom(utils,head)
 importFrom(utils,read.csv)
+importFrom(utils,write.csv)
