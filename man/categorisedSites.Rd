@@ -4,12 +4,12 @@
 \alias{categorisedSites}
 \title{categorisedSites}
 \usage{
-categorisedSites(lfmData, ProductionData, scenario_name)
+categorisedSites(lfm_data, production_data, scenario_name)
 }
 \arguments{
-\item{lfmData}{(data.table) Live Fish Movement data extracted from STARFISH database with columns 'Src_Code', 'Scr_AutRegStatus', 'PurposeOfMovement' included.}
+\item{lfm_data}{(data.table) Live Fish Movement data extracted from STARFISH database with columns 'Src_Code', 'Scr_AutRegStatus', 'PurposeOfMovement' included.}
 
-\item{ProductionData}{(data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription2' included.}
+\item{production_data}{(data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription2' included.}
 
 \item{scenario_name}{(character) Name of the scenario being run. Set in the params .yml file.}
 }
@@ -18,7 +18,7 @@ a csv file with site categorised by type; 'Farm/fishery', 'Table', 'Restocker', 
 A site can fall into multiple categories.
 }
 \description{
-Sites from fisheries and farms are labeled if they fall into the following site type; Table, Restocker, Ongrower, Hatchery and Fishery.
-Using both the LFM and Production datasets. A csv file is then outputed with the classifications for each site labelled using 'Y' and 'N'
+Sites from fisheries and farms are labelled if they fall into the following site type; Table, Restocker, Ongrower, Hatchery and Fishery.
+Using both the LFM and Production datasets. A csv file is then outputted with the classifications for each site labelled using 'Y' and 'N'
 based on if they meet the conditions for each site type.
 }
