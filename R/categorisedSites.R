@@ -18,61 +18,135 @@
 categorisedSites <- function(lfm_data, production_data, scenario_name){
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  Category <- CodeDescription2 <- DevCode <- Fishery <- Hatchery <- Ongrower <-
-    PurposeOfMovement <- Restocker <- Scr_AutRegStatus <- Table <- Tablelfm <- NULL
+  Scr_Restocker <- Scr_Hatchery <- Scr_Table <- Dest_Ongrower <- Dest_Table <-
+    Scr_Code <- Dest_Code <- Scr_Fishery <- Dest_Fishery <- Dest_AutRegStatus <-
+    Scr_Category <- Dest_Category <- CodeDescription2 <- DevCode <-
+    PurposeOfMovement <- Scr_AutRegStatus <- Src_Code <- Table <- NULL
 
-  # Classify Table from ProductionData data
+  # Classify table producers from production data ------------------------------
 
-  # Rename 'Code' col from Production to match lfm_data
+  # rename 'Code' col from Production to match lfm_data
   colnames(production_data)[colnames(production_data) == "Code"] <- "Src_Code"
 
-  # Label as 'Table' using production_data data if CodeDescription2 == 'Table'
+  # label as 'Table' using production_data data if CodeDescription2 == 'Table'
   production_data[, Table := ifelse(CodeDescription2 == 'Table', 'Y', 'N')]
 
-  # Remove unwanted cols
+  # remove un-needed cols
   production_dataFarm <- production_data[, c("Src_Code", "Table"), with = FALSE]
 
+  # Classify others using LFM data ---------------------------------------------
 
-  # Categories using LFM data
+  ## Classify source sites =====================================================
 
-  # Label as Ongrower if 'Ongrowing', 'Broodstock' is contained within the PurposeOfMovement column
-  lfmCategorised <- lfm_data[, Ongrower := ifelse(PurposeOfMovement %in% c('Ongrowing', 'Broodstock'), 'Y', 'N')]
+  lfmCategorised <- lfm_data %>% data.table()
 
-  # Label as Restocker if 'Sport/Angling', 'Restocking, i.e. Salmonid stock enhancement' is contained within the PurposeOfMovement column
-  lfmCategorised[, Restocker := ifelse(PurposeOfMovement %in% c('Sport/Angling', 'Restocking, i.e. Salmonid stock enhancement'), 'Y', 'N')]
+  # label as Restocker if 'Sport/Angling', 'Restocking, i.e. Salmonid stock enhancement' is contained within the PurposeOfMovement column
+  lfmCategorised[, Scr_Restocker := ifelse(PurposeOfMovement %in% c('Sport/Angling',
+                                                                    'Restocking, i.e. Salmonid stock enhancement'), 'Y', 'N')]
 
-  # Label as hatchery if DevCode = 'EGG'
-  lfmCategorised[, Hatchery := ifelse(DevCode == 'EGG', 'Y', 'N') ]
+  # label as Hatchery if DevCode = 'EGG'
+  lfmCategorised[, Scr_Hatchery := ifelse(DevCode == 'EGG', 'Y', 'N') ]
 
-  # Label as fishery if Scr_AutRegStatus is equal to 'REGFISH'
-  lfmCategorised[, Fishery := ifelse(Scr_AutRegStatus == 'REGFISH', 'Y', 'N') ]
+  # label as Table if PurposeOfMovement is equal to 'Slaughter'
+  lfmCategorised[, Scr_Table := ifelse(PurposeOfMovement == 'Slaughter', 'Y', 'N')]
 
-  # Classify as either farm or fishery using the Scr_AutRegStatus column
-  lfmCategorised[, Category := ifelse(grepl("FARM", lfmCategorised$Scr_AutRegStatus, ignore.case = TRUE), "Farm",
-                                      ifelse(Scr_AutRegStatus == 'REGFISH', 'Fishery', 'Other'))]
-  # Label as Table if PurposeOfMovement is equal to 'Slaughter'
-  lfmCategorised <- lfm_data[, Tablelfm := ifelse(PurposeOfMovement == 'Slaughter', 'Y', 'N')]
+  ## Classify destination sites ================================================
 
-  # Remove duplicates from LFM categorised dataset (as multiple movements per farm)
-  farmType <- unique(lfmCategorised, by = "Src_Code")
+  # label as Ongrower if 'Ongrowing', 'Broodstock' is contained within the PurposeOfMovement column
+  lfmCategorised[, Dest_Ongrower := ifelse(PurposeOfMovement %in% c('Ongrowing',
+                                                                    'Broodstock'), 'Y', 'N')]
 
+  # label as Table if PurposeOfMovement is equal to 'Slaughter'
+  lfmCategorised[, Dest_Table := ifelse(PurposeOfMovement == 'Slaughter', 'Y', 'N')]
 
+  ## Melt source and destination sites together ==================================
 
-  # Merge production_data and lfm_data
-  production_dataLFM <- merge(farmType, production_dataFarm, by = 'Src_Code', all.x = TRUE)
-  head(production_dataLFM)
+  # get unique sites
+  sites <- data.frame(Code = c(lfm_data$Src_Code, lfm_data$Dest_Code),
+                      Hatchery = NA,
+                      Ongrower = NA,
+                      Restocker = NA,
+                      Table = NA,
+                      Fishery = NA) %>% unique()
 
-  # Combine LFM and production_data 'Table' columns- filling in from lfm if production 'Table' column equals 'N' or 'NA'
-  test <- production_dataLFM[, Table := ifelse(is.na(Table) | Table == "N", Tablelfm, Table)]
-  head(test)
+  # loop to get types
+  for(i in 1:nrow(sites)){
+    prod <- production_dataFarm[Src_Code == sites$Code[i]]
+    source <- lfmCategorised[Src_Code == sites$Code[i]]
+    dest <- lfmCategorised[Dest_Code == sites$Code[i]]
+    # Hatchery
+    if("Y" %in% source$Scr_Hatchery){
+      sites$Hatchery[i] <- "Y"
+    }
+    # Ongrower
+    if("Y" %in% dest$Dest_Ongrower){
+      sites$Ongrower[i] <- "Y"
+    }
+    # Restocker
+    if("Y" %in% source$Scr_Restocker){
+      sites$Restocker[i] <- "Y"
+    }
+    # Table
+    if("Y" %in% prod$Table ||
+       "Y" %in% source$Scr_Table ||
+       "Y" %in% dest$Dest_Table){
+      sites$Table[i] <- "Y"
+    }
+  }
 
-  # remove unwanted cols
-  categorisedSites <- production_dataLFM[, c("Src_Code", "Scr_AutRegStatus", "Category", "Table", "Ongrower",  "Restocker", "Hatchery", "Fishery"), with = FALSE]
-  print(head(categorisedSites))
+  # Classify using RegStatus ---------------------------------------------------
+
+  # Label as farm if AutRegStatus is equal to 'REGFISH'
+  lfmCategorised[, Scr_Fishery := ifelse(Scr_AutRegStatus == 'REGFISH', 'Y', 'N') ]
+  lfmCategorised[, Dest_Fishery := ifelse(Dest_AutRegStatus == 'REGFISH', 'Y', 'N') ]
+
+  # loop to add to type
+  for(i in 1:nrow(sites)){
+    source <- lfmCategorised[Src_Code == sites$Code[i]]
+    dest <- lfmCategorised[Dest_Code == sites$Code[i]]
+    # Fishery
+    if("Y" %in% source$Scr_Fishery ||
+       "Y" %in% dest$Dest_Fishery){
+      sites$Fishery[i] <- "Y"
+    }
+  }
+
+  # classify as either farm or fishery using the Scr_AutRegStatus column
+  lfmCategorised[, Scr_Category := ifelse(grepl("FARM", lfmCategorised$Scr_AutRegStatus, ignore.case = TRUE), "Farm",
+                                          ifelse(Scr_AutRegStatus == 'REGFISH', 'Fishery', 'Other'))]
+  lfmCategorised[, Dest_Category := ifelse(grepl("FARM", lfmCategorised$Dest_AutRegStatus, ignore.case = TRUE), "Farm",
+                                           ifelse(Dest_AutRegStatus == 'REGFISH', 'Fishery', 'Other'))]
+
+  # melt to long format with source and destination sites
+  lfmCategorised_long <- data.frame(Code = c(lfmCategorised$Src_Code,
+                                             lfmCategorised$Dest_Code),
+                                    Category = c(lfmCategorised$Scr_Category,
+                                                 lfmCategorised$Dest_Category)) %>% unique()
+
+  # combine with sites
+  all_data <- merge(sites,
+                    lfmCategorised_long,
+                    by = "Code",
+                    all.x = TRUE)
+
+  # replace NA with "N"
+  all_data[, c("Hatchery",
+               "Ongrower",
+               "Restocker",
+               "Table",
+               "Fishery")][is.na(all_data[c("Hatchery",
+                                            "Ongrower",
+                                            "Restocker",
+                                            "Table",
+                                            "Fishery")])] <- "N"
+
+  # print head
+  print(head(all_data))
 
   # Save final dataset as csv
-  utils::write.csv(categorisedSites, here::here("outputs",
+  utils::write.csv(all_data, here::here("outputs",
                                          scenario_name,
                                          "categorisedSites.csv"))
+  return(all_data)
 
 }
