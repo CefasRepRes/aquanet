@@ -29,6 +29,9 @@
 #' states whether movements at this site are currently restricted (TRUE) or unrestricted (FALSE).
 #' (Note: created in the `aquanet::updateRates` function of aquanet-mod).
 #'
+#' @param river_distances_df (class data frame) a data frame of distances between sites
+#' along the river network. Created using the GIS tool.
+#'
 #' @param spmatrix_risk_contacts (class dgCMatrix, Matrix package) sparse matrix containing live
 #' fish movements contact probability adapted to identify only contacts between sites that present a
 #'  risk of disease spread. Source sites that are infected but cannot transport fish off site due
@@ -61,6 +64,12 @@
 #' probability of live fish movements between sites. (Note: output of
 #' `createContactProbabilityMatrix` function of aquanet-mod).
 #'
+#' @param river_downstream_transmission_matrix (class dgTMatrix, Matrix package) sparse matrix
+#' containing the probability of disease transmission via the river network.
+#'
+#' @param site_details (class data frame) data frame of site details. Created by the
+#' mergeGraphMetaWithCatchmentLocation function in aquanet.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
 #' 2. (class list) of length 7 containing: updated catchment_movements input. Updated elements
@@ -71,9 +80,12 @@
 #'
 #' @importFrom Matrix t
 excludeWithinCatchmentMovements <- function(move_restricted_sites,
+                                            river_distances_df,
                                             spmatrix_risk_contacts,
                                             catchment_movements,
-                                            matrix_movements_prob) {
+                                            matrix_movements_prob,
+                                            river_downstream_transmission_matrix,
+                                            site_details) {
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[["spmatrix_sites_catchment"]]
   lgmatrix_catch_catch <- catchment_movements[["lgmatrix_catch_catch"]]
@@ -96,6 +108,23 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     sites_controlled <- as.vector(spmatrix_sites_catchment %*% catchments_controlled)
     sites_controlled[sites_controlled > 1] <- 1
 
+    # if the site control type is 3 (current E&W)
+    if (site_control_type == 3){
+      # get tidal sites
+      sites_tidal <- data.frame(site_id = site_details$siteID,
+                                tidal = site_details$tidal) %>%
+        data.table()
+      # get upstream sites
+      upstream <- upstreamSiteRelease(river_distances_df = river_distances_df,
+                                      move_restricted_sites = move_restricted_sites,
+                                      sites_unique = spmatrix_sites_catchment@Dimnames[[1]],
+                                      sites_controlled = sites_controlled,
+                                      sites_tidal = sites_tidal)
+      # remove upstream sites from controlled sites
+      sites_controlled <- sites_controlled - upstream
+      sites_controlled[sites_controlled < 1] <- 0
+    }
+
     # create contact probability matrix for sites within controlled catchments
     # sites outside controlled catchments have p = 0 else 1
     sites_controlled_prob <- matrix_movements_prob * sites_controlled
@@ -105,7 +134,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     catchment_movements[["sites_controlled"]] <- sites_controlled
 
     # if the site control type is 0 or 1
-    if (site_control_type %in% c(0,1)) {
+    if (site_control_type %in% c(0, 1, 3)) {
       # create matrix of all contacts made within controlled catchments
       sites_controlled_in_catchment_prob <- sites_controlled_prob * lgmatrix_catch_catch
 

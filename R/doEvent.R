@@ -270,7 +270,9 @@ doEvent <- function(state_vector,
     }
 
     # define the site as no longer contact traced (if not infected and contact traced)
-    control_matrix[site, 7] <- 0
+    if(state_vector[site] == 0 && control_matrix[site, 7] == 1){
+      control_matrix[site, 7] <- 0
+    }
 
 
     # place controls on sites that are infected and not latent (i.e. infection detected and reported)

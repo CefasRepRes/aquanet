@@ -16,6 +16,5 @@ Section 30 movements.}
 1's depicting sites that are of type "Farm" and 0's for all other site types.
 }
 \description{
-Use the connectivity matrix as input to return a numeric binary vector indicating which sites
-are of type "Farm".
+Use the connectivity matrix as input to return a numeric binary vector indicating site attributes
 }

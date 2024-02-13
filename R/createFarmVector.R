@@ -1,7 +1,6 @@
 #' createFarmVector
 #'
-#' Use the connectivity matrix as input to return a numeric binary vector indicating which sites
-#' are of type "Farm".
+#' Use the connectivity matrix as input to return a numeric binary vector indicating site attributes
 #'
 #' @param graph (class igraph) graph of connections/movements between sites produced with iGraph
 #' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and

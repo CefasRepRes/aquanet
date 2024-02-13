@@ -16,7 +16,7 @@ timePlot <- function(scenario_name,
                      y_max){
   # define column names used with dplyr syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- NULL
+  t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- . <- NULL
   # Load results
   scenario <- data.table(aquanet::loadResultsSummary(scenario_name))
   class(scenario)
