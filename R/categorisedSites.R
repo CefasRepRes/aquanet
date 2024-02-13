@@ -6,6 +6,7 @@
 #'
 #' @param lfmData (data.table) Live Fish Movement data extracted from STARFISH database with columns 'Src_Code', 'Scr_AutRegStatus', 'PurposeOfMovement' included.
 #' @param ProductionData (data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription2' included.
+#' @param scenario_name (character) Name of the scenario being run. Set in the params .yml file.
 #'
 #' @return a csv file with site categorised by type; 'Farm/fishery', 'Table', 'Restocker', 'Ongrower', 'Hatchery', 'Fishery'.
 #' A site can fall into multiple categories.
@@ -14,7 +15,7 @@
 #' @importFrom utils write.csv
 #' @export
 #'
-categorisedSites <- function(lfmData, ProductionData){
+categorisedSites <- function(lfmData, ProductionData, scenario_name){
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   Category <- CodeDescription2 <- DevCode <- Fishery <- Hatchery <- Ongrower <-
@@ -70,9 +71,8 @@ categorisedSites <- function(lfmData, ProductionData){
   print(head(categorisedSites))
 
   # Save final dataset as csv
-  utils::write.csv(categorisedSites, here::here("data",
-                                         "LFMs",
-                                         "modified",
+  utils::write.csv(categorisedSites, here::here("outputs",
+                                         scenario_name,
                                          "categorisedSites.csv"))
 
 }
