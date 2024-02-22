@@ -62,7 +62,7 @@ listRatesSusceptibleRiskContacts <- function(spmatrix_risk_contacts,
                                              state_vector,
                                              trans_type) {
   # convert 'dgCMatrix' to 'dgTMatrix'
-  spmatrix_risk_contacts <- as(t(spmatrix_risk_contacts), "dgTMatrix")
+  spmatrix_risk_contacts <- as(t(spmatrix_risk_contacts), "TsparseMatrix")
 
   # get matrix value coordinates (i, j) and values (x)
   # NOTE: 0-based coordinates (most R objects have 1-based coordinates)

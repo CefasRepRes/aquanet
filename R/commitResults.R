@@ -60,7 +60,7 @@ commitResults <- function(df_states,
     # n states for state summary
     # + 1 to start after the above
   matrix_states <- as(object = as.matrix(df_states[((6 + n_states + 1):(6 + n_states + n_sites)), ]),
-                      Class = "dgTMatrix")
+                      Class = "TsparseMatrix")
 
   # create data frame of simulation site states and times at each iteration
   sims <- data.frame(modelID = as.integer(site_indices[(matrix_states@i + 1)] + 1),
