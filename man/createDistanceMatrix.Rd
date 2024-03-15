@@ -15,8 +15,7 @@ createDistanceMatrix(
 }
 \arguments{
 \item{graph}{(class igraph) graph of connections/movements between sites produced with iGraph
-in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
-Section 30 movements.}
+in '03_CreateContactNetwork.R' of AquaNet-mod.}
 
 \item{filename_site_catchments}{(class string) string containing the file path and file name for
 .csv containing information about site location (easting and northing) and which catchment each
@@ -25,7 +24,7 @@ site resides in.}
 \item{crs_epsg}{(class numeric) 4-5 digit epsg code stating the coordinate reference system (crs)
 to use for projecting the data.}
 
-\item{sdm_max_dist}{(class numeric) maximum distance (in metres) over which short distance
+\item{sdm_max_dist}{(class numeric) maximum distance (in km) over which short distance
 mechanical (SDM) transmission can occur.}
 
 \item{sdm_rate_gamma}{(class numeric) daily short distance mechanical (SDM) transmission rate

@@ -15,8 +15,7 @@
 #' as the contact matrix (graph).
 #'
 #' @param graph (class igraph) graph of connections/movements between sites produced with iGraph
-#' in '03_CreateContactNetwork.R' of AquaNet-mod. This includes both live fish movements and
-#' Section 30 movements.
+#' in '03_CreateContactNetwork.R' of AquaNet-mod.
 #'
 #' @param filename_site_catchments  (class string) string containing the file path and file name for
 #'  .csv containing information about site location (easting and northing) and which catchment each
@@ -28,7 +27,7 @@
 #' @param sdm_rate_gamma (class numeric) daily short distance mechanical (SDM) transmission rate
 #' over 0 km.
 #'
-#' @param sdm_max_dist (class numeric) maximum distance (in metres) over which short distance
+#' @param sdm_max_dist (class numeric) maximum distance (in km) over which short distance
 #' mechanical (SDM) transmission can occur.
 #'
 #' @param sdm_scalar_lambda (class numeric) local scalar of short distance mechanical (SDM)
@@ -52,6 +51,8 @@ createDistanceMatrix <- function(graph,
                                  sdm_max_dist,
                                  sdm_rate_gamma,
                                  sdm_scalar_lambda) {
+  # convert sdm_max_dist to m
+  sdm_max_dist <- sdm_max_dist * 1000
 
   # import the list of site locations, and assign the correct spatial projection system
   site_catchments <- read.csv(filename_site_catchments, header = TRUE)
@@ -68,7 +69,7 @@ createDistanceMatrix <- function(graph,
   site_order <- igraph::get.vertex.attribute(graph = graph, name = "siteID", index = igraph::V(graph))
   matrix_distances_order <- matrix_distances[site_order, site_order]
 
-  # exclude self-loops and ignore any distances longer than sdm_max_dist m
+  # exclude self-loops and ignore any distances longer than sdm_max_dist
   matrix_distances_order[cbind(site_order, site_order)] <- 0
   matrix_distances_order[matrix_distances_order > sdm_max_dist] <- 0
 
