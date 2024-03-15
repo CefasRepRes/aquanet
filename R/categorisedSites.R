@@ -146,7 +146,8 @@ categorisedSites <- function(lfm_data, production_data, scenario_name){
   # Save final dataset as csv
   utils::write.csv(all_data, here::here("outputs",
                                          scenario_name,
-                                         "categorisedSites.csv"))
+                                         "categorisedSites.csv"),
+                   row.names = FALSE)
   return(all_data)
 
 }

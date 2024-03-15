@@ -70,13 +70,13 @@ importAndCondense <- function(scenario_name){
     # read in site type vector
     site_type <- data.table::fread(here::here("outputs",
                                             scenario_name,
-                                            "site_types.csv"))
+                                            "categorisedSites.csv"))
     # join to sites_summary
     sites_summary_type <- data.table::merge.data.table(sites_summary,
                                                        site_type,
                                                        all.x = TRUE,
                                                        by.x = "siteID",
-                                                       by.y = "site_code")
+                                                       by.y = "Code")
 
     # rename columns
     data.table::setnames(sites_summary_type, old = "siteID", new = "site_id")
