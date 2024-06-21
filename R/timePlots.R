@@ -2,7 +2,8 @@
 #'
 #' Time plots created displaying cumulative number of infected sites on the y axis and time in days on the x axis.
 #' @param scenario_name (class string) the name of the scenario being loaded.
-#' @param y_max maximum number of infected sites
+#' @param scenario_summary (class string) a file path to the scenario summary produced by cumulativeTimeSummary
+#' @param y_max (class numeric) maximum number of infected sites
 #'
 #' @return outputPlot
 #' @import here
@@ -13,32 +14,33 @@
 #'
 
 timePlot <- function(scenario_name,
+                     scenario_summary,
                      y_max){
-  # define column names used with dplyr syntax
+  # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- . <- NULL
-  # Load results
-  scenario <- data.table(aquanet::loadResultsSummary(scenario_name))
-  class(scenario)
+  t_simplified <- cumulative_no_infected_sites <- sim_no <- x <- y <- . <- scenario <- NULL
 
-  # Round time to the nearest day
-  scenario$t_simplified <- round(scenario$t, digits = 0)
+  # load results
+  scenario_summary <- read.csv(scenario_summary) %>% data.table()
 
-  # Average across days
-  scenario_average <- scenario[, .(mean = mean(cumulative_no_infected_sites)), by = t_simplified]
+  # round time to the nearest day
+  scenario_summary$t_simplified <- round(scenario_summary$t, digits = 0)
+
+  # average across days
+  scenario_average <- scenario_summary[, .(mean = mean(cumulative_no_infected_sites)), by = t_simplified]
   nrow(scenario_average)
-  scenario_count <- scenario[, .N, by = t_simplified,]
-  scenario_summary <- merge(scenario_average,scenario_count, by = 't_simplified', nomatch = 0)
+  scenario_count <- scenario_summary[, .N, by = t_simplified,]
+  scenario_average <- merge(scenario_average, scenario_count, by = 't_simplified', nomatch = 0)
 
   # Smooth the average weighted by count
-  scenario_smooth <- smooth.spline(x = scenario_summary$t_simplified,
-                                   y = scenario_summary$mean,
-                                   w = scenario_summary$n)
+  scenario_smooth <- smooth.spline(x = scenario_average$t_simplified,
+                                   y = scenario_average$mean,
+                                   w = scenario_average$n)
   scenario_smooth <- data.frame(x = scenario_smooth$x,
                                 y = scenario_smooth$y,
                                 sim_no = NA)
   # Plot trajectories
-  outputPlot <- ggplot(scenario, aes(x = t, y = cumulative_no_infected_sites, group = sim_no)) +
+  outputPlot <- ggplot(scenario_summary, aes(x = t, y = cumulative_no_infected_sites, group = sim_no)) +
     geom_line(col = "#0072B2", alpha = 0.08) +
     ylim(0, y_max) +
     xlab("Time (days)") +
@@ -46,7 +48,7 @@ timePlot <- function(scenario_name,
     geom_line(data = scenario_smooth, aes(x = x, y = y)) +
     theme_light()
 
-  #create plot folder to save plot if does not exist
+  # create plot folder to save plot if does not exist
   if (!file.exists(here::here("outputs","plots"))){
     dir.create(here::here("outputs","plots"))
     cat("Directory 'plots' created\n")

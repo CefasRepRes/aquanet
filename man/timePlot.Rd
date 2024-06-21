@@ -4,12 +4,14 @@
 \alias{timePlot}
 \title{timePlots}
 \usage{
-timePlot(scenario_name, y_max)
+timePlot(scenario_name, scenario_summary, y_max)
 }
 \arguments{
 \item{scenario_name}{(class string) the name of the scenario being loaded.}
 
-\item{y_max}{maximum number of infected sites}
+\item{scenario_summary}{(class string) a file path to the scenario summary produced by cumulativeTimeSummary}
+
+\item{y_max}{(class numeric) maximum number of infected sites}
 }
 \value{
 outputPlot
