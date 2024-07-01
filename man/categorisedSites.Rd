@@ -7,7 +7,7 @@
 categorisedSites(production_data, scenario_name)
 }
 \arguments{
-\item{production_data}{(data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).}
+\item{production_data}{(data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInTonnes', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).}
 
 \item{scenario_name}{(character) Name of the scenario being run. Set in the params .yml file.}
 }
@@ -19,6 +19,6 @@ A site can fall into multiple categories.
 \description{
 Sites from fisheries and farms are labelled if they fall into the following site type based on Tonnage/count produced per calander year; Table (Small (0-10T), Medium (>10-100T), Large (>100T)),
 Restocker(Small (0-10T), Medium (>10-100T), Large (>100T)), Ongrower (Small(0-20T), Medium (>20-50T), Large (>50)), Hatchery (Small (0-1000K), Large (>1000K)) and Fishery ((Small (0-10T), Medium (>10-100T), Large (>100T)).
-Using the Production dataset (including movement of dead fish). A csv file is then outputted with the classifications for each site labelled using 'Y' and 'N'
+Using the Production dataset (including movement of dead fish)- which has been converted to change counts to tonnes (excluding hatcheries). A csv file is then outputted with the classifications for each site labelled using 'Y' and 'N'
 based on if they meet the conditions for each site type.
 }

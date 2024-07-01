@@ -2,10 +2,10 @@
 #'
 #' Sites from fisheries and farms are labelled if they fall into the following site type based on Tonnage/count produced per calander year; Table (Small (0-10T), Medium (>10-100T), Large (>100T)),
 #' Restocker(Small (0-10T), Medium (>10-100T), Large (>100T)), Ongrower (Small(0-20T), Medium (>20-50T), Large (>50)), Hatchery (Small (0-1000K), Large (>1000K)) and Fishery ((Small (0-10T), Medium (>10-100T), Large (>100T)).
-#' Using the Production dataset (including movement of dead fish). A csv file is then outputted with the classifications for each site labelled using 'Y' and 'N'
+#' Using the Production dataset (including movement of dead fish)- which has been converted to change counts to tonnes (excluding hatcheries). A csv file is then outputted with the classifications for each site labelled using 'Y' and 'N'
 #' based on if they meet the conditions for each site type.
 #'
-#' @param production_data (data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).
+#' @param production_data (data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInTonnes', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).
 #' @param scenario_name (character) Name of the scenario being run. Set in the params .yml file.
 #'
 #' @return a csv file with site categorised by type; 'Farm/fishery', 'SmallTable', 'MediumTable, 'LargeTable, 'SmallRestocker',
@@ -23,13 +23,13 @@ categorisedSites <- function(production_data, scenario_name){
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   SmallRestocker <- MediumRestocker <- LargeRestocker <- SmallOngrower <- MediumOngrower <- LargeOngrower <- SmallTable <-
     MediumTable <- LargeTable <- SmallHatchery <- SmallHatch <- LargeHatchery <- LargeHatch <- SmallFishery <- MediumFishery <- LargeFishery <- Code <-
-    AuthorisationAndRegistrationStatusCode <- Category <- CodeDescription2 <- CodeDescription <- AmountInUnits <- Year <- Units <- AnnualTonnes <- AnnualCount <- AmountInUnits <- NULL
+    AuthorisationAndRegistrationStatusCode <- Category <- CodeDescription2 <- CodeDescription <- AmountInUnits <- AmountInTonnes <- Year <- Units <- AnnualTonnes <- AnnualCount <- AmountInUnits <- NULL
 
   # Label as 'Table' using production_data data if CodeDescription2 == 'Table'
   Table <- production_data[CodeDescription2 == 'Table']
 
   # Tonnes per year for site
-  tonnes <- Table[, list(AnnualTonnes = sum(AmountInUnits)), by = list(Code, Year)]
+  tonnes <- Table[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
 
   # Merge with original table dataset
   AnnualtonneTable <- merge(Table, tonnes, by = c("Code", "Year"), all.x= TRUE)
@@ -69,7 +69,7 @@ categorisedSites <- function(production_data, scenario_name){
   Restocker <- production_data[CodeDescription2 %in% c('Restocking','Fishing/Sport')]
 
   # Tonnes per year for site
-  tonnes <- Restocker[, list(AnnualTonnes = sum(AmountInUnits)), by = list(Code, Year)]
+  tonnes <- Restocker[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
 
   # Merge with original Restocker dataset
   AnnualtonneRestocker <- merge(Restocker, tonnes, by = c("Code", "Year"), all.x= TRUE)
@@ -90,7 +90,7 @@ categorisedSites <- function(production_data, scenario_name){
   Ongrower <- production_data[CodeDescription2 == 'Ongrowing']
 
   # Tonnes per year for site
-  tonnes <- Ongrower[, list(AnnualTonnes = sum(AmountInUnits)), by = list(Code, Year)]
+  tonnes <- Ongrower[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
 
   # Merge with original Ongrower dataset
   AnnualtonneOngrower <- merge(Ongrower, tonnes, by = c("Code", "Year"), all.x= TRUE)
@@ -114,7 +114,7 @@ categorisedSites <- function(production_data, scenario_name){
   Fishery <- production_data[AuthorisationAndRegistrationStatusCode == 'REGFISH']
 
   # Tonnes per year for site
-  tonnes <- Fishery[, list(AnnualTonnes = sum(AmountInUnits)), by = list(Code, Year)]
+  tonnes <- Fishery[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
 
   # Merge with original Fishery dataset
   AnnualtonneFishery <- merge(Fishery, tonnes, by = c("Code", "Year"), all.x= TRUE)
