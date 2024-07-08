@@ -31,34 +31,39 @@
 #' @importFrom Matrix Matrix
 #' @importFrom methods as
 createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_epsg) {
+
+
   # create data frame of catchment ID and site ID
   df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex.attribute(graph = graph,
-                                                                     name = "CatchmentID",
-                                                                     index = igraph::V(graph)),
+                                                                   name = "CatchmentID",
+                                                                   index = igraph::V(graph)),
                          siteID = igraph::get.vertex.attribute(graph = graph,
-                                                                 name = "siteID",
-                                                                 index = igraph::V(graph)),
+                                                               name = "siteID",
+                                                               index = igraph::V(graph)),
                          Order = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
+
+  #Edit TRUNK_code to have 00 at the start to match catchement format)
+  df_sites$TRUNK_CODE <- sprintf("00%s", df_sites$TRUNK_CODE)
 
   # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
   catchment_layer <- sf::read_sf(dsn = filename_catchment_layer,
-                                 layer = sub(pattern = "(.*)\\..*$",
-                                             replacement = "\\1",
-                                             basename(filename_catchment_layer)))
+                                     layer = sub(pattern = "(.*)\\..*$",
+                                                 replacement = "\\1",
+                                                 basename(filename_catchment_layer)))
 
   # transform to correct crs epsg code (if already correct, does nothing)
   catchment_layer_crs <- sf::st_transform(catchment_layer, crs = crs_epsg)
 
   # extract the data from the catchment layer
   df_catchments <- as.data.frame(catchment_layer_crs)
-  cols <- c("S_ID", "RIVER")
+  cols <- c("ESW_CatID", "ESW_CNAM")
   df_catchments[cols] <- sapply(df_catchments[cols], as.character)
 
   # merge catchment data with site data extracted from graph
   df_catchment_sites <- merge(x = df_sites,
                               y = df_catchments,
                               by.x = "TRUNK_CODE",
-                              by.y = "S_ID",
+                              by.y = "ESW_CatID",
                               sort = FALSE,
                               all.x = TRUE)
 

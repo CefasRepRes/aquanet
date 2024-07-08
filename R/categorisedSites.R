@@ -17,7 +17,7 @@
 #' @importFrom utils write.csv
 #' @export
 
-categorisedSites <- function(production_data, scenario_name){
+categorisedSites <- function(lfm_data, production_data, scenario_name){
 
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -25,14 +25,17 @@ categorisedSites <- function(production_data, scenario_name){
     MediumTable <- LargeTable <- SmallHatchery <- SmallHatch <- LargeHatchery <- LargeHatch <- SmallFishery <- MediumFishery <- LargeFishery <- Code <-
     AuthorisationAndRegistrationStatusCode <- Category <- CodeDescription2 <- CodeDescription <- AmountInUnits <- AmountInTonnes <- Year <- Units <- AnnualTonnes <- AnnualCount <- AmountInUnits <- NULL
 
+  # rename 'Code' col from Production to match lfm_data
+  colnames(production_data)[colnames(production_data) == "Code"] <- "Src_Code"
+
   # Label as 'Table' using production_data data if CodeDescription2 == 'Table'
   Table <- production_data[CodeDescription2 == 'Table']
 
   # Tonnes per year for site
-  tonnes <- Table[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
+  tonnes <- Table[, list(AnnualTonnes = sum(AmountIntonnes)), by = list(Src_Code, Year)]
 
   # Merge with original table dataset
-  AnnualtonneTable <- merge(Table, tonnes, by = c("Code", "Year"), all.x= TRUE)
+  AnnualtonneTable <- merge(Table, tonnes, by = c("Src_Code", "Year"), all.x= TRUE)
 
   # If 0-10 label as small table
   AnnualtonneTable[, SmallTable := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
@@ -48,13 +51,12 @@ categorisedSites <- function(production_data, scenario_name){
 
   # label as Hatchery using production_data if CodeDescription == 'egg' or eggs'
   Hatchery <- production_data[CodeDescription %in% c('EGG', 'EGGS')]
-  head(Hatchery)
 
   # Counts (k) per year for site
-  Count <- Hatchery[, list(AnnualCount = sum(AmountInUnits)), by = list(Code, Year)]
+  Count <- Hatchery[, list(AnnualCount = sum(AmountInUnits)), by = list(Src_Code, Year)]
 
   # Merge with original table dataset
-  AnnualCountHatch <- merge(Hatchery, Count, by = c("Code", "Year"), all.x= TRUE)
+  AnnualCountHatch <- merge(Hatchery, Count, by = c("Src_Code", "Year"), all.x= TRUE)
 
   # If 0-1000K label as small hatchery
   AnnualCountHatch[, SmallHatch := ifelse(AnnualCount >=0 & AnnualCount <=1000, 'Y', 'N')]
@@ -62,78 +64,116 @@ categorisedSites <- function(production_data, scenario_name){
   # If >1000 label as large hatchery
   AnnualCountHatch[, LargeHatch := ifelse(AnnualCount > 1000, 'Y', 'N')]
 
+  # Classify others using LFM data ---------------------------------------------
 
-  # Classify Restocker -----------------------------------------------------------------------------------------------
+  ### Preprocessing
+  lfmCategorised <- lfm_data %>% data.table()
 
-  # Label as 'Restocker' using production_data data if CodeDescription2 == 'Restocking' or 'Fishing/Sport'
-  Restocker <- production_data[CodeDescription2 %in% c('Restocking','Fishing/Sport')]
+  # Convert to date format
+  lfmCategorised$MovementDate <- as.Date(lfmCategorised$MovementDate,
+                                         format = "%d/%m/%Y")
+  # Create a 'Year' column
+  lfmCategorised[, Year := year(MovementDate)]
+
+  # Convert TotalWeight_g to numeric, handle non-numeric conversion with na.rm
+  lfmCategorised[, TotalWeight_g := as.numeric(TotalWeight_g)]
 
   # Tonnes per year for site
-  tonnes <- Restocker[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
+  AnnualTonnes <- lfmCategorised[, list(AnnualTonnes = sum(TotalWeight_g)/1000000), by = list(Src_Code, Year)]
 
-  # Merge with original Restocker dataset
-  AnnualtonneRestocker <- merge(Restocker, tonnes, by = c("Code", "Year"), all.x= TRUE)
+  # Merge with lfm dataset
+  Annualtonnelfm <- merge(lfmCategorised, AnnualTonnes, by = c("Src_Code", "Year"), all.x= TRUE)
+
+  ## Classify source sites =====================================================
+
+  # Restocker -----------------------------------------------------------
+
+  # label as Restocker if 'Sport/Angling', 'Restocking, i.e. Salmonid stock enhancement' is contained within the PurposeOfMovement column
+  Restocker <- Annualtonnelfm[PurposeOfMovement %in% c('Sport/Angling','Restocking, i.e. Salmonid stock enhancement')]
 
   # If 0-10 label as small Restocker
-  AnnualtonneRestocker[, SmallRestocker := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
+  Restocker[, SrcSmallRestocker := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
 
   # If 10-100 label as medium Restocker
-  AnnualtonneRestocker[, MediumRestocker := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
+  Restocker[, SrcMediumRestocker := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
 
   # If 100-1000 label as large Restocker
-  AnnualtonneRestocker[, LargeRestocker := ifelse(AnnualTonnes > 100, 'Y', 'N')]
+  Restocker[, SrcLargeRestocker := ifelse(AnnualTonnes > 100, 'Y', 'N')]
 
+  # Ongrower --------------------------------------------------------------
 
-  # Classify Ongrower -----------------------------------------------------------------------------------------------
-
-  # Label as 'Ongrower' using production_data data if CodeDescription2 == 'Restocking' or 'Fishing/Sport'
-  Ongrower <- production_data[CodeDescription2 == 'Ongrowing']
-
-  # Tonnes per year for site
-  tonnes <- Ongrower[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
-
-  # Merge with original Ongrower dataset
-  AnnualtonneOngrower <- merge(Ongrower, tonnes, by = c("Code", "Year"), all.x= TRUE)
+  # Label as Ongrower if 'Ongrowing' is contained within the PurposeOfMovement column
+  Ongrower <- Annualtonnelfm[PurposeOfMovement =='Ongrowing']
 
   # If 0-10 label as small Ongrower
-  AnnualtonneOngrower[, SmallOngrower := ifelse(AnnualTonnes >=0 & AnnualTonnes <=20, 'Y', 'N')]
+  Ongrower[, SrcSmallOngrower := ifelse(AnnualTonnes >=0 & AnnualTonnes <=20, 'Y', 'N')]
 
   # If 10-100 label as medium Ongrower
-  AnnualtonneOngrower[, MediumOngrower := ifelse(AnnualTonnes > 20 & AnnualTonnes <=50, 'Y', 'N')]
+  Ongrower[, SrcMediumOngrower := ifelse(AnnualTonnes > 20 & AnnualTonnes <=50, 'Y', 'N')]
 
   # If 100-1000 label as large Ongrower
-  AnnualtonneOngrower[, LargeOngrower := ifelse(AnnualTonnes > 50, 'Y', 'N')]
+  Ongrower[, SrcLargeOngrower := ifelse(AnnualTonnes > 50, 'Y', 'N')]
 
+  # Fishery --------------------------------------------------------------
 
-  # Classify Fishery ---------------------------------------------------
-
-  # Label as fishery if AutRegStatus is equal to 'REGFISH'
-  # Fishery
-
-  # Label as 'Fishery' using production_data data if AuthorisationAndRegistrationStatusCode == 'REGFISH'
-  Fishery <- production_data[AuthorisationAndRegistrationStatusCode == 'REGFISH']
-
-  # Tonnes per year for site
-  tonnes <- Fishery[, list(AnnualTonnes = sum(AmountInTonnes)), by = list(Code, Year)]
-
-  # Merge with original Fishery dataset
-  AnnualtonneFishery <- merge(Fishery, tonnes, by = c("Code", "Year"), all.x= TRUE)
+  # Label as Fishery if Scr_AutRegStatus == 'REGFISH'
+  SrcFishery <- Annualtonnelfm[Scr_AutRegStatus == 'REGFISH']
 
   # If 0-10 label as small Fishery
-  AnnualtonneFishery[, SmallFishery := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
+  SrcFishery[, SrcSmallFishery := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
 
   # If 10-100 label as medium Fishery
-  AnnualtonneFishery[, MediumFishery := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
+  SrcFishery[, SrcMediumFishery := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
 
   # If 100-1000 label as large Fishery
-  AnnualtonneFishery[, LargeFishery := ifelse(AnnualTonnes > 100, 'Y', 'N')]
+  SrcFishery[, SrcLargeFishery := ifelse(AnnualTonnes > 100, 'Y', 'N')]
 
 
+  # Classify destination sites ================================================
 
-  # Melt all datasets -----------------------------------------------------------------------------------------------
+  # label as Restocker if 'Sport/Angling', 'Restocking, i.e. Salmonid stock enhancement' is contained within the PurposeOfMovement column
 
-  # Get unique sites
-  sites <- data.frame(Code = c(production_data$Code),
+  # If 0-10 label as small Restocker
+  Restocker[, DestSmallRestocker := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
+
+  # If 10-100 label as medium Restocker
+  Restocker[, DestMediumRestocker := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
+
+  # If 100-1000 label as large Restocker
+  Restocker[, DestLargeRestocker := ifelse(AnnualTonnes > 100, 'Y', 'N')]
+
+  # Ongrower --------------------------------------------------------------
+
+  # Label as Ongrower if 'Ongrowing' is contained within the PurposeOfMovement column
+  Ongrower <- Annualtonnelfm[PurposeOfMovement =='Ongrowing']
+
+  # If 0-10 label as small Ongrower
+  Ongrower[, DestSmallOngrower := ifelse(AnnualTonnes >=0 & AnnualTonnes <=20, 'Y', 'N')]
+
+  # If 10-100 label as medium Ongrower
+  Ongrower[, DestMediumOngrower := ifelse(AnnualTonnes > 20 & AnnualTonnes <=50, 'Y', 'N')]
+
+  # If 100-1000 label as large Ongrower
+  Ongrower[, DestLargeOngrower := ifelse(AnnualTonnes > 50, 'Y', 'N')]
+
+  # Fishery --------------------------------------------------------------
+
+  # Label as Fishery if Scr_AutRegStatus == 'REGFISH'
+  DestFishery <- Annualtonnelfm[Dest_AutRegStatus == 'REGFISH']
+
+  # If 0-10 label as small Fishery
+  DestFishery[, DestSmallFishery := ifelse(AnnualTonnes >=0 & AnnualTonnes <=10, 'Y', 'N')]
+
+  # If 10-100 label as medium Fishery
+  DestFishery[, DestMediumFishery := ifelse(AnnualTonnes > 10 & AnnualTonnes <=100, 'Y', 'N')]
+
+  # If 100-1000 label as large Fishery
+  DestFishery[, DestLargeFishery := ifelse(AnnualTonnes > 100, 'Y', 'N')]
+
+  ## Melt source and destination sites together ==================================
+
+  # get unique sites
+  sites <- data.frame(Code = c(Annualtonnelfm$Src_Code, Annualtonnelfm$Dest_Code, AnnualtonneTable$Src_Code, AnnualCountHatch$Src_Code),
                       SmallHatchery = NA,
                       LargeHatchery = NA,
                       SmallOngrower = NA,
@@ -151,66 +191,108 @@ categorisedSites <- function(production_data, scenario_name){
 
   # loop to get types
   for(i in 1:nrow(sites)){
-    Hatch <- AnnualCountHatch[Code == sites$Code[i]]
-    Ongrow <- AnnualtonneOngrower[Code == sites$Code[i]]
-    Rest <- AnnualtonneRestocker[Code == sites$Code[i]]
-    Table <- AnnualtonneTable[Code == sites$Code[i]]
-    Fish <- AnnualtonneFishery[Code == sites$Code[i]]
+    prodTable <- AnnualtonneTable[Src_Code == sites$Code[i]]
+    prodHatch <- AnnualCountHatch[Src_Code == sites$Code[i]]
+    SrcOngrow <- Ongrower[Src_Code == sites$Code[i]]
+    SrcRest <- Restocker[Src_Code == sites$Code[i]]
+    SrcFish <- SrcFishery[Src_Code == sites$Code[i]]
+    DestOngrow <- Ongrower[Dest_Code == sites$Code[i]]
+    DestRest <- Restocker[Dest_Code == sites$Code[i]]
+    DestFish <- DestFishery[Dest_Code == sites$Code[i]]
+    #Source ----------------------------------------
     #Small Hatchery
-    if("Y" %in% Hatch$SmallHatch){
+    if("Y" %in% prodHatch$SmallHatch){
       sites$SmallHatchery[i] <- "Y"
     }
     # Large Hatchery
-    if("Y" %in% Hatch$LargeHatch){
+    if("Y" %in% prodHatch$LargeHatch){
       sites$LargeHatchery[i] <- "Y"
     }
     # Small Ongrower
-    if("Y" %in% Ongrow$SmallOngrower){
+    if("Y" %in% SrcOngrow$SrcSmallOngrower){
       sites$SmallOngrower[i] <- "Y"
     }
     # Med Ongrower
-    if("Y" %in% Ongrow$MediumOngrower){
+    if("Y" %in% SrcOngrow$SrcMediumOngrower){
       sites$MediumOngrower[i] <- "Y"
     }
     # Large Ongrower
-    if("Y" %in% Ongrow$LargeOngrower){
+    if("Y" %in% SrcOngrow$SrcLargeOngrower){
+      sites$LargeOngrower[i] <- "Y"
+    }
+    # Small Restocker
+    if("Y" %in% SrcRest$SrcSmallRestocker){
+      sites$SmallRestocker[i] <- "Y"
+    }
+    # Medium Restocker
+    if("Y" %in% SrcRest$SrcMediumRestocker){
+      sites$MediumRestocker[i] <- "Y"
+    }
+    # Large Restocker
+    if("Y" %in% SrcRest$SrcLargeRestocker){
+      sites$LargeRestocker[i] <- "Y"
+    }
+    # Small Table
+    if("Y" %in% prodTable$SmallTable){
+      sites$SmallTable[i] <- "Y"
+    }
+    # Medium Table
+    if("Y" %in% prodTable$MediumTable){
+      sites$MediumTable[i] <- "Y"
+    }
+    # Large Table
+    if("Y" %in% prodTable$LargeTable){
+      sites$LargeTable[i] <- "Y"
+    }
+    # Small Fishery
+    if("Y" %in% SrcFish$SrcSmallFishery){
+      sites$SmallFishery[i] <- "Y"
+    }
+    # Medium Fishery
+    if("Y" %in% SrcFish$SrcMediumFishery){
+      sites$MediumFishery[i] <- "Y"
+    }
+    # Large Fishery
+    if("Y" %in% SrcFish$SrcLargeFishery){
+      sites$LargeFishery[i] <- "Y"
+    }
+    #Dest ----------------------------------------
+
+    # Small Ongrower
+    if("Y" %in% DestOngrow$DestSmallOngrower){
+      sites$SmallOngrower[i] <- "Y"
+    }
+    # Med Ongrower
+    if("Y" %in% DestOngrow$DestMediumOngrower){
+      sites$MediumOngrower[i] <- "Y"
+    }
+    # Large Ongrower
+    if("Y" %in% DestOngrow$DestLargeOngrower){
       sites$LargeOngrower[i] <- "Y"
     }
 
     # Small Restocker
-    if("Y" %in% Rest$SmallRestocker){
+    if("Y" %in% DestRest$DestSmallRestocker){
       sites$SmallRestocker[i] <- "Y"
     }
     # Medium Restocker
-    if("Y" %in% Rest$MediumRestocker){
+    if("Y" %in% DestRest$DestMediumRestocker){
       sites$MediumRestocker[i] <- "Y"
     }
     # Large Restocker
-    if("Y" %in% Rest$LargeRestocker){
+    if("Y" %in% DestRest$DestLargeRestocker){
       sites$LargeRestocker[i] <- "Y"
     }
-    # Small Table
-    if("Y" %in% Table$SmallTable){
-      sites$SmallTable[i] <- "Y"
-    }
-    # Medium Table
-    if("Y" %in% Table$MediumTable){
-      sites$MediumTable[i] <- "Y"
-    }
-    # Large Table
-    if("Y" %in% Table$LargeTable){
-      sites$LargeTable[i] <- "Y"
-    }
     # Small Fishery
-    if("Y" %in% Fish$SmallFishery){
+    if("Y" %in% DestFish$SmallFishery){
       sites$SmallFishery[i] <- "Y"
     }
     # Medium Fishery
-    if("Y" %in% Fish$MediumFishery){
+    if("Y" %in% DestFish$MediumFishery){
       sites$MediumFishery[i] <- "Y"
     }
     # Large Fishery
-    if("Y" %in% Fish$LargeFishery){
+    if("Y" %in% DestFish$LargeFishery){
       sites$LargeFishery[i] <- "Y"
     }
   }
@@ -218,18 +300,23 @@ categorisedSites <- function(production_data, scenario_name){
   # Classify as farm or fishery -----------------------------------------------------------------------------------------------
 
   # classify as either farm or fishery using the Scr_AutRegStatus column
-  production_data[, Category := ifelse(grepl("Farm", production_data$AuthorisationAndRegistrationStatusCode, ignore.case = TRUE), "FARM",
-                                       ifelse(AuthorisationAndRegistrationStatusCode == 'REGFISH', 'Fishery', 'Other'))]
+  lfmCategorised[, Scr_Category := ifelse(grepl("FARM", lfmCategorised$Scr_AutRegStatus, ignore.case = TRUE), "Farm",
+                                          ifelse(Scr_AutRegStatus == 'REGFISH', 'Fishery', 'Other'))]
+  lfmCategorised[, Dest_Category := ifelse(grepl("FARM", lfmCategorised$Dest_AutRegStatus, ignore.case = TRUE), "Farm",
+                                           ifelse(Dest_AutRegStatus == 'REGFISH', 'Fishery', 'Other'))]
 
   # melt to long format with source and destination sites
-  Production_category <- data.frame(Code = production_data$Code,
-                                    Category = production_data$Category) %>% unique()
+  lfmCategorised_long <- data.frame(Code = c(lfmCategorised$Src_Code,
+                                             lfmCategorised$Dest_Code),
+                                    Category = c(lfmCategorised$Scr_Category,
+                                                 lfmCategorised$Dest_Category)) %>% unique()
 
   # Clean up final dataset -----------------------------------------------------------------------------------------------
 
   # combine with sites
+  # combine with sites
   all_data <- merge(sites,
-                    Production_category,
+                    lfmCategorised_long,
                     by = "Code",
                     all.x = TRUE)
 
@@ -245,6 +332,5 @@ categorisedSites <- function(production_data, scenario_name){
                                         "categorisedSites.csv"),
                    row.names = FALSE)
   return(all_data)
-
 }
 
