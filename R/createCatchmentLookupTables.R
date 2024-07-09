@@ -34,25 +34,25 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 
 
   # create data frame of catchment ID and site ID
-  df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex.attribute(graph = graph,
+  df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex_attr(graph = graph,
                                                                    name = "CatchmentID",
                                                                    index = igraph::V(graph)),
-                         siteID = igraph::get.vertex.attribute(graph = graph,
+                         siteID = igraph::get.vertex_attr(graph = graph,
                                                                name = "siteID",
                                                                index = igraph::V(graph)),
-                         Order = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
+                         Order = seq(1, length(get.vertex_attr(graph = graph, "siteID"))))
 
   #Edit TRUNK_code to have 00 at the start to match catchement format)
   df_sites$TRUNK_CODE <- sprintf("00%s", df_sites$TRUNK_CODE)
 
   # load GIS catchment layer shapefile to SpatialPolygonsDataFrame
-  catchment_layer <- sf::read_sf(dsn = filename_catchment_layer,
+  catchment_layer_crs <- sf::read_sf(dsn = filename_catchment_layer,
                                      layer = sub(pattern = "(.*)\\..*$",
                                                  replacement = "\\1",
                                                  basename(filename_catchment_layer)))
 
   # transform to correct crs epsg code (if already correct, does nothing)
-  catchment_layer_crs <- sf::st_transform(catchment_layer, crs = crs_epsg)
+  #catchment_layer_crs <- sf::st_transform(catchment_layer, crs = crs_epsg) # commented out as create warnings if in the correct crs
 
   # extract the data from the catchment layer
   df_catchments <- as.data.frame(catchment_layer_crs)
