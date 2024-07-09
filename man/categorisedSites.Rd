@@ -4,9 +4,11 @@
 \alias{categorisedSites}
 \title{categorisedSites}
 \usage{
-categorisedSites(production_data, scenario_name)
+categorisedSites(lfm_data, production_data, scenario_name)
 }
 \arguments{
+\item{lfm_data}{(data.table) Live fish Movement data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'MovementDate', 'Src_code', 'Dest_Code', 'DevCode', 'Scr_AutRegStatus', 'Dest_AutRegStatus', 'PurposeOfMovement', 'TotalWeight_g' included.}
+
 \item{production_data}{(data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInTonnes', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).}
 
 \item{scenario_name}{(character) Name of the scenario being run. Set in the params .yml file.}

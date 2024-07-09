@@ -34,13 +34,13 @@ createCatchmentToSiteMatrix <- function(graph, filename_catchment_layer, crs_eps
 
 
   # create data frame of catchment ID and site ID
-  df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex_attr(graph = graph,
+  df_sites <- data.frame(TRUNK_CODE = igraph::get.vertex.attribute(graph = graph,
                                                                    name = "CatchmentID",
                                                                    index = igraph::V(graph)),
-                         siteID = igraph::get.vertex_attr(graph = graph,
+                         siteID = igraph::get.vertex.attribute(graph = graph,
                                                                name = "siteID",
                                                                index = igraph::V(graph)),
-                         Order = seq(1, length(get.vertex_attr(graph = graph, "siteID"))))
+                         Order = seq(1, length(get.vertex.attribute(graph = graph, "siteID"))))
 
   #Edit TRUNK_code to have 00 at the start to match catchement format)
   df_sites$TRUNK_CODE <- sprintf("00%s", df_sites$TRUNK_CODE)

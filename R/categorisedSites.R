@@ -6,6 +6,7 @@
 #' based on if they meet the conditions for each site type.
 #'
 #' @param production_data (data.table) Production data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'Code', 'AuthorisationAndRegistrationStatusCode', 'CodeDescription', 'CodeDescription2', 'Year', 'AmountInTonnes', 'AmountInUnits', 'Units' included. included. If data is in the units 'K' for Table, Restocker, Ongrower or Fishery, the data has been converted into Tonnes using the average size of species recorder within the year (calculated using the unaggrated LFM data).
+#' @param lfm_data (data.table) Live fish Movement data as data.table (using function 'fread(dataset)') extracted from STARFISH, with columns 'MovementDate', 'Src_code', 'Dest_Code', 'DevCode', 'Scr_AutRegStatus', 'Dest_AutRegStatus', 'PurposeOfMovement', 'TotalWeight_g' included.
 #' @param scenario_name (character) Name of the scenario being run. Set in the params .yml file.
 #'
 #' @return a csv file with site categorised by type; 'Farm/fishery', 'SmallTable', 'MediumTable, 'LargeTable, 'SmallRestocker',
@@ -23,7 +24,11 @@ categorisedSites <- function(lfm_data, production_data, scenario_name){
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   SmallRestocker <- MediumRestocker <- LargeRestocker <- SmallOngrower <- MediumOngrower <- LargeOngrower <- SmallTable <-
     MediumTable <- LargeTable <- SmallHatchery <- SmallHatch <- LargeHatchery <- LargeHatch <- SmallFishery <- MediumFishery <- LargeFishery <- Code <-
-    AuthorisationAndRegistrationStatusCode <- Category <- CodeDescription2 <- CodeDescription <- AmountInUnits <- AmountInTonnes <- Year <- Units <- AnnualTonnes <- AnnualCount <- AmountInUnits <- NULL
+    AuthorisationAndRegistrationStatusCode <- Category <- CodeDescription2 <- CodeDescription <- AmountInUnits <- AmountInTonnes <- Year <- Units <-
+    AnnualTonnes <- AnnualCount <- AmountInUnits <- AmountIntonnes <- Src_Code <- MovementDate <- TotalWeight_g <- PurposeOfMovement <- SrcSmallRestocker <-
+    SrcMediumRestocker <- SrcLargeRestocker <-SrcSmallOngrower <- SrcMediumOngrower <- SrcLargeOngrower <- Scr_AutRegStatus <- SrcSmallFishery <-
+    SrcMediumFishery <- SrcLargeFishery <- DestSmallRestocker <- DestMediumRestocker <- DestLargeRestocker <- DestSmallOngrower <- DestMediumOngrower <-
+    DestLargeOngrower <- DestSmallFishery <- DestMediumFishery <- DestLargeFishery <- Dest_Code <- Scr_Category <- Dest_Category <- Dest_AutRegStatus <- NULL
 
   # rename 'Code' col from Production to match lfm_data
   colnames(production_data)[colnames(production_data) == "Code"] <- "Src_Code"
