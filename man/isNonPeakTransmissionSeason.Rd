@@ -4,7 +4,7 @@
 \alias{isNonPeakTransmissionSeason}
 \title{isNonPeakTransmissionSeason}
 \usage{
-isNonPeakTransmissionSeason(t, period = c("180", "90", "0"))
+isNonPeakTransmissionSeason(t, period = c("180", "90", "28", "0"))
 }
 \arguments{
 \item{t}{(class numeric) time in simulation.}
@@ -32,6 +32,10 @@ non peak transmission season.
 
 If \code{period = "90"} the non peak transmission season lasts for 90 days, meaning there are 4
 seasons within the 360 day simulation year and the fourth season within the year is the non peak
+transmission season.
+
+#' If \code{period = "28"} the non peak transmission season lasts for 28 days, meaning there are 12
+seasons within the 360 day simulation year and the twelth  season within the year is the non peak
 transmission season.
 
 If \code{period == "0"} the non peak transmission season is 0 days long and never occurs.

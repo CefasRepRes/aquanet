@@ -7,11 +7,15 @@
 #' on the value of `period` supplied the equation to determine seasonality is then selected.
 #'
 #' For example if `period = "180` the non peak transmission season lasts for 180 days, meaning there
-#'  are 2 seasons within the 360 day simulation year and the second season within the year is the
+#' are 2 seasons within the 360 day simulation year and the second season within the year is the
 #' non peak transmission season.
 #'
 #' If `period = "90"` the non peak transmission season lasts for 90 days, meaning there are 4
 #' seasons within the 360 day simulation year and the fourth season within the year is the non peak
+#' transmission season.
+#'
+#' #' If `period = "28"` the non peak transmission season lasts for 28 days, meaning there are 12
+#' seasons within the 360 day simulation year and the 12 season within the year is the non peak
 #' transmission season.
 #'
 #' If `period == "0"` the non peak transmission season is 0 days long and never occurs.
@@ -28,7 +32,7 @@
 #'
 #' @export
 isNonPeakTransmissionSeason <- function(t,
-                                        period = c("180", "90", "0")) {
+                                        period = c("180", "90", "28", "0")) {
 
   # check period matches accepted values
   period <- match.arg(arg = period)
@@ -38,6 +42,7 @@ isNonPeakTransmissionSeason <- function(t,
     EXPR = period,
     "180" = ((t %/% 180) %% 2) == 1,
     "90" = ((t %/% 90) %% 4) == 3,
+    "28" = ((t %/% 28) %% 12) == 11,
     "0" = FALSE
   )
 }
