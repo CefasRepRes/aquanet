@@ -15,7 +15,7 @@
 #' transmission season.
 #'
 #' #' If `period = "28"` the non peak transmission season lasts for 28 days, meaning there are 12
-#' seasons within the 360 day simulation year and the 12 season within the year is the non peak
+#' seasons within the 360 day simulation year and the twelth  season within the year is the non peak
 #' transmission season.
 #'
 #' If `period == "0"` the non peak transmission season is 0 days long and never occurs.
