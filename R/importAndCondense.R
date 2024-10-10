@@ -115,7 +115,7 @@ importAndCondense <- function(scenario_name){
 
   # determine whether surveillance stage is followed by culled state and whether it is
   # therefore defined as a cull_state (grouped by sim_no and site_id)
-  import_condense_all[ , cull_state := fifelse((state %in% surveillance_states & # surveillance state
+  import_condense_all[ , cull_state := ifelse((state %in% surveillance_states & # surveillance state
                                                   shift(state, type = "lead") %in% culled_states), # next state is culled
                                                TRUE,
                                                FALSE),
