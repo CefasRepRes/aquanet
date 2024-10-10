@@ -178,7 +178,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   # write as csv
   write.csv(FinalDt, here::here("outputs",
                                 scenario_name,
-                                "SiteCondensedOutput.csv"))
+                                paste0(scenario_name,"SiteCondensedOutput.csv")))
 
   return(FinalDt)
 
