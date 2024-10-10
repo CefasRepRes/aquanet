@@ -47,14 +47,23 @@ importAndCondense <- function(scenario_name){
 
     # import the parquet file
     file <- arrow::read_parquet(here::here("outputs",
-                            scenario_name,
-                            "full_results",
-                            x))
+                                           scenario_name,
+                                           "full_results",
+                                           x))
 
     # convert to data.table for speed (and ensure tdiff is numeric)
     sims <- data.table::data.table(file)
     sims$tdiff <- as.numeric(sims$tdiff)
     sims$siteID <- sims$siteID
+
+    # epidemic duration
+    valid_results <- sims[simNo != 0]
+    no_days <- valid_results[, c("simNo", "t")][ # select sim_no and t
+      , by = simNo, .(max_t = max(t))][ # get maximum time per sim_no
+        , c("simNo", "max_t")] # select sim_no and max_t
+
+    # remove duplicates
+    no_days <- unique(no_days)
 
     # create a record ID for each row (grouped by simNo and siteID)
     sims[ , recordID := seq_len(.N), by = .(simNo, siteID)]
@@ -62,21 +71,24 @@ importAndCondense <- function(scenario_name){
     # add group columns to get lengths of consecutive states (grouped by simNo and siteID)
     sims[ , group := data.table::rleid(state), by = .(simNo, siteID)]
 
+
     # add tdiff for each consecutive time point where the state is the same
     sites_summary <- sims[ ,
-                     .(timeID = min(timeID), tdiff = sum(tdiff), t = min(t), trans_type = utils::head(trans_type, 1)),
-                     . (modelID, siteID, state, group, simNo)]
+                           .(timeID = min(timeID), tdiff = sum(tdiff), t = min(t), trans_type = utils::head(trans_type, 1)),
+                           . (modelID, siteID, state, group, simNo)]
 
     # read in site type vector
     site_type <- data.table::fread(here::here("outputs",
-                                            scenario_name,
-                                            "categorisedSites.csv"))
+                                              scenario_name,
+                                              "categorisedSites.csv"))
     # join to sites_summary
     sites_summary_type <- data.table::merge.data.table(sites_summary,
                                                        site_type,
                                                        all.x = TRUE,
                                                        by.x = "siteID",
                                                        by.y = "Code")
+    #add to sims
+    sites_summary_type <- merge(sites_summary_type, no_days, by= "simNo")
 
     # rename columns
     data.table::setnames(sites_summary_type, old = "siteID", new = "site_id")
@@ -105,8 +117,8 @@ importAndCondense <- function(scenario_name){
   # therefore defined as a cull_state (grouped by sim_no and site_id)
   import_condense_all[ , cull_state := fifelse((state %in% surveillance_states & # surveillance state
                                                   shift(state, type = "lead") %in% culled_states), # next state is culled
-                                                TRUE,
-                                                FALSE),
+                                               TRUE,
+                                               FALSE),
                        by = .(sim_no, site_id)]
 
   # define output directory
@@ -115,14 +127,15 @@ importAndCondense <- function(scenario_name){
   # if economics directory doesn't exist, create it
   if (!dir.exists(economics_dir)) {
     dir.create(economics_dir)
-    }
+  }
 
   # save as parquet file
   arrow::write_parquet(import_condense_all,
-                       sink = here::here(economics_dir,
-                                         paste0(scenario_name, "-details-condensed.parquet")))
+                       sink = here::here(economics_dir,paste0(scenario_name, "-details-condensed.parquet")))
+
 
   # return condensed files
   return(import_condense_all)
+
 
 }
