@@ -21,19 +21,19 @@
 #' simulation states for each site and the proportion for each tranmission route per site.
 #' This contains the following information:
 #' 1. `site_id` (integer) the site identification number.
-#' 2. `t_infected_S1` (numeric) total time (days) in which the site has been in state 1
+#' 2. `totalDays_S1` (numeric) total time (days) in which the site has been in state 1
 #'    (infected) through all of the simulations
 #' 3. `proportion_state1` (numeric) proportion of time (days) in which the site has been
 #'     in state 1 (infected) throughout the course of all the simulations
-#' 4. `t_infected_S3` (numeric) total time (days) in which the site has been in state 3
+#' 4. `totalDays_S3` (numeric) total time (days) in which the site has been in state 3
 #'    (Infected with secondary controls) through all of the simulations
 #' 5. `proportion_state3` (numeric) proportion of time (days) in which the site has been
 #'     in state 3 (Infected with secondary controls) throughout the course of all the simulations
-#' 6. `t_infected_S0` (numeric) total time (days) in which the site has been in state 0 (uninfected)
+#' 6. `totalDays_S0` (numeric) total time (days) in which the site has been in state 0 (uninfected)
 #'     through all of the simulations
 #' 7. `proportion_state0` (numeric) proportion of time (days) in which the site has been in state 0
 #'     (Uninfected) throughout the course of all the simulations
-#' 8. `t_infected_S2` (numeric) total time (days) in which the site has been in state 2 (Uninfected
+#' 8. `totalDays_S2` (numeric) total time (days) in which the site has been in state 2 (Uninfected
 #'     with secondary controls) through all of the simulations
 #' 9. `proportion_state2` (numeric) proportion of time (days) in which the site has been in state 2
 #'     (Uninfected with secondary controls) throughout the course of all the simulations
@@ -59,10 +59,9 @@ aggregateScenerioOutputs <- function(scenario_name){
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   scenario_name <- max_t <- sim_no <- sim_sum_time <- state <- t_total <- NULL
-  site_id <- proportion_state1 <- t_infected_S1 <-proportion_state1 <- t_infected_S0 <- NULL
-  proportion_state0 <- t_infected_S2 <- proportion_state2 <- t_infected_S3 <- . <- NULL
-  proportion_state3 <- trans_type <- siteTotalTransmissions <- LFM <- RB <- SDM <- NULL
-  DIM <-
+  site_id <- proportion_state1 <- totalDays_S1 <-proportion_state1 <- totalDays_S0 <- NULL
+  proportion_state0 <- totalDays_S2 <- proportion_state2 <- totalDays_S3 <- . <- NULL
+  proportion_state3 <- trans_type <- siteTotalTransmissions <- LFM <- RB <- SDM <- DIM <- NULL
 
   # import the parquet file
   condensed_output <- arrow::read_parquet(here::here("outputs",
@@ -92,10 +91,10 @@ aggregateScenerioOutputs <- function(scenario_name){
   state1<- dt[substr(as.character(state), 1, 1) %in% c("1")]
 
   # group by sites, sum t_total (sum of time spend in state)
-  state1_sum <- state1[, .(t_infected_S1 = sum(t_total)), by = site_id]
+  state1_sum <- state1[, .(totalDays_S1 = sum(t_total)), by = site_id]
 
   # Calculate proportion of time spent infected per site
-  proportion_inf1 <- state1_sum[, proportion_state1 := t_infected_S1/overall_scenerio_time]
+  proportion_inf1 <- state1_sum[, proportion_state1 := totalDays_S1/overall_scenerio_time]
 
   #--------------------------------------------------------------------------
   # Proportion in state 3 (infected with secondary controls)
@@ -104,10 +103,10 @@ aggregateScenerioOutputs <- function(scenario_name){
   state3_dt<- dt[substr(as.character(state), 1, 1) %in% c("3")]
 
   # group by sites, sum t_total (sum of time spend in state)
-  state3_sum <- state3_dt[, .(t_infected_S3 = sum(t_total)), by = site_id]
+  state3_sum <- state3_dt[, .(totalDays_S3 = sum(t_total)), by = site_id]
 
   # Calculate proportion of time spent infected per site
-  proportion_inf3 <- state3_sum[, proportion_state3 := t_infected_S3/overall_scenerio_time]
+  proportion_inf3 <- state3_sum[, proportion_state3 := totalDays_S3/overall_scenerio_time]
 
   #--------------------------------------------------------------------------
   # Proportion in state 0 (Uninfected)
@@ -116,10 +115,10 @@ aggregateScenerioOutputs <- function(scenario_name){
   state0_dt<- dt[substr(as.character(state), 1, 1) %in% c("0")]
 
   # group by sites, sum t_total (sum of time spend in state)
-  state0_sum <- state0_dt[, .(t_infected_S0 = sum(t_total)), by = site_id]
+  state0_sum <- state0_dt[, .(totalDays_S0 = sum(t_total)), by = site_id]
 
   # Calculate proportion of time spent infected per site
-  proportion_inf0 <- state0_sum[, proportion_state0 := t_infected_S0/overall_scenerio_time]
+  proportion_inf0 <- state0_sum[, proportion_state0 := totalDays_S0/overall_scenerio_time]
 
   #--------------------------------------------------------------------------
   # Proportion in state 2 (Uninfected with secondary controls)
@@ -128,10 +127,10 @@ aggregateScenerioOutputs <- function(scenario_name){
   state2_dt<- dt[substr(as.character(state), 1, 1) %in% c("2")]
 
   # group by sites, sum t_total (sum of time spend in state)
-  state2_sum <- state2_dt[, .(t_infected_S2 = sum(t_total)), by = site_id]
+  state2_sum <- state2_dt[, .(totalDays_S2 = sum(t_total)), by = site_id]
 
   # Calculate proportion of time spent infected per site
-  proportion_inf2 <- state2_sum[, proportion_state2 := t_infected_S2/overall_scenerio_time]
+  proportion_inf2 <- state2_sum[, proportion_state2 := totalDays_S2/overall_scenerio_time]
 
   ###################################################################
   # Transition proportions

@@ -23,19 +23,19 @@ simulation states for each site and the proportion for each tranmission route pe
 This contains the following information:
 \enumerate{
 \item \code{site_id} (integer) the site identification number.
-\item \code{t_infected_S1} (numeric) total time (days) in which the site has been in state 1
+\item \code{totalDays_S1} (numeric) total time (days) in which the site has been in state 1
 (infected) through all of the simulations
 \item \code{proportion_state1} (numeric) proportion of time (days) in which the site has been
 in state 1 (infected) throughout the course of all the simulations
-\item \code{t_infected_S3} (numeric) total time (days) in which the site has been in state 3
+\item \code{totalDays_S3} (numeric) total time (days) in which the site has been in state 3
 (Infected with secondary controls) through all of the simulations
 \item \code{proportion_state3} (numeric) proportion of time (days) in which the site has been
 in state 3 (Infected with secondary controls) throughout the course of all the simulations
-\item \code{t_infected_S0} (numeric) total time (days) in which the site has been in state 0 (uninfected)
+\item \code{totalDays_S0} (numeric) total time (days) in which the site has been in state 0 (uninfected)
 through all of the simulations
 \item \code{proportion_state0} (numeric) proportion of time (days) in which the site has been in state 0
 (Uninfected) throughout the course of all the simulations
-\item \code{t_infected_S2} (numeric) total time (days) in which the site has been in state 2 (Uninfected
+\item \code{totalDays_S2} (numeric) total time (days) in which the site has been in state 2 (Uninfected
 with secondary controls) through all of the simulations
 \item \code{proportion_state2} (numeric) proportion of time (days) in which the site has been in state 2
 (Uninfected with secondary controls) throughout the course of all the simulations
