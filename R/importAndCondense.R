@@ -56,14 +56,7 @@ importAndCondense <- function(scenario_name){
     sims$tdiff <- as.numeric(sims$tdiff)
     sims$siteID <- sims$siteID
 
-    # epidemic duration
-    valid_results <- sims[simNo != 0]
-    no_days <- valid_results[, c("simNo", "t")][ # select sim_no and t
-      , by = simNo, .(max_t = max(t))][ # get maximum time per sim_no
-        , c("simNo", "max_t")] # select sim_no and max_t
 
-    # remove duplicates
-    no_days <- unique(no_days)
 
     # create a record ID for each row (grouped by simNo and siteID)
     sims[ , recordID := seq_len(.N), by = .(simNo, siteID)]
@@ -87,8 +80,6 @@ importAndCondense <- function(scenario_name){
                                                        all.x = TRUE,
                                                        by.x = "siteID",
                                                        by.y = "Code")
-    #add to sims
-    sites_summary_type <- merge(sites_summary_type, no_days, by= "simNo")
 
     # rename columns
     data.table::setnames(sites_summary_type, old = "siteID", new = "site_id")

@@ -58,7 +58,7 @@ aggregateScenerioOutputs <- function(scenario_name){
 
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  scenario_name <- max_t <- sim_no <- sim_sum_time <- state <- t_total <- NULL
+  max_t <- sim_no <- sim_sum_time <- state <- t_total <- NULL
   site_id <- proportion_state1 <- totalDays_S1 <-proportion_state1 <- totalDays_S0 <- NULL
   proportion_state0 <- totalDays_S2 <- proportion_state2 <- totalDays_S3 <- . <- NULL
   proportion_state3 <- trans_type <- siteTotalTransmissions <- LFM <- RB <- SDM <- DIM <- NULL
@@ -71,12 +71,18 @@ aggregateScenerioOutputs <- function(scenario_name){
   # convert to data.table
   dt <- data.table::data.table(condensed_output)
 
+  # epidemic duration
+  full_results <- aquanet::loadResultsSummary(scenario_name)
+  full_results <- data.table(full_results)
+  data.table::setnames(full_results, old = "sim_no", new = "simNo")
+  valid_results <- full_results[simNo != 0]
+  no_days <- valid_results[, c("simNo", "t")][ # select simNo and t
+    , by = simNo, .(max_t = max(t))][ # get maximum time per simNo
+      , c("simNo", "max_t")] # select simNo and max_t
+
   # sum max_t for each simulation (for calculating proportions)
-  # sum per simulation
-  sum_time <- dt[, .(sim_sum_time = sum(unique(max_t))), by = sim_no]
-  summary(sum_time)
   #overall sum
-  overall_scenerio_time <- sum_time[, sum(sim_sum_time)]
+  overall_scenerio_time <- no_days[, sum(max_t)]
 
   # If one digit= uninfected
   dt[, state := ifelse(nchar(state) == 1, sprintf("%02d", as.numeric(state)), state)]
