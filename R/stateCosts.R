@@ -62,7 +62,7 @@ stateCosts <- function(data,
   state_summary_long <- data.table::melt(state_summary,
                                          id.vars = c("site_id", "modelID", "state", "group",
                                                      "sim_no", "timeID", "t_total", "t", "trans_type",
-                                                     "farm_vector", "row_sums", "cull_state"),
+                                                     "farm_vector", "cull_state"),
                                          measure.vars = c(site_types))
 
   # multiply site_type 'value' by 't_total' to determine time spent for each site type
@@ -95,5 +95,6 @@ stateCosts <- function(data,
   cost_output <- list("full_state_costs" = state_costs,
                       "summary_state_costs" = sim_cost_summary)
   return(cost_output)
+
 
 }
