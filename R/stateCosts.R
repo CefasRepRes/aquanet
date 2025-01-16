@@ -24,10 +24,6 @@
 #' @import data.table
 #'
 
-data = time_summary_farms
-state = "catchment_control"
-site_types = site_types
-
 stateCosts <- function(data,
                        state,
                        site_types){
@@ -35,7 +31,7 @@ stateCosts <- function(data,
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   value <- t_total <- time_in_state <- total_duration <- duration_cost <- NULL
-  cull_state <- sim_no <- stage <- . <- NULL
+  cull_state <- sim_no <- stage <- . <- number_of_months <- NULL
 
   # filter data depending on input state
   if(state == "fallow"){
@@ -127,4 +123,3 @@ stateCosts <- function(data,
 
 }
 
-}
