@@ -122,6 +122,12 @@
 #' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
 #' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
 #'
+#' @param stochastic_run (class logical) vector of length 1 indicating whether
+#' to randomly seed the starting farm (TRUE) or manually select it.
+#'
+#' @param seed_farm_choice (class character) character vector of length 1 containing
+#' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
+#'
 #' @export
 #'
 #' @importFrom methods new
@@ -151,7 +157,9 @@ simulationCode <- function(runs,
                            proportion_cullable,
                            days_before_catchment_restock,
                            river_distances_df,
-                           site_details) {
+                           site_details,
+                           stochastic_run,
+                           seed_farm_choice) {
 
   ## extract information from input parameters ----
 
@@ -268,7 +276,7 @@ simulationCode <- function(runs,
     culling_vector <- ifelse(culling_vector <= proportion_cullable, 1, 0)
     }
 
-    ## randomly select initial site to seed infection (Note: always a farm) ----
+    ## randomly or manually select initial site to seed infection (Note: always a farm) ----
 
     # reset for loop input and farm selection vector
     d <- 0
@@ -283,8 +291,19 @@ simulationCode <- function(runs,
       }
     }
 
-    # select farm to seed from list of start sites
-    seed_farm <- sample(farm_select, n_initial_infections)
+    if (stochastic_run) {
+      # select farm to seed randomly from list of start sites
+      seed_farm <- sample(farm_select, n_initial_infections)
+    } else {
+      # use manual seed farm selection
+      seed_farm_choice_ID <-  site_details$modelID[
+        which(site_details$siteID == seed_farm_choice)]
+      if (!(seed_farm_choice_ID %in% farm_select)) {
+        stop('seed_farm_choice is not a farm')
+      } else {
+        seed_farm <- seed_farm_choice_ID
+      }
+    }
 
     # mark this site as infected
     state_vector[seed_farm] <- 1
