@@ -98,11 +98,11 @@
 #'
 #' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
 #' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
-#' 
-#' @param stochastic_run (class logical) vector of length 1 indicating whether 
+#'
+#' @param stochastic_run (class logical) vector of length 1 indicating whether
 #' to randomly seed the starting farm (TRUE) or manually select it.
-#' 
-#' @param seed_farm_choice (class character) character vector of length 1 containing 
+#'
+#' @param seed_farm_choice (class character) character vector of length 1 containing
 #' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
 #'
 #' @return (class list) of length 2 containing:
@@ -172,10 +172,16 @@ runSimulations <- function(n_cores,
   n_overall_interactions <- n_sims_per_job * n_cores
 
   # print number of cores/jobs, simulations per jobs and number of interactions
-  print(c(n_cores, n_sims_per_job, n_overall_interactions))
+  cat("Simulation setup:\n",
+      "  Number of cores: ", n_cores, "\n",
+      "  Simulations per job: ", n_sims_per_job, "\n",
+      "  Total interactions: ", n_overall_interactions, "\n\n")
 
   # set seed
   set.seed(seed_num)
+
+  # announce start of simulations
+  cat("########## STARTING SIMULATIONS IN PARALLEL ##########\n\n")
 
   # run simulation in parallel
   allruns <-
@@ -210,6 +216,9 @@ runSimulations <- function(n_cores,
 
   # shut down set of copies of R running in parallel communicating over sockets
   parallel::stopCluster(cl = cluster)
+
+  # announce END of simulations
+  cat("########## SIMULATIONS FINISHED ##########\n\n")
 
   return(list(n_cores, allruns))
 }
