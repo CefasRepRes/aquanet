@@ -30,7 +30,9 @@ runSimulations(
   proportion_cullable,
   days_before_catchment_restock,
   river_distances_df,
-  site_details
+  site_details,
+  stochastic_run,
+  seed_farm_choice
 )
 }
 \arguments{
@@ -119,6 +121,12 @@ along the river network. Created using the GIS tool.}
 
 \item{site_details}{(class data frame) a data frame of site and model IDs, locations and whether
 or not the site is tidal. Created using \code{aquanet::mergeGraphMetaWithCatchmentLocation}.}
+
+\item{stochastic_run}{(class logical) vector of length 1 indicating whether
+to randomly seed the starting farm (TRUE) or manually select it.}
+
+\item{seed_farm_choice}{(class character) character vector of length 1 containing
+the manual selection for seed farm. Will be used if \code{stochastic_run} is FALSE.}
 }
 \value{
 (class list) of length 2 containing:
