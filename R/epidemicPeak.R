@@ -30,7 +30,7 @@
 #' @importFrom stats median
 #' @importFrom stats sd
 #'
-epidemicPeak <- function(results) {
+epidemicPeak <- function(results, summary = F) {
 
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -53,6 +53,8 @@ epidemicPeak <- function(results) {
 
   no_inf <- unique(no_inf)
 
+  if(summary == TRUE){
+
   # statistics ----
   mean_infections <- mean(no_inf[ , max_inf])
   sd_infections <- sd(no_inf[ , max_inf])
@@ -74,5 +76,9 @@ epidemicPeak <- function(results) {
                                              q05_infections = q5_infections,
                                              q95_infections = q95_infections,
                                              no_iter = iterations)
+
+    } else {
+    scenario_results <- no_inf
+  }
   return(scenario_results)
 }

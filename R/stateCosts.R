@@ -23,15 +23,16 @@
 #'
 #' @import data.table
 #'
+# define column names used with data.table syntax
+# NOTE: this satisfies "no visible binding for global variable" devtools::check()
+value <- value_2 <-  t_total <- time_in_state <- total_duration <- duration_cost <- <-farm_cost_per_unit <- NULL
+cull_state <- sim_no <- stage <- . <- number_of_months <- value_t <- max_no_manage_cost <-site_id <- NULL
+
 
 stateCosts <- function(data,
                        state,
                        site_types){
 
-  # define column names used with data.table syntax
-  # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  value <- t_total <- time_in_state <- total_duration <- duration_cost <- NULL
-  cull_state <- sim_no <- stage <- . <- number_of_months <- NULL
 
   # filter data depending on input state
   if(state == "fallow"){
@@ -39,7 +40,7 @@ stateCosts <- function(data,
     state_summary <- data[cull_state == TRUE | state %in% state_codes]
 
   } else if(state == "no_manage"){
-    state_codes <- c(10, 30)
+    state_codes <- 10
     state_summary <- data[state %in% state_codes]
 
   } else if(state == "contact_trace"){
@@ -67,18 +68,49 @@ stateCosts <- function(data,
                                          measure.vars = c(site_types))
 
   # multiply site_type 'value' by 't_total' to determine time spent for each site type
-  state_summary_long[ , value := value * t_total, ]
+  state_summary_long[ , value_t := value * t_total, ]
 
   # rename columns to something more readable
   data.table::setnames(state_summary_long, old = "variable", new = "site_types")
-  data.table::setnames(state_summary_long, old = "value", new = "time_in_state")
+  data.table::setnames(state_summary_long, old = "value_t", new = "time_in_state")
 
   # sum the 'time_in_state' by each of the 'site_types' (group by sim_no)
   aggregated <- state_summary_long[ , .(total_duration =  sum(time_in_state)), by = .(sim_no, site_types)]
 
 
   ######################################################################
-  if (state == "catchment_control") {
+  # In your economic code only use 'no_manage' if no controls scenario
+  if (state == "no_manage") {
+
+    # Apply this cost once per outbreak, only once per farm (pick max cost per farm type it falls under)
+    # Only select if value =1 (aka if the category is true) and cull state is TRUE
+    state_summary_long <- state_summary_long[value == 1]
+
+    # merge with no controls cost
+    no_controls_costs <- unit_cost[stage == 'no_manage']
+    state_summary_long_costs <- merge(state_summary_long, no_controls_costs, by.x='site_types', by.y = 'site_type')
+
+    # only select maximum cost for site (based on site types which is true)
+    state_summary_long_costs[, max_no_manage_cost := max(farm_cost_per_unit, na.rm = TRUE), by = site_id]
+
+    # Only keep 1 entry for if same site_id, timeID and sim number
+    state_summary_long_costs_unique <- state_summary_long_costs[, .SD[1], by = .(site_id, sim_no, timeID)]
+
+    # calculate the total cull costs costs per sim_no
+    #farm_cull_costs <- farm_data_long_cull_costs[, cull_cost_farm_by_sim:= sum(max_cull_cost_farm, na.rm = TRUE), by = sim_no]
+
+    sim_cost_summary <- state_summary_long_costs_unique[, .(total_cost = sum(max_no_manage_cost, na.rm = TRUE)),
+                                                          by = .(sim_no)]
+    # rename columns to incorporate state
+    data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
+
+    # output list of results and return
+    cost_output <- list("summary_state_costs" = sim_cost_summary)
+
+
+
+  ######################################################################
+  } else if (state == "catchment_control") {
     # Calculate number of months in state
     aggregated[, number_of_months := total_duration / 30]
 
@@ -98,6 +130,13 @@ stateCosts <- function(data,
     # aggregate to get cost per simulation (across all site_types)
     sim_cost_summary <- state_costs[ , .(total_cost = sum(duration_cost, na.rm = T)) , by = .(sim_no)]
     data.table::setnames(state_costs, old = "number_of_months", new = paste0(state, "_number_of_months"))
+    data.table::setnames(state_costs, old = "duration_cost", new = paste0(state, "_total_duration_cost"))
+    # rename columns to incorporate state
+    data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
+
+    # output list of results and return
+    cost_output <- list("full_state_costs" = state_costs,
+                        "summary_state_costs" = sim_cost_summary)
 
   } else {
     # multiply 'total_duration' by corresponding site_type daily costs to get state_costs
@@ -110,15 +149,15 @@ stateCosts <- function(data,
     # aggregate to get cost per simulation (across all site_types)
     sim_cost_summary <- state_costs[ , .(total_cost = sum(duration_cost, na.rm = T)) , by = .(sim_no)]
     data.table::setnames(state_costs, old = "total_duration", new = paste0(state, "_total_duration"))
+    data.table::setnames(state_costs, old = "duration_cost", new = paste0(state, "_total_duration_cost"))
+    # rename columns to incorporate state
+    data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
+
+    # output list of results and return
+    cost_output <- list("full_state_costs" = state_costs,
+                        "summary_state_costs" = sim_cost_summary)
   }
 
-  # rename columns to incorporate state
-  data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
-  data.table::setnames(state_costs, old = "duration_cost", new = paste0(state, "_total_duration_cost"))
-
-  # output list of results and return
-  cost_output <- list("full_state_costs" = state_costs,
-                      "summary_state_costs" = sim_cost_summary)
   return(cost_output)
 
 }

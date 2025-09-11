@@ -4,7 +4,7 @@
 \alias{epidemicPeak}
 \title{epidemicPeak}
 \usage{
-epidemicPeak(results)
+epidemicPeak(results, summary = F)
 }
 \arguments{
 \item{results}{(class data.frame) A data frame created from \code{aquanet::loadResultsSummary()} that

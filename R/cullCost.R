@@ -21,7 +21,7 @@
 #' @import data.table
 
 cullCost <- function(farm_data,
-                     non_farm_data,
+                     #non_farm_data,
                      cull_costs,
                      site_types) {
 
@@ -32,7 +32,7 @@ cullCost <- function(farm_data,
 
   # convert input data frames to data tables
   farm_data <- data.table::data.table(farm_data)
-  non_farm_data <- data.table::data.table(non_farm_data)
+  #non_farm_data <- data.table::data.table(non_farm_data)
   cull_cost <- data.table::data.table(cull_cost)
 
   # calculate farm cull costs ----
@@ -66,14 +66,18 @@ cullCost <- function(farm_data,
   # only select maximum cull cost for site (based on site types which is true)- Farm
   farm_data_long_cull_costs[, max_cull_cost_farm := max(cull_cost_farm, na.rm = TRUE), by = site_id]
 
+
   # only select maximum cull cost for site (based on site types which is true)- CA
   farm_data_long_cull_costs[, max_cull_cost_ca := max(cull_cost_ca, na.rm = TRUE), by = site_id]
+
+  # Only keep 1 entry for if same site_id, timeID and sim number
+  farm_data_long_cull_costs_unique <- farm_data_long_cull_costs[, .SD[1], by = .(site_id, sim_no, timeID)]
 
 
   # calculate the total cull costs costs per sim_no
   #farm_cull_costs <- farm_data_long_cull_costs[, cull_cost_farm_by_sim:= sum(max_cull_cost_farm, na.rm = TRUE), by = sim_no]
 
-  full_cull_cost_sim_farm <- farm_data_long_cull_costs[ ,
+  full_cull_cost_sim_farm <- farm_data_long_cull_costs_unique[ ,
                                               .(cull_cost_ca_farms = sum(max_cull_cost_ca, na.rm = TRUE),
                                                 cull_cost_farms = sum(max_cull_cost_farm, na.rm = TRUE)),
                                               by = .(sim_no)]
