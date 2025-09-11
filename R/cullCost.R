@@ -27,7 +27,7 @@ cullCost <- function(farm_data,
 
   # define column names used with data.table syntax
   # NOTE: this satisfies "no visible binding for global variable" devtools::check()
-  value <- number_culled <- site_type <- cull_cost_ca <- cull_state <- NULL
+  value <- number_culled <- site_type <- cull_cost_ca <- timeID <- cull_state <- NULL
   cull_cost_site <- sim_no <- max_cull_cost_farm <- cull_cost_farm <- site_id <- max_cull_cost_ca <- . <- NULL
 
   # convert input data frames to data tables
