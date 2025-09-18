@@ -21,6 +21,9 @@ duration of the previous timestep).
 \item \code{cumulative_no_infected_sites} the cumulative number of infected sites in the simulation.
 Plus the number of sites in each state (1:39) plus redundancy (40:42).
 }}
+
+\item{summary}{(class logical) A logical to return either a summary (T) or the peak number of infections
+per scenario (F). F is the default.}
 }
 \value{
 (class data.table) summary of epidemic infections (measured in number of sites infected):

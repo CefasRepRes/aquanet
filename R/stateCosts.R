@@ -24,14 +24,14 @@
 #' @import data.table
 #'
 # define column names used with data.table syntax
-# NOTE: this satisfies "no visible binding for global variable" devtools::check()
-value <- value_2 <-  t_total <- timeID <- time_in_state <- total_duration <- duration_cost <- farm_cost_per_unit <- NULL
-cull_state <- sim_no <- stage <- . <- number_of_months <- value_t <- max_no_manage_cost <-site_id <- NULL
-
 
 stateCosts <- function(data,
                        state,
                        site_types){
+
+  # NOTE: this satisfies "no visible binding for global variable" devtools::check()
+  value <- value_2 <-  t_total <- timeID <- time_in_state <- total_duration <- duration_cost <- farm_cost_per_unit <- NULL
+  cull_state <- sim_no <- stage <- . <- number_of_months <- value_t <- max_no_manage_cost <-site_id <- NULL
 
 
   # filter data depending on input state

@@ -6,9 +6,6 @@
 #' @param farm_data (class data.frame) the `time_summary` data frame created from the
 #' `aquanet::importAndCondense()` function, for farms only.
 #'
-#' @param non_farm_data (class data.frame) the `time_summary` data frame created from the
-#' `aquanet::importAndCondense` function, for non-farms (fisheries) only.
-#'
 #' @param cull_costs (class data.frame) of the costs to both the site and the competent authority
 #' for each site type.
 #'

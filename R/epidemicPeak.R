@@ -15,6 +15,9 @@
 #' 8. `cumulative_no_infected_sites` the cumulative number of infected sites in the simulation.
 #' Plus the number of sites in each state (1:39) plus redundancy (40:42).
 #'
+#' @param summary (class logical) A logical to return either a summary (T) or the peak number of infections
+#' per scenario (F). F is the default.
+#'
 #' @return (class data.table) summary of epidemic infections (measured in number of sites infected):
 #' 1. `mean_infections` the mean epidemic infections for the scenario.
 #' 2. `sd_infections` the standard deviation of the epidemic infections for the scenario.
