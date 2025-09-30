@@ -43,9 +43,6 @@ stateCosts <- function(data,
     state_codes <- 10
     state_summary <- data[state %in% state_codes]
 
-  } else if(state == "contact_trace"){
-    state_codes <- c(1, 7, 11, 17, 21, 27, 31, 37)
-    state_summary <- data[state %in% state_codes]
 
   } else if(state == "catchment_control"){
     state_codes <- c(20, 21, 26, 27)
@@ -80,27 +77,18 @@ stateCosts <- function(data,
 
   ######################################################################
   # In your economic code only use 'no_manage' if no controls scenario
+  # one cost applied for simulation every time site is infected. Cost for different sides of business applied e.g. if
+  #site is a small hatchery and small ongrower both 'no mange' costs are applied
+
   if (state == "no_manage") {
 
-    # Apply this cost once per outbreak, only once per farm (pick max cost per farm type it falls under)
-    # Only select if value =1 (aka if the category is true) and cull state is TRUE
     state_summary_long <- state_summary_long[value == 1]
-
-    # merge with no controls cost
     no_controls_costs <- unit_cost[stage == 'no_manage']
     state_summary_long_costs <- merge(state_summary_long, no_controls_costs, by.x='site_types', by.y = 'site_type')
 
-    # only select maximum cost for site (based on site types which is true)
-    state_summary_long_costs[, max_no_manage_cost := max(farm_cost_per_unit, na.rm = TRUE), by = site_id]
+    sim_cost_summary <- state_summary_long_costs[, .(total_cost = sum(farm_cost_per_unit, na.rm = TRUE)),
+                                                 by = .(sim_no)]
 
-    # Only keep 1 entry for if same site_id, timeID and sim number
-    state_summary_long_costs_unique <- state_summary_long_costs[, .SD[1], by = .(site_id, sim_no, timeID)]
-
-    # calculate the total cull costs costs per sim_no
-    #farm_cull_costs <- farm_data_long_cull_costs[, cull_cost_farm_by_sim:= sum(max_cull_cost_farm, na.rm = TRUE), by = sim_no]
-
-    sim_cost_summary <- state_summary_long_costs_unique[, .(total_cost = sum(max_no_manage_cost, na.rm = TRUE)),
-                                                          by = .(sim_no)]
     # rename columns to incorporate state
     data.table::setnames(sim_cost_summary, old = "total_cost", new = paste0(state, "_total_cost"))
 
@@ -108,8 +96,9 @@ stateCosts <- function(data,
     cost_output <- list("summary_state_costs" = sim_cost_summary)
 
 
+    ######################################################################
+    # No catchment costs are applied per month. Cumulative costs e.g. cost for all sides of business.
 
-  ######################################################################
   } else if (state == "catchment_control") {
     # Calculate number of months in state
     aggregated[, number_of_months := total_duration / 30]
@@ -139,6 +128,7 @@ stateCosts <- function(data,
                         "summary_state_costs" = sim_cost_summary)
 
   } else {
+    # Fallow costs, cost applied per day/time under state 'fallow'. All sides of business applied.
     # multiply 'total_duration' by corresponding site_type daily costs to get state_costs
     state_costs <- aggregated[ ,
                                .(site_types = site_types,
@@ -161,4 +151,3 @@ stateCosts <- function(data,
   return(cost_output)
 
 }
-
