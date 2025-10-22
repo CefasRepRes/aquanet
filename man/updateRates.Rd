@@ -23,7 +23,8 @@ updateRates(
   n_infections_remove_top_sites,
   disease_controls,
   river_distances_df,
-  site_details
+  site_details,
+  sites_bankrupt
 )
 }
 \arguments{
@@ -106,6 +107,8 @@ along the river network. Created using the GIS tool.}
 
 \item{site_details}{(class data frame) a data frame of site and model IDs, locations and whether
 or not the site is tidal. Created using \code{aquanet::mergeGraphMetaWithCatchmentLocation}.}
+
+\item{sites_bankrupt}{(class logical) logical vector of bankrupt sites.}
 }
 \value{
 (class list) of length 3 containing:

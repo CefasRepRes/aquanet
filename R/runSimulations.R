@@ -105,6 +105,9 @@
 #' @param seed_farm_choice (class character) character vector of length 1 containing
 #' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
 #'
+#' @param bankruptcy_threshold (class numeric) vector of length 1 indicating the minimum number
+#' of infections that make a site bankrupt.
+#'
 #' @return (class list) of length 2 containing:
 #' 1. (class numeric) the number of cores used for the run.
 #' 2. the output of the foreach loop running the `aquanet::simulationCode()` function.
@@ -142,7 +145,8 @@ runSimulations <- function(n_cores,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           bankruptcy_threshold) {
 
   # define batch_num utilised with foreach loop syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -211,7 +215,8 @@ runSimulations <- function(n_cores,
       river_distances_df = river_distances_df,
       site_details = site_details,
       stochastic_run = stochastic_run,
-      seed_farm_choice = seed_farm_choice
+      seed_farm_choice = seed_farm_choice,
+      bankruptcy_threshold = bankruptcy_threshold
     )
 
   # shut down set of copies of R running in parallel communicating over sockets

@@ -32,7 +32,8 @@ runSimulations(
   river_distances_df,
   site_details,
   stochastic_run,
-  seed_farm_choice
+  seed_farm_choice,
+  bankruptcy_threshold
 )
 }
 \arguments{
@@ -127,6 +128,9 @@ to randomly seed the starting farm (TRUE) or manually select it.}
 
 \item{seed_farm_choice}{(class character) character vector of length 1 containing
 the manual selection for seed farm. Will be used if \code{stochastic_run} is FALSE.}
+
+\item{bankruptcy_threshold}{(class numeric) vector of length 1 indicating the minimum number
+of infections that make a site bankrupt.}
 }
 \value{
 (class list) of length 2 containing:

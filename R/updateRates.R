@@ -105,6 +105,8 @@
 #' @param site_details (class data frame) a data frame of site and model IDs, locations and whether
 #' or not the site is tidal. Created using `aquanet::mergeGraphMetaWithCatchmentLocation`.
 #'
+#' @param sites_bankrupt (class logical) logical vector of bankrupt sites.
+#'
 #' @return (class list) of length 3 containing:
 #' 1. (class list) of length 4 containing transition rates:
 #' 1.1. (class numeric) vector of transition types.
@@ -141,7 +143,8 @@ updateRates <- function(control_matrix,
                         n_infections_remove_top_sites,
                         disease_controls,
                         river_distances_df,
-                        site_details) {
+                        site_details,
+                        sites_bankrupt) {
 
   ### Select contact matrix ---
 
@@ -377,6 +380,31 @@ updateRates <- function(control_matrix,
 
     }
   }
+
+  ## Remove spread to/from bankrupt sites
+  sites_bankrupt_index <- site_indices[sites_bankrupt]
+
+  # Rate types to be removed for bankrupt sites
+  target_rate_types <- c(0, 10, 14, 11, 4) # LFM, RB, SDM and DIM rate as well as recrudescence rate
+
+  # Identify where bankrupt sites undergo or are the source of a state change for the target rate types
+  sites_to_remove <- which(
+    trans_rates$rate_type %in% target_rate_types &
+      (trans_rates$position %in% sites_bankrupt_index |
+         trans_rates$source %in% sites_bankrupt_index))
+
+  # If there are bankrupt sites, remove them from transition rates
+  if (length(sites_to_remove) > 0) {
+    trans_rates$rate_type <- trans_rates$rate_type[-sites_to_remove]
+    trans_rates$position  <- trans_rates$position[-sites_to_remove]
+    trans_rates$rate      <- trans_rates$rate[-sites_to_remove]
+    trans_rates$source    <- trans_rates$source[-sites_to_remove]
+  }
+
+  # # REMOVE BEFORE MERGE
+  # if (length(sites_to_remove) > 0) {
+  #   browser()
+  # }
 
   return(list(trans_rates = trans_rates,
               catchment_movements = risk_contacts_catch_corrected[["catchment_movements"]],

@@ -30,7 +30,8 @@ simulationCode(
   river_distances_df,
   site_details,
   stochastic_run,
-  seed_farm_choice
+  seed_farm_choice,
+  bankruptcy_threshold
 )
 }
 \arguments{
@@ -93,7 +94,7 @@ directories for model run created in \code{aquanet-mod/code/RunModelCommandLine.
 \item{contact_tracing}{(class logical) vector of length 1 indicating whether or not contact
 tracing should take place.}
 
-\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the remova
+\item{remove_top_sites}{(class logical) vector of length 1 indicating whether or not the removal
 of the most connected sites in the network should take place.}
 
 \item{n_infections_remove_top_sites}{(class numeric) vector of length 1. After the cumulative
@@ -119,6 +120,9 @@ to randomly seed the starting farm (TRUE) or manually select it.}
 
 \item{seed_farm_choice}{(class character) character vector of length 1 containing
 the manual selection for seed farm. Will be used if \code{stochastic_run} is FALSE.}
+
+\item{bankruptcy_threshold}{(class numeric) vector of length 1 indicating the minimum number
+of infections that make a site bankrupt.}
 }
 \value{
 (class numeric) batch number \code{batch_num} and output_summary_states saved to

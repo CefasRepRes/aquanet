@@ -98,7 +98,7 @@
 #' @param contact_tracing (class logical) vector of length 1 indicating whether or not contact
 #' tracing should take place.
 #'
-#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the remova
+#' @param remove_top_sites (class logical) vector of length 1 indicating whether or not the removal
 #' of the most connected sites in the network should take place.
 #'
 #' @param n_infections_remove_top_sites (class numeric) vector of length 1. After the cumulative
@@ -127,6 +127,9 @@
 #'
 #' @param seed_farm_choice (class character) character vector of length 1 containing
 #' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
+#'
+#' @param bankruptcy_threshold (class numeric) vector of length 1 indicating the minimum number
+#' of infections that make a site bankrupt.
 #'
 #' @export
 #'
@@ -159,7 +162,8 @@ simulationCode <- function(runs,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           bankruptcy_threshold) {
 
   ## extract information from input parameters ----
 
@@ -237,6 +241,12 @@ simulationCode <- function(runs,
 
     # define infection status at sites
     sites_states_cumulative <- state_vector
+
+    # vector for counting total infections at each site
+    cumulative_infections <- rep(0, n_sites)
+
+    # logical vector of bankrupt sites
+    sites_bankrupt <- rep(FALSE, n_sites)
 
     # vector to record source sites responsible for infection via Live Fish Movements/river network
     source_inf_vector <- rep(0, n_sites)
@@ -335,7 +345,8 @@ simulationCode <- function(runs,
                                             n_infections_remove_top_sites = n_infections_remove_top_sites,
                                             disease_controls = disease_controls,
                                             river_distances_df = river_distances_df,
-                                            site_details = site_details)
+                                            site_details = site_details,
+                                            sites_bankrupt = sites_bankrupt)
 
       # extract list of all transition rates
       transition_rates <- updated_rates[["trans_rates"]]
@@ -364,9 +375,16 @@ simulationCode <- function(runs,
       sites_states_totals <- tabulate(sites_states_vector, nbins = n_states)
       sites_states_cumulative <- (state_vector | sites_states_cumulative)
 
+      # Record current infected sites before next event
+      prev_state_vector <- state_vector
 
       # increment the number of operations
       n_operations <- n_operations + 1
+
+      # REMOVE BEFORE MERGE
+      # if (t > 1000){
+      #   browser()
+      # }
 
       # in column n_operations of output_summary_states append 50 values from time step
       output_summary_states[ , as.character(n_operations) := c(batch_num,
@@ -462,6 +480,13 @@ simulationCode <- function(runs,
       source_inf_vector <- doEvent_out[["source_inf_vector"]]
       trans_type <- doEvent_out[["trans_type"]]
       source_inf_matrix <- doEvent_out[["source_inf_matrix"]]
+
+      # Compare previous state_vector to new state_vector to tally site infections
+      new_infections <- which((prev_state_vector == 0) & (state_vector == 1))
+      cumulative_infections[new_infections] <- cumulative_infections[new_infections] + 1
+
+      # Update bankrupt sites based on cumulative infections
+      sites_bankrupt <- cumulative_infections >= bankruptcy_threshold
 
       # every 100 steps print run information to screen
       if (n_steps %% 100 == 1) {
