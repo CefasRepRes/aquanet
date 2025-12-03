@@ -15,7 +15,7 @@
 #' 4. `group` (integer)
 #' 5. `sim_no` (integer) simulation number.
 #' 5. `timeID` (integer) simulation time step ID.
-#' 6. `t_diff` (numeric) sum of time spend in state.
+#' 6. `t_total` (numeric) sum of time spend in state.
 #' 7. `t` (numeric) time at which change of state occurs.
 #' 8. `trans_type` (numeric) transition type that results in change of state.
 #' 9. onwards binary vectors indicating site type assigned in `site_types.csv`.

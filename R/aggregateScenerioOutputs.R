@@ -71,7 +71,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   # convert to data.table
   dt <- data.table::data.table(condensed_output)
 
-  # epidemic duration
+  # epidemic duration (used to calculate proportions)
   full_results <- aquanet::loadResultsSummary(scenario_name)
   full_results <- data.table(full_results)
   data.table::setnames(full_results, old = "sim_no", new = "simNo")
@@ -96,7 +96,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   # select only states that start with 1 (infected)
   state1<- dt[substr(as.character(state), 1, 1) %in% c("1")]
 
-  # group by sites, sum t_total (sum of time spend in state)
+  # group by site, sum t_total (sum of time spend in state)
   state1_sum <- state1[, .(totalDays_S1 = sum(t_total)), by = site_id]
 
   # Calculate proportion of time spent infected per site
@@ -118,7 +118,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   #--------------------------------------------------------------------------
   # Proportion in state 2 (Uninfected with secondary controls)
 
-  # select only states that start with 0 (Uninfected with secondary controls)
+  # select only states that start with 2 (Uninfected with secondary controls)
   state2_dt<- dt[substr(as.character(state), 1, 1) %in% c("2")]
 
   # group by sites, sum t_total (sum of time spend in state)
@@ -134,6 +134,9 @@ aggregateScenerioOutputs <- function(scenario_name){
 
   ProportionsDt <- merge(proportion_inf1, proportion_inf3, by = "site_id", all = TRUE)
   ProportionsDt <- merge(ProportionsDt, proportion_inf2, by = "site_id", all = TRUE)
+  # chnage NA to 0
+  ProportionsDt[is.na(ProportionsDt)] <- 0
+
 
   # per site sum state 1-3
   ProportionsDt[,sum_1_3 := sum(totalDays_S1,totalDays_S2,totalDays_S3), by = site_id]
@@ -141,7 +144,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   # minus by over scenerio time
   ProportionsDt[,state0_sum := overall_scenerio_time-sum_1_3, by = site_id]
 
-  # Calculate proportion of time spent infected per site
+  # Calculate proportion of time spent uninfected per site
   ProportionsDt[,proportion_state0 := state0_sum/overall_scenerio_time, by = site_id]
 
   # drop column sum_1_3
@@ -151,7 +154,7 @@ aggregateScenerioOutputs <- function(scenario_name){
   # Transition proportions
   ###################################################################
 
-  # Process the filtered data as in your original code
+  # Process the filtered data as in original code
   infection_events_per_site <- dt[ ,
                                    .(LFM = sum(trans_type == 0),
                                      RB = sum(trans_type == 10),
@@ -163,11 +166,13 @@ aggregateScenerioOutputs <- function(scenario_name){
   infection_events_per_site[, siteTotalTransmissions := sum(LFM, RB, SDM, DIM), by = site_id]
 
 
-  # calculate proportion of infections via each route- rounded to 2 d.p.
+  # calculate proportion of infections via each route
   infection_events_per_site[, `:=`(LFM_prop = LFM / siteTotalTransmissions,
-                                   RB_prop = round(RB / siteTotalTransmissions, 2),
-                                   SDM_prop = round(SDM / siteTotalTransmissions, 2),
-                                   DIM_prop = round(DIM / siteTotalTransmissions,2))]
+                                   RB_prop = RB / siteTotalTransmissions,
+                                   SDM_prop = SDM / siteTotalTransmissions,
+                                   DIM_prop = DIM / siteTotalTransmissions)]
+
+  infection_events_per_site[is.na(infection_events_per_site)] <- 0
 
   ###################################################################
   # Join datasets
@@ -194,5 +199,3 @@ aggregateScenerioOutputs <- function(scenario_name){
   return(FinalDt)
 
 }
-
-

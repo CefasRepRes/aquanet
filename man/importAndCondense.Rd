@@ -20,7 +20,7 @@ same state are counted separately. This contains the following information:
 \item \code{group} (integer)
 \item \code{sim_no} (integer) simulation number.
 \item \code{timeID} (integer) simulation time step ID.
-\item \code{t_diff} (numeric) sum of time spend in state.
+\item \code{t_total} (numeric) sum of time spend in state.
 \item \code{t} (numeric) time at which change of state occurs.
 \item \code{trans_type} (numeric) transition type that results in change of state.
 \item onwards binary vectors indicating site type assigned in \code{site_types.csv}.

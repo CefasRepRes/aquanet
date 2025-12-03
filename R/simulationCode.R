@@ -292,17 +292,17 @@ simulationCode <- function(runs,
     }
 
     if (stochastic_run) {
-      # select farm to seed randomly from list of start sites
       seed_farm <- sample(farm_select, n_initial_infections)
-    } else {
-      # use manual seed farm selection
-      seed_farm_choice_ID <-  site_details$modelID[
+    } else if (!is.null(seed_farm_choice) && seed_farm_choice != "") {
+      seed_farm_choice_ID <- site_details$modelID[
         which(site_details$siteID == seed_farm_choice)]
       if (!(seed_farm_choice_ID %in% farm_select)) {
         stop('seed_farm_choice is not a farm')
       } else {
         seed_farm <- seed_farm_choice_ID
       }
+    } else {
+      stop('Manual seed farm selection required when stochastic_run = FALSE')
     }
 
     # mark this site as infected
