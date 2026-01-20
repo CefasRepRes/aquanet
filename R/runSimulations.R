@@ -142,7 +142,8 @@ runSimulations <- function(n_cores,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           compartments_sites) {
 
   # define batch_num utilised with foreach loop syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
@@ -211,7 +212,8 @@ runSimulations <- function(n_cores,
       river_distances_df = river_distances_df,
       site_details = site_details,
       stochastic_run = stochastic_run,
-      seed_farm_choice = seed_farm_choice
+      seed_farm_choice = seed_farm_choice,
+      compartments_sites = compartments_sites
     )
 
   # shut down set of copies of R running in parallel communicating over sockets

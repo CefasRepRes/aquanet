@@ -159,7 +159,8 @@ simulationCode <- function(runs,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           compartments_sites) {
 
   ## extract information from input parameters ----
 
