@@ -294,12 +294,11 @@ simulationCode <- function(runs,
     if (stochastic_run) {
       seed_farm <- sample(farm_select, n_initial_infections)
     } else if (!is.null(seed_farm_choice) && seed_farm_choice != "") {
-      seed_farm_choice_ID <- site_details$modelID[
-        which(site_details$siteID == seed_farm_choice)]
-      if (!(seed_farm_choice_ID %in% farm_select)) {
-        stop('seed_farm_choice is not a farm')
+      farm_site_ids <- site_details$siteID[site_details$modelID %in% farm_select]
+      if (!(seed_farm_choice %in% farm_site_ids)) {
+        stop(paste0("seed_farm_choice '", seed_farm_choice, "' is not a farm"))
       } else {
-        seed_farm <- seed_farm_choice_ID
+        seed_farm <- site_details$modelID[match(seed_farm_choice, site_details$siteID)]
       }
     } else {
       stop('Manual seed farm selection required when stochastic_run = FALSE')
