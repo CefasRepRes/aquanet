@@ -296,7 +296,7 @@ simulationCode <- function(runs,
     } else if (!is.null(seed_farm_choice) && seed_farm_choice != "") {
       farm_site_ids <- site_details$siteID[site_details$modelID %in% farm_select]
       if (!(seed_farm_choice %in% farm_site_ids)) {
-        stop(paste0("seed_farm_choice '", seed_farm_choice, "' is not a farm...", farm_select, "not in:", farm_site_ids))
+        stop(paste0("seed_farm_choice '", seed_farm_choice, "' is not a farm...", farm_select, "not in valid choices: ", paste(farm_site_ids, collapse = ", ")))
       } else {
         seed_farm <- site_details$modelID[match(seed_farm_choice, site_details$siteID)]
       }
