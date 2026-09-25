@@ -128,6 +128,8 @@
 #' @param seed_farm_choice (class character) character vector of length 1 containing
 #' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
 #'
+#' @param sim_offset (class numeric) the first simulation number in the current batch.
+#'
 #' @export
 #'
 #' @importFrom methods new
@@ -159,7 +161,8 @@ simulationCode <- function(runs,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           sim_offset = 0L) {
 
   ## extract information from input parameters ----
 
@@ -209,8 +212,8 @@ simulationCode <- function(runs,
 
   for (k in 1:runs) {
 
-    # calculate simulation number (equivalent to k and valid across every parallel thread)
-    sim_num <- k + ((batch_num - 1) * runs)
+    # calculate simulation number within the batch and across the full run
+    sim_num <- sim_offset + k - 1L
 
     # reset the time, time step, and rate type for the run
     t <- 0

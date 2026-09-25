@@ -32,13 +32,19 @@ runSimulations(
   river_distances_df,
   site_details,
   stochastic_run,
-  seed_farm_choice
+  seed_farm_choice,
+  batch_size = NULL,
+  n_sims_per_job = NULL
 )
 }
 \arguments{
 \item{n_cores}{(class numeric) the number of cores to use for parallel computing.}
 
 \item{n_sims}{(class numeric) number of simulations.}
+
+\item{batch_size}{(class numeric) number of simulations assigned to each parallel batch job.
+This can also be supplied as \code{n_sims_per_job} for compatibility. Defaults to
+\code{ceiling(n_sims / n_cores)} when \code{NULL}.}
 
 \item{seed_num}{(class numeric) number used to generate random seed for result replication.}
 
