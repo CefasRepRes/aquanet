@@ -206,21 +206,16 @@ updateRates <- function(control_matrix,
 
   ### identify LFM contacts carrying risk ----
 
-  # retain contact probabilities where origin site is infected with unrestricted transport off site
-  matrix_risk_contacts <- movement_probability * (state_vector * !transport_prevented_off)
-
-  # retain contact probabilities where receiving sites have no restricted transport on site
-  matrix_risk_contacts <- Matrix::t(matrix_risk_contacts) * !transport_prevented_on
-  matrix_risk_contacts <- Matrix::t(matrix_risk_contacts)
-
-  # exclude within catchment movements unless there are no catchment movement restrictions
+  # filter movement edges by source, destination and catchment controls in one pass
   risk_contacts_catch_corrected <- aquanet::excludeWithinCatchmentMovements(move_restricted_sites = sites_all_movement_restricted,
                                                                             river_distances_df = river_distances_df,
-                                                                            spmatrix_risk_contacts = matrix_risk_contacts,
+                                                                            spmatrix_risk_contacts = movement_probability,
                                                                             catchment_movements = catchment_movements,
                                                                             matrix_movements_prob = movement_probability,
                                                                             river_downstream_transmission_matrix = river_prob,
-                                                                            site_details = site_details)
+                                                                            site_details = site_details,
+                                                                            source_sites_allowed = as.logical(state_vector * !transport_prevented_off),
+                                                                            destination_sites_allowed = !transport_prevented_on)
 
   ### calculate LFM infection rate ----
 
