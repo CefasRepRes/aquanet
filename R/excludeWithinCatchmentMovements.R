@@ -6,9 +6,11 @@
 #' Identify the catchments that are under movement controls based on the list of sites with movement
 #'  restrictions `move_restricted_sites` and determine total number of catchments under controls.
 #'
-#' If the catchments under control are the same as the previous time step then reuse the
-#' previously defined matrix of contacts `matrix_contacts_exclude` in
-#' `catchment_movements[["matrix_contacts_exclude"]]`.
+#' If the catchments under control are the same as the previous time step then subtract the
+#' previously defined matrix of risk contacts `matrix_contacts_exclude` in
+#' `catchment_movements[["matrix_contacts_exclude]]` containing risk contacts that should be
+#' excluded due to movement restrictions from the input matrix of risk contacts
+#' `spmatrix_risk_contacts`.
 #'
 #' If the catchments under control in the current time step differ from the previous time step then
 #' extract a vector of sites that are contained within controlled catchments and reassign this to
@@ -17,8 +19,8 @@
 #' catchment controls defined in `catchment_movements[["type_catchment_controls]]` generate a
 #' matrix of within catchment site to site contacts to exclude.
 #'
-#' In both scenarios filter the movement edges by site eligibility and the contacts to exclude.
-#' Then reassign objects 3, 4 and 7 within the
+#' In both scenarios subtract the matrix of contacts to exclude from the input matrix of risk
+#' contacts `spmatrix_risk_contacts`. Then reassign objects 3, 4 and 7 within the
 #' `catchment_movements` list to update: (3) the matrix of controlled catchments, (4) the matrix of
 #' contacts that are excluded based on the catchment controls in place and (7) the total number of
 #' controlled catchments.
@@ -30,9 +32,16 @@
 #' @param river_distances_df (class data frame) a data frame of distances between sites
 #' along the river network. Created using the GIS tool.
 #'
-#' @param spmatrix_risk_contacts Sparse matrix of live fish movement probabilities. When
-#' `source_sites_allowed` and `destination_sites_allowed` are omitted, this matrix is already
-#' filtered for at-risk contacts. Rows are source sites and columns are receiving sites.
+#' @param spmatrix_risk_contacts (class dgCMatrix, Matrix package) sparse matrix containing live
+#' fish movements contact probability adapted to identify only contacts between sites that present a
+#'  risk of disease spread. Source sites that are infected but cannot transport fish off site due
+#' to movement restrictions have their contact probabilities converted to 0 as they cannot form
+#' 'at risk' contacts. Additionally. sites that are uninfected with or without movement restrictions
+#' have a probability of 0. Receiving sites that cannot transport fish on site due to movement
+#' restrictions also have their contact probabilities converted to 0 as they cannot form 'at risk'
+#' contacts. At risk contacts occur between sites that are infected with no restrictions on movement
+#'  off site and receiving sites with no restrictions on site. (Note: defined within
+#' `aquanet::updateRates` function of aquanet-mod).
 #'
 #' @param catchment_movements (class list) of length 7, containing objects related to catchment-
 #' level movements:
@@ -61,12 +70,6 @@
 #' @param site_details (class data frame) data frame of site details. Created by the
 #' mergeGraphMetaWithCatchmentLocation function in aquanet.
 #'
-#' @param source_sites_allowed Optional logical vector indicating which source sites can spread
-#' infection and transport fish off site.
-#'
-#' @param destination_sites_allowed Optional logical vector indicating which receiving sites can
-#' accept fish.
-#'
 #' @return (class list) of length 2 containing:
 #' 1. (dgCMatrix, Matrix package) sparse matrix of corrected 'at risk' contacts.
 #' 2. (class list) of length 7 containing: updated catchment_movements input. Updated elements
@@ -82,9 +85,7 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
                                             catchment_movements,
                                             matrix_movements_prob,
                                             river_downstream_transmission_matrix,
-                                            site_details,
-                                            source_sites_allowed = NULL,
-                                            destination_sites_allowed = NULL) {
+                                            site_details) {
   # extract elements from list
   spmatrix_sites_catchment <- catchment_movements[["spmatrix_sites_catchment"]]
   lgmatrix_catch_catch <- catchment_movements[["lgmatrix_catch_catch"]]
@@ -92,13 +93,11 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
   matrix_contacts_exclude <- catchment_movements[["matrix_contacts_exclude"]]
   site_control_type <- catchment_movements[["type_catchment_controls"]]
 
-  # skip the catchment multiplication when no sites can put a catchment under control
-  if (site_control_type == "None" || !any(move_restricted_sites)) {
-    catchments_controlled <- catchments_controlled_prev * 0
-  } else {
-    catchments_controlled <- Matrix::crossprod(spmatrix_sites_catchment,
-                                               as.numeric(move_restricted_sites))
-  }
+  # create matrix of catchments (rows) under control (col 1) by multiplying the sites by whether
+  # movements are restricted if there are no catchment controls, ignore this step
+  ifelse(site_control_type != "None",
+  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites,
+  catchments_controlled <- Matrix::t(spmatrix_sites_catchment) %*% move_restricted_sites * 0)
 
   # determine number of catchments under control
   n_catchments_controlled <- sum(catchments_controlled > 0)
@@ -165,27 +164,9 @@ excludeWithinCatchmentMovements <- function(move_restricted_sites,
     }
   }
 
-  # filter the non-zero movement edges without scaling, transposing or subtracting sparse matrices
-  contacts <- methods::as(spmatrix_risk_contacts, "TsparseMatrix")
-  source <- contacts@i + 1L
-  destination <- contacts@j + 1L
-  keep <- contacts@x != 0
-  if (!is.null(source_sites_allowed)) {
-    keep <- keep & source_sites_allowed[source]
-  }
-  if (!is.null(destination_sites_allowed)) {
-    keep <- keep & destination_sites_allowed[destination]
-  }
-  if (any(keep) && length(matrix_contacts_exclude@x) > 0L) {
-    eligible <- which(keep)
-    keep[eligible] <- matrix_contacts_exclude[cbind(source[eligible],
-                                                    destination[eligible])] == 0
-  }
-  spmatrix_risk_contacts <- Matrix::sparseMatrix(i = source[keep],
-                                                 j = destination[keep],
-                                                 x = contacts@x[keep],
-                                                 dims = dim(contacts),
-                                                 dimnames = dimnames(contacts))
+  # create matrix of contacts to remove and remove from input matrix of risk contacts
+  risk_contacts_remove <- spmatrix_risk_contacts * matrix_contacts_exclude
+  spmatrix_risk_contacts <- spmatrix_risk_contacts - risk_contacts_remove
 
   # reassign new catchment control information (catchment, contacts to exclude and number of catchments)
   catchment_movements[["catchments_controlled_prev"]] <- catchments_controlled
