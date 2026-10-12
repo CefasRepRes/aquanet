@@ -169,8 +169,9 @@ for (control_type in list("None", 0, 1, 2)) {
     expect_movement_matrix(restricted_result, expected_full_movements)
     stopifnot(restricted_result$catchment_movements$n_catchments_controlled == 0)
   }
+  expected_n_controlled <- if (identical(control_type, "None")) 0 else 2
   stopifnot(restricted_result$catchment_movements$n_catchments_controlled ==
-              if (identical(control_type, "None")) 0 else 2)
+              expected_n_controlled)
 
   unrestricted_result <- filter_movements(
     type = control_type,
@@ -193,6 +194,10 @@ expect_movement_matrix(
            0.31, 0.32, 0),
          nrow = 3L, byrow = TRUE, dimnames = list(site_ids, site_ids))
 )
+stopifnot(identical(
+  as.numeric(reuse_first$catchment_movements$catchments_controlled_prev),
+  c(1, 0)
+))
 reuse_second <- filter_movements(
   type = 0,
   restricted = c(FALSE, TRUE, FALSE),
@@ -210,6 +215,10 @@ expect_movement_matrix(
 stopifnot(identical(
   as.matrix(reuse_second$catchment_movements$matrix_contacts_exclude),
   as.matrix(reuse_first$catchment_movements$matrix_contacts_exclude)
+))
+stopifnot(identical(
+  as.numeric(reuse_second$catchment_movements$catchments_controlled_prev),
+  c(1, 0)
 ))
 stopifnot(reuse_second$catchment_movements$n_catchments_controlled == 1)
 reuse_changed <- filter_movements(
@@ -245,6 +254,10 @@ stopifnot(reuse_cleared$catchment_movements$n_catchments_controlled == 0)
 stopifnot(identical(
   as.matrix(reuse_cleared$catchment_movements$matrix_contacts_exclude),
   matrix(0, 3L, 3L, dimnames = list(site_ids, site_ids))
+))
+stopifnot(identical(
+  as.numeric(reuse_cleared$catchment_movements$catchments_controlled_prev),
+  c(0, 0)
 ))
 
 ## excludeWithinCatchmentMovements
