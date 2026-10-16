@@ -30,7 +30,8 @@ simulationCode(
   river_distances_df,
   site_details,
   stochastic_run,
-  seed_farm_choice
+  seed_farm_choice,
+  sim_offset = 0L
 )
 }
 \arguments{
@@ -119,6 +120,8 @@ to randomly seed the starting farm (TRUE) or manually select it.}
 
 \item{seed_farm_choice}{(class character) character vector of length 1 containing
 the manual selection for seed farm. Will be used if \code{stochastic_run} is FALSE.}
+
+\item{sim_offset}{(class numeric) the first simulation number in the current batch.}
 }
 \value{
 (class numeric) batch number \code{batch_num} and output_summary_states saved to

@@ -17,6 +17,10 @@
 #'
 #' @param n_sims (class numeric) number of simulations.
 #'
+#' @param batch_size (class numeric) number of simulations assigned to each parallel batch job.
+#' This can also be supplied as `n_sims_per_job` for compatibility. Defaults to
+#' `ceiling(n_sims / n_cores)` when `NULL`.
+#'
 #' @param seed_num (class numeric) number used to generate random seed for result replication.
 #'
 #' @param clear_results (class logical) TRUE/FALSE stating whether .RData results should be cleared
@@ -142,11 +146,46 @@ runSimulations <- function(n_cores,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           batch_size = NULL,
+                           n_sims_per_job = NULL) {
 
   # define batch_num utilised with foreach loop syntax
     # NOTE: this satisfies "no visible binding for global variable" devtools::check()
   batch_num <- NULL
+
+  if (!is.numeric(n_cores) || length(n_cores) != 1L || is.na(n_cores) ||
+      n_cores < 1 || abs(n_cores - round(n_cores)) > sqrt(.Machine$double.eps) ||
+      !is.numeric(n_sims) || length(n_sims) != 1L || is.na(n_sims) ||
+      n_sims < 1 || abs(n_sims - round(n_sims)) > sqrt(.Machine$double.eps)) {
+    stop("n_cores and n_sims must both be single positive integers.")
+  }
+
+  n_cores <- as.integer(round(n_cores))
+  n_sims <- as.integer(round(n_sims))
+
+  if (!is.null(n_sims_per_job) && !is.null(batch_size) && !identical(batch_size, n_sims_per_job)) {
+    stop("Specify only one of batch_size or n_sims_per_job.")
+  }
+
+  if (is.null(batch_size)) {
+    batch_size <- n_sims_per_job
+  }
+
+  if (is.null(batch_size)) {
+    batch_size <- max(1L, ceiling(n_sims / n_cores))
+  }
+
+  if (!is.numeric(batch_size) || length(batch_size) != 1L || is.na(batch_size) ||
+      batch_size < 1 || abs(batch_size - round(batch_size)) > sqrt(.Machine$double.eps)) {
+    stop("batch_size must be a single positive integer.")
+  }
+
+  batch_size <- as.integer(round(batch_size))
+  n_batches <- ceiling(n_sims / batch_size)
+  batch_sizes <- rep(batch_size, n_batches)
+  batch_sizes[length(batch_sizes)] <- min(batch_size, n_sims - batch_size * (n_batches - 1L))
+  batch_starts <- c(1L, 1L + cumsum(batch_sizes[-length(batch_sizes)]))
 
   if (clear_results == TRUE) {
   # list files ending in .RData in the results directory
@@ -159,9 +198,6 @@ runSimulations <- function(n_cores,
   do.call(file.remove, list(files))
   }
 
-  # define number of simulations per job (n_jobs == n_cores)
-  n_sims_per_job <- ceiling(n_sims/ n_cores)
-
   # create set of copies of R running in parallel communicating over sockets - save output to log file
   cluster <- parallel::makeCluster(n_cores, outfile = "log.txt")
 
@@ -169,12 +205,13 @@ runSimulations <- function(n_cores,
   doParallel::registerDoParallel(cluster)
 
   # calculate number of interactions
-  n_overall_interactions <- n_sims_per_job * n_cores
+  n_overall_interactions <- sum(batch_sizes)
 
-  # print number of cores/jobs, simulations per jobs and number of interactions
+  # print number of cores/jobs, batch size and number of interactions
   cat("Simulation setup:\n",
       "  Number of cores: ", n_cores, "\n",
-      "  Simulations per job: ", n_sims_per_job, "\n",
+      "  Batch size: ", batch_size, "\n",
+      "  Number of batches: ", n_batches, "\n",
       "  Total interactions: ", n_overall_interactions, "\n\n")
 
   # set seed
@@ -185,8 +222,8 @@ runSimulations <- function(n_cores,
 
   # run simulation in parallel
   allruns <-
-    foreach::foreach(batch_num = 1:n_cores, .combine = c) %dorng% aquanet::simulationCode(
-      runs = n_sims_per_job,
+    foreach::foreach(batch_num = seq_len(n_batches), .combine = c) %dorng% aquanet::simulationCode(
+      runs = batch_sizes[batch_num],
       tmax = tmax,
       batch_num = batch_num,
       run_time_params = run_time_params,
@@ -211,7 +248,8 @@ runSimulations <- function(n_cores,
       river_distances_df = river_distances_df,
       site_details = site_details,
       stochastic_run = stochastic_run,
-      seed_farm_choice = seed_farm_choice
+      seed_farm_choice = seed_farm_choice,
+      sim_offset = batch_starts[batch_num]
     )
 
   # shut down set of copies of R running in parallel communicating over sockets
