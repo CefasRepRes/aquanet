@@ -30,8 +30,17 @@
 #' @param river_distances_df (class data frame) a data frame of distances between sites
 #' along the river network. Created using the GIS tool.
 #'
-#' @param spmatrix_risk_contacts Sparse matrix of live fish movement probabilities. When
-#' `source_sites_allowed` and `destination_sites_allowed` are omitted, this matrix is already
+#' @param spmatrix_risk_contacts Sparse matrix containing live fish movements 
+#' contact probability adapted to identify only contacts between sites that present a
+#' risk of disease spread. Source sites that are infected but cannot transport fish off site due
+#' to movement restrictions have their contact probabilities converted to 0 as they cannot form
+#' 'at risk' contacts. Additionally. sites that are uninfected with or without movement restrictions
+#' have a probability of 0. Receiving sites that cannot transport fish on site due to movement
+#' restrictions also have their contact probabilities converted to 0 as they cannot form 'at risk'
+#' contacts. At risk contacts occur between sites that are infected with no restrictions on movement
+#'  off site and receiving sites with no restrictions on site. (Note: defined within
+#' `aquanet::updateRates` function of aquanet-mod).
+#' When`source_sites_allowed` and `destination_sites_allowed` are omitted, this matrix is already
 #' filtered for at-risk contacts. Rows are source sites and columns are receiving sites.
 #'
 #' @param catchment_movements (class list) of length 7, containing objects related to catchment-
