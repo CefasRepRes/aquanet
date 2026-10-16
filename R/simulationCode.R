@@ -128,6 +128,8 @@
 #' @param seed_farm_choice (class character) character vector of length 1 containing
 #' the manual selection for seed farm. Will be used if `stochastic_run` is FALSE.
 #'
+#' @param sim_offset (class numeric) the first simulation number in the current batch.
+#'
 #' @export
 #'
 #' @importFrom methods new
@@ -159,7 +161,8 @@ simulationCode <- function(runs,
                            river_distances_df,
                            site_details,
                            stochastic_run,
-                           seed_farm_choice) {
+                           seed_farm_choice,
+                           sim_offset = 0L) {
 
   ## extract information from input parameters ----
 
@@ -209,8 +212,8 @@ simulationCode <- function(runs,
 
   for (k in 1:runs) {
 
-    # calculate simulation number (equivalent to k and valid across every parallel thread)
-    sim_num <- k + ((batch_num - 1) * runs)
+    # calculate simulation number within the batch and across the full run
+    sim_num <- sim_offset + k - 1L
 
     # reset the time, time step, and rate type for the run
     t <- 0
@@ -292,18 +295,24 @@ simulationCode <- function(runs,
     }
 
     if (stochastic_run) {
+      # select farm to seed randomly from list of start sites
       seed_farm <- sample(farm_select, n_initial_infections)
-    } else if (!is.null(seed_farm_choice) && seed_farm_choice != "") {
-      seed_farm_choice_ID <- site_details$modelID[
-        which(site_details$siteID == seed_farm_choice)]
-      if (!(seed_farm_choice_ID %in% farm_select)) {
-        stop('seed_farm_choice is not a farm')
-      } else {
-        seed_farm <- seed_farm_choice_ID
-      }
-    } else {
-      stop('Manual seed farm selection required when stochastic_run = FALSE')
-    }
+	} else if ( !is.null(seed_farm_choice) &&  length(seed_farm_choice) > 0 && all(!is.na(seed_farm_choice)) && all(nzchar(seed_farm_choice))  ) {
+      # this pathway is for user-selected farms and should accept multiple
+	  matched_rows <- match(seed_farm_choice, site_details$siteID)
+	  if (anyNA(matched_rows)) {
+		missing_sites <- seed_farm_choice[is.na(matched_rows)]
+		stop("The following seed_farm_choice sites were not found: ", paste(missing_sites, collapse = ", ")	)
+	  }
+	  seed_farm_choice_ID <- site_details$modelID[matched_rows]
+	  if (!all(seed_farm_choice_ID %in% farm_select)) {
+		invalid_sites <- seed_farm_choice[!(seed_farm_choice_ID %in% farm_select)]
+		stop("The following seed_farm_choice sites are not farms: ", paste(invalid_sites, collapse = ", ") )
+	  }
+	  seed_farm <- seed_farm_choice_ID
+	} else { stop( "Manual seed farm selection required when stochastic_run = FALSE" )	}
+
+
 
     # mark this site as infected
     state_vector[seed_farm] <- 1

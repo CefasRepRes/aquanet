@@ -1,0 +1,236 @@
+library(aquanet)
+
+site_ids <- c("S1", "S2", "S3")
+movement_probabilities <- Matrix::sparseMatrix(
+  i = c(1L, 1L, 3L),
+  j = c(2L, 3L, 1L),
+  x = c(0.2, 0.3, 0.4),
+  dims = c(3L, 3L),
+  dimnames = list(site_ids, site_ids)
+)
+
+make_catchment_movements <- function(type) {
+  list(
+    spmatrix_sites_catchment = Matrix::sparseMatrix(
+      i = c(1L, 2L, 3L),
+      j = c(1L, 1L, 2L),
+      x = c(1, 1, 1),
+      dims = c(3L, 2L),
+      dimnames = list(site_ids, c("C1", "C2"))
+    ),
+    lgmatrix_catch_catch = Matrix::Matrix(
+      matrix(c(TRUE, TRUE, FALSE,
+               TRUE, TRUE, FALSE,
+               FALSE, FALSE, TRUE), nrow = 3L),
+      sparse = TRUE,
+      dimnames = list(site_ids, site_ids)
+    ),
+    catchments_controlled_prev = methods::as(
+      Matrix::Matrix(nrow = 2L, ncol = 1L, data = 0, sparse = TRUE),
+      "unpackedMatrix"
+    ),
+    matrix_contacts_exclude = methods::new(
+      Class = "dgTMatrix",
+      Dim = c(3L, 3L)
+    ),
+    type_catchment_controls = type,
+    sites_controlled = logical(3L),
+    n_catchments_controlled = 0
+  )
+}
+
+## excludeWithinCatchmentMovements
+exclude_result <- aquanet::excludeWithinCatchmentMovements(
+  move_restricted_sites = c(TRUE, FALSE, FALSE),
+  river_distances_df = data.frame(),
+  spmatrix_risk_contacts = movement_probabilities,
+  catchment_movements = make_catchment_movements(0),
+  matrix_movements_prob = movement_probabilities,
+  river_downstream_transmission_matrix = movement_probabilities,
+  site_details = data.frame(
+    siteID = site_ids,
+    tidal = c(FALSE, TRUE, FALSE)
+  )
+)
+
+expected_risk_contacts <- matrix(
+  c(0, 0, 0.4,
+    0.2, 0, 0,
+    0, 0, 0),
+  nrow = 3L,
+  dimnames = list(site_ids, site_ids)
+)
+stopifnot(identical(as.matrix(exclude_result$spmatrix_risk_contacts),
+                    expected_risk_contacts))
+stopifnot(identical(
+  as.numeric(exclude_result$catchment_movements$sites_controlled),
+  c(1, 1, 0)
+))
+stopifnot(exclude_result$catchment_movements$n_catchments_controlled == 1)
+
+## updateRates
+zero_contacts <- Matrix::sparseMatrix(
+  i = integer(),
+  j = integer(),
+  x = numeric(),
+  dims = c(3L, 3L),
+  dimnames = list(site_ids, site_ids)
+)
+rates_result <- aquanet::updateRates(
+  control_matrix = matrix(0, nrow = 3L, ncol = 7L),
+  state_vector = c(1, 0, 0),
+  farm_vector = c(1, 0, 1),
+  culling_vector = c(0, 0, 0),
+  site_indices = 0:2,
+  catchment_movements = make_catchment_movements("None"),
+  movements_prob = list(matrix_movements_prob = movement_probabilities),
+  movements_prob_top_sites_removed = list(
+    matrix_movements_prob = movement_probabilities
+  ),
+  river_prob = list(matrix_river_distances_prob = zero_contacts),
+  site_distances_prob = list(matrix_distances_probability = zero_contacts),
+  run_time_params = data.frame(
+    Site_Recovers = 4,
+    Infection_Becomes_Subclinical = 10,
+    Clearing_Of_Latency_From_Infected_Sites = 20
+  ),
+  non_peak_season = TRUE,
+  contact_tracing = FALSE,
+  remove_top_sites = FALSE,
+  sites_states_cumulative = c(1, 0, 0),
+  n_infections_remove_top_sites = 1,
+  disease_controls = FALSE,
+  river_distances_df = data.frame(),
+  site_details = data.frame(
+    siteID = site_ids,
+    modelID = 1:3,
+    tidal = c(FALSE, TRUE, FALSE)
+  )
+)
+
+rates <- rates_result$trans_rates
+stopifnot(identical(as.numeric(rates$rate_type), c(0, 0, 3)))
+stopifnot(identical(as.numeric(rates$position), c(1, 2, 0)))
+stopifnot(isTRUE(all.equal(as.numeric(rates$rate), c(0.2, 0.3, 0.25))))
+stopifnot(identical(is.na(rates$source), c(FALSE, FALSE, TRUE)))
+stopifnot(identical(
+  as.numeric(rates$source[!is.na(rates$source)]),
+  c(0, 0)
+))
+stopifnot(identical(
+  rates_result$sites_all_movement_restricted,
+  c(FALSE, FALSE, FALSE)
+))
+
+## runSimulations
+simulation_site_ids <- "S1"
+simulation_matrix <- Matrix::sparseMatrix(
+  i = integer(),
+  j = integer(),
+  x = numeric(),
+  dims = c(1L, 1L),
+  dimnames = list(simulation_site_ids, simulation_site_ids)
+)
+simulation_root <- tempfile("aquanet-runSimulations-")
+simulation_paths <- list(
+  results = file.path(simulation_root, "results"),
+  results_batch = file.path(simulation_root, "results_batch"),
+  results_full = file.path(simulation_root, "results_full")
+)
+invisible(lapply(simulation_paths, dir.create, recursive = TRUE))
+
+simulation_result <- local({
+  previous_directory <- setwd(simulation_root)
+  on.exit(setwd(previous_directory), add = TRUE)
+  aquanet::runSimulations(
+    n_cores = 1,
+    n_sims = 1,
+    seed_num = 2468,
+    clear_results = FALSE,
+    tmax = 1e6,
+    run_time_params = data.frame(
+      Site_Recovers = 1,
+      Infection_Becomes_Subclinical = 1,
+      Clearing_Of_Latency_From_Infected_Sites = 1,
+      Second_Outbreak_Due_To_Subclinical_Infection = 1,
+      Fomite_Transmission_Independant_Prob = 1,
+      Early_Controls_Fisheries = 0,
+      Late_Controls_Fisheries = 0
+    ),
+    non_peak_season_length = "0",
+    out_createContactProbabilityMatrix = list(
+      n_sites = 1L,
+      matrix_movements_prob = simulation_matrix
+    ),
+    out_createContactProbabilityMatrixTopSitesRemoved = list(
+      n_sites = 1,
+      matrix_movements_prob = simulation_matrix
+    ),
+    out_createWithinCatchmentEdges = list(
+      lgmatrix_catch_catch = Matrix::Matrix(matrix(TRUE), sparse = TRUE)
+    ),
+    out_createCatchmentToSiteMatrix = list(
+      spmatrix_catchment_sites = Matrix::sparseMatrix(
+        i = 1L,
+        j = 1L,
+        x = 1,
+        dims = c(1L, 1L),
+        dimnames = list(simulation_site_ids, "C1")
+      )
+    ),
+    out_createRiverDistanceProbabilityMatrix = list(
+      matrix_river_distances_prob = simulation_matrix
+    ),
+    out_createDistanceMatrix = list(
+      matrix_distances_probability = simulation_matrix
+    ),
+    farm_vector = 1,
+    n_states = 20,
+    n_initial_infections = 1,
+    type_catchment_controls = "None",
+    filepath_results = simulation_paths,
+    contact_tracing = FALSE,
+    remove_top_sites = FALSE,
+    n_infections_remove_top_sites = 1,
+    disease_controls = FALSE,
+    proportion_cullable = 0,
+    days_before_catchment_restock = 0,
+    river_distances_df = data.frame(),
+    site_details = data.frame(
+      siteID = simulation_site_ids,
+      modelID = 1,
+      tidal = FALSE
+    ),
+    stochastic_run = FALSE,
+    seed_farm_choice = "S1"
+  )
+})
+
+stopifnot(simulation_result[[1]] == 1)
+stopifnot(identical(as.numeric(simulation_result[[2]]), 1))
+
+summary_env <- new.env()
+load(file.path(simulation_paths$results_batch, "batchNo-1.RData"),
+     envir = summary_env)
+summary_values <- as.matrix(summary_env$output_summary_states)[, 1:3, drop = FALSE]
+expected_state_counts <- matrix(0, nrow = 20L, ncol = 3L)
+expected_state_counts[10L, 1L] <- 1
+expected_state_counts[16L, 2L] <- 1
+expected_state_counts[10L, 3L] <- 1
+
+stopifnot(identical(
+  unname(summary_values[9:28, , drop = FALSE]),
+  unname(expected_state_counts)
+))
+
+stopifnot(identical(
+  unname(summary_values[c(1L, 2L, 5L, 6L, 7L, 8L), , drop = FALSE]),
+  unname(rbind(
+    c(1, 1, 1),
+    c(1, 1, 1),
+    c(1, 1, 1),
+    c(0, 3, 4),
+    c(0, 0, 0),
+    c(1, 1, 1)
+  ))
+))
